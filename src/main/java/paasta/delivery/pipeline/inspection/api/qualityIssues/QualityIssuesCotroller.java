@@ -2,6 +2,7 @@ package paasta.delivery.pipeline.inspection.api.qualityIssues;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import paasta.delivery.pipeline.inspection.api.qualityProfile.QualityProfile;
 
 import java.util.List;
 
@@ -35,9 +36,9 @@ public class QualityIssuesCotroller {
      *
      * @return
      */
-    @RequestMapping(value = "/projectList" , method = RequestMethod.GET)
-    public List<QualityIssues> getProjectList(){
-        return qualityIssuesService.getProjectList();
+    @RequestMapping(value = "/issuesConditionList" , method = RequestMethod.POST)
+    public List<QualityIssues> getIssuesConditionList(@RequestBody QualityIssues qualityIssues){
+        return qualityIssuesService.getIssuesConditionList(qualityIssues);
     }
 
 

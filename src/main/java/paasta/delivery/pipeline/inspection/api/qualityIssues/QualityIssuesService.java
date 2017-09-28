@@ -8,6 +8,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import paasta.delivery.pipeline.inspection.api.common.CommonService;
+import paasta.delivery.pipeline.inspection.api.project.Project;
 
 import java.beans.Transient;
 import java.io.IOException;
@@ -47,19 +48,39 @@ public class QualityIssuesService {
         return  commonService.sendForm(inspectionServerUrl, url, HttpMethod.GET,null, QualityIssues.class);
     }
 
-    public List<QualityIssues> getProjectList(){
+    public List<QualityIssues> getIssuesConditionList(QualityIssues qualityIssues){
         QualityIssues param = new QualityIssues();
+        Project projectParam = new Project();
+        List<QualityIssues> list = new ArrayList();
+        List<Map<String, String>> projectList = new ArrayList<>();
         int num = 0;
-        param = commonService.sendForm(inspectionServerUrl, "/api/issues/search", HttpMethod.GET,null, QualityIssues.class);
+        String sonarKey = "";
+        projectParam.setServiceInstancesId(qualityIssues.getServiceInstancesId());
 
+        //project check시
+        if(qualityIssues.getComponentKeys() != null) {
+            sonarKey = qualityIssues.getComponentKeys();
+        }else{
+            projectList = commonService.sendForm(commonApiUrl, "/project/projectsList", HttpMethod.POST, projectParam, List.class);
+            //DB에서 프로젝트 키값 바인딩
+            if (projectList.size() > 0) {
+                for (int i = 0; i < projectList.size(); i++) {
+                    sonarKey += projectList.get(i).get("sonarKey") + ",";
+                }
+            }
+
+        }
+
+        param = commonService.sendForm(inspectionServerUrl, "/api/issues/search?componentKeys="+sonarKey, HttpMethod.GET,null, QualityIssues.class);
+
+        //총 total값
         if(!param.getTotal().equals("0") && param.getTotal() != null){
             num = (Integer.parseInt(param.getTotal()) / 500) +1;
         }
 
-        List<QualityIssues> list = new ArrayList();
 
         for(int i=1;i<=num;i++){
-            list.add(commonService.sendForm(inspectionServerUrl, "/api/issues/search?s=CREATION_DATE&additionalFields=_all&ps=500&pageIndex="+i, HttpMethod.GET,null, QualityIssues.class));
+            list.add(commonService.sendForm(inspectionServerUrl, "/api/issues/search?s=CREATION_DATE&additionalFields=_all&ps=500&pageIndex="+i+"&componentKeys="+sonarKey, HttpMethod.GET,null, QualityIssues.class));
         }
 
         return list;

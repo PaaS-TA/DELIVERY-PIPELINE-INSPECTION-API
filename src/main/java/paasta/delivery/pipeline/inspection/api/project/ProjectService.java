@@ -95,15 +95,19 @@ public class ProjectService {
     ////////////////////////////////////////////////////
 
 
-    List getProjecstList(){
-        return (List) commonService.sendForm(commonApiUrl, "/project/projectsList", HttpMethod.GET , null ,Object.class);
+    List getProjecstList(Project project){
+        System.out.println("::::::::::::::::::::::::"+project);
+        return commonService.sendForm(commonApiUrl, "/project/projectsList", HttpMethod.POST , project ,List.class);
     }
 
     public Project createProjects(Project project){
         Project result = new Project();
         //프로젝트 키 셋팅
-        project.setKey(UUID.randomUUID().toString().replace("-", ""));
-        project.setSonarKey(project.getKey());
+//        project.setKey(UUID.randomUUID().toString().replace("-", ""));
+//        project.setSonarKey(project.getKey());
+        project.setKey("bd-project-test-key");
+        project.setSonarKey("bd-project-test-key");
+
         result = commonService.sendForm(inspectionServerUrl, "/api/projects/create" , HttpMethod.POST, project, Project.class);
         //sona에서 가져온 id 셋팅
         project.setId(result.getId());

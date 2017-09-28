@@ -69,8 +69,8 @@ public class QualityGateController {
      * @param
      * @return QualityGate
      */
-    @RequestMapping(value = "/qualityGateList/{serviceInstancesId}", method = RequestMethod.GET)
-    public List getQualityGateList(@PathVariable String serviceInstancesId){
+    @RequestMapping(value = "/qualityGateList", method = RequestMethod.GET)
+    public List getQualityGateList(@RequestParam String serviceInstancesId){
         return qualityGateService.getQualityGateList(serviceInstancesId);
     }
 

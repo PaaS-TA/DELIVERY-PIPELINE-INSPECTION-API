@@ -44,6 +44,8 @@ public class QualityGate {
     private List qualitygates;
     private String defaultKey;
 
+
+    private String defaultYn;
     private List domains;
 
 
@@ -257,6 +259,13 @@ public class QualityGate {
         this.domains = domains;
     }
 
+    public String getDefaultYn() {
+        return defaultYn;
+    }
+
+    public void setDefaultYn(String defaultYn) {
+        this.defaultYn = defaultYn;
+    }
 
     @Override
     public String toString() {
@@ -286,6 +295,7 @@ public class QualityGate {
                 ", linked=" + linked +
                 ", qualitygates=" + qualitygates +
                 ", defaultKey='" + defaultKey + '\'' +
+                ", defaultYn='" + defaultYn + '\'' +
                 ", domains=" + domains +
                 '}';
     }

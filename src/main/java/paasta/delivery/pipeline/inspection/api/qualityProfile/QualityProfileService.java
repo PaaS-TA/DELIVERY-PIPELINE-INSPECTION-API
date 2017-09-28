@@ -81,8 +81,9 @@ public class QualityProfileService {
 //    commonService.sendForm(inspectionServerUrl,"api/qualitygates/copy", HttpMethod.POST,  resultModel, QualityGate.class);
 
 
-    List getQualityProfileList(){
-        return commonService.sendForm(commonApiUrl , "/qualityProfile/qualityProfileList",HttpMethod.GET, null, List.class);
+    List getQualityProfileList(String serviceInstancesId){
+        System.out.println(" ::::::::::::::"+serviceInstancesId);
+        return commonService.sendForm(commonApiUrl , "/qualityProfile/qualityProfileList?serviceInstancesId="+serviceInstancesId,HttpMethod.GET, null, List.class);
     }
 
     /**

@@ -74,8 +74,8 @@ public class QualityProfileController {
 
     //시연후 로그인 정보 추가
     @RequestMapping(value = "/qualityProfileList" , method = RequestMethod.GET)
-    public List getQualityProfileList(){
-        return qualityProfileService.getQualityProfileList();
+    public List getQualityProfileList(String serviceInstancesId){
+        return qualityProfileService.getQualityProfileList(serviceInstancesId);
     }
 
     /**

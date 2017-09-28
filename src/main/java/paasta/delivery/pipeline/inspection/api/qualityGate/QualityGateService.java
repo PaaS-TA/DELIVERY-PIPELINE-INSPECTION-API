@@ -88,15 +88,8 @@ public class QualityGateService {
         List result = new ArrayList<>();
         QualityGate qualityGate = new QualityGate();
         //default라는 자바예약어변수를 쓸수 없기 때문에 변수명을 바꿔씀.
-        params = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/list",HttpMethod.GET,null,Map.class);
-        result = commonService.sendForm(commonApiUrl,"/qualityGate/qualityGateList/"+serviceInstancesId,HttpMethod.GET, null, List.class);
-
-        if(params.containsKey("default") == true){
-            qualityGate.setDefaultKey(params.get("default").toString());
-            result.add(qualityGate);
-        }
-
-
+//        params = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/list",HttpMethod.GET,null,Map.class);
+        result = commonService.sendForm(commonApiUrl,"/qualityGate/qualityGateList?serviceInstancesId="+serviceInstancesId,HttpMethod.GET, null, List.class);
         return result;
     }
 
@@ -185,9 +178,11 @@ public class QualityGateService {
         resultModel.put("id", qualityGate.getId().toString());
         resultModel.put("name", qualityGate.getName());
         resultModel.put("serviceInstancesId", qualityGate.getServiceInstancesId());
+        resultModel.put("defaultYn",qualityGate.getDefaultYn());
 
         qualityGate = commonService.sendForm(inspectionServerUrl,"api/qualitygates/copy", HttpMethod.POST,  resultModel, QualityGate.class);
         qualityGate.setServiceInstancesId(resultModel.get("serviceInstancesId"));
+        qualityGate.setDefaultYn(resultModel.get("defaultYn"));
         qualityGate = commonService.sendForm(commonApiUrl, "/qualityGate/qualityGateCopy", HttpMethod.PUT, qualityGate, QualityGate.class);
 
         return qualityGate;
@@ -209,6 +204,7 @@ public class QualityGateService {
         QualityGate result = new QualityGate();
         result = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/create", HttpMethod.POST,qualityGate, QualityGate.class);
         result.setServiceInstancesId(qualityGate.getServiceInstancesId());
+        result.setDefaultYn(qualityGate.getDefaultYn());
         result = commonService.sendForm(commonApiUrl, "/qualityGate/qualityGateCreate", HttpMethod.PUT, result,QualityGate.class);
         return result;
     }
@@ -225,6 +221,8 @@ public class QualityGateService {
         Map<String, String> resultModel = new HashMap<>();
         resultModel.put("id", qualityGate.getId().toString());
         resultModel.put("name", qualityGate.getName());
+        resultModel.put("ServiceInstancesId",qualityGate.getServiceInstancesId());
+        resultModel.put("defaultYn", qualityGate.getDefaultYn());
 
         qualityGate = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/rename", HttpMethod.POST, resultModel,QualityGate.class);
         qualityGate = commonService.sendForm(commonApiUrl, "/qualityGate/qualityGateUpdate", HttpMethod.PUT, resultModel,QualityGate.class);

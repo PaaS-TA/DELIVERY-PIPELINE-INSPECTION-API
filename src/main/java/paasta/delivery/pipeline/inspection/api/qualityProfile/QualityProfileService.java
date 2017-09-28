@@ -96,7 +96,7 @@ public class QualityProfileService {
         result = commonService.sendForm(inspectionServerUrl , "/api/qualityprofiles/copy",HttpMethod.POST, qualityProfile, QualityProfile.class);
 
         result.setServiceInstancesId(qualityProfile.getServiceInstancesId());
-
+        result.setDefaultYn(qualityProfile.getDefaultYn());
         //sona에서 가져오 키값 셋팅해서 db로 저장
         result = commonService.sendForm(commonApiUrl , "/qualityProfile/qualityProfileCopy",HttpMethod.PUT, result, QualityProfile.class);
 
@@ -144,8 +144,6 @@ public class QualityProfileService {
         qualityProfile = (QualityProfile) commonService.sendRequestToSonar(qualityProfile, "/api/qualityprofiles/create", HttpMethod.POST);
         qualityProfile = (QualityProfile) commonService.sendRequestToCommon(qualityProfile, qualityProfile.getResultStatus(), "/qualityProfile", HttpMethod.POST);
 */
-
-
         JsonNode result = commonService.sendForm(inspectionServerUrl, "/api/qualityprofiles/create", HttpMethod.POST, qualityProfile, JsonNode.class);
         qualityProfile.setName(result.get("profile").get("name").asText());
         qualityProfile.setKey(result.get("profile").get("key").asText());

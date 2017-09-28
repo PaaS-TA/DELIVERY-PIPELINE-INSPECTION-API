@@ -24,7 +24,7 @@ public class QualityProfile {
     private String resultStatus;
     private String resultMessage;
     private String serviceInstancesId;
-    private String qualityProfileDefault;
+    private String defaultYn;
     //////////////////////
     //프로파일 복제
     private String fromKey;
@@ -197,12 +197,12 @@ public class QualityProfile {
         this.serviceInstancesId = serviceInstancesId;
     }
 
-    public String getQualityProfileDefault() {
-        return qualityProfileDefault;
+    public String getDefaultYn() {
+        return defaultYn;
     }
 
-    public void setQualityProfileDefault(String qualityProfileDefault) {
-        this.qualityProfileDefault = qualityProfileDefault;
+    public void setDefaultYn(String defaultYn) {
+        this.defaultYn = defaultYn;
     }
 
     @Override
@@ -223,7 +223,7 @@ public class QualityProfile {
                 ", resultStatus='" + resultStatus + '\'' +
                 ", resultMessage='" + resultMessage + '\'' +
                 ", serviceInstancesId='" + serviceInstancesId + '\'' +
-                ", qualityProfileDefault='" + qualityProfileDefault + '\'' +
+                ", defaultYn='" + defaultYn + '\'' +
                 ", fromKey='" + fromKey + '\'' +
                 ", toName='" + toName + '\'' +
                 ", sonarKey='" + sonarKey + '\'' +

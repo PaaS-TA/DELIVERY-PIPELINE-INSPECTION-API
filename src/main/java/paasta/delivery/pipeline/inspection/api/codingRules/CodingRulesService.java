@@ -30,6 +30,14 @@ public class CodingRulesService {
 
 
     CodingRules getCodingRulesList(CodingRules codingRules) {
+        CodingRules param = new CodingRules();
+
+        param = commonService.sendForm(inspectionServerUrl, "/api/rules/search", HttpMethod.POST , codingRules ,CodingRules.class);
+
+        param.getTotal();
+
+
+
         return commonService.sendForm(inspectionServerUrl, "/api/rules/search", HttpMethod.POST , codingRules ,CodingRules.class);
 
     }

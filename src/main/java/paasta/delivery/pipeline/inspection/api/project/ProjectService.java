@@ -96,7 +96,6 @@ public class ProjectService {
 
 
     List getProjecstList(Project project){
-        System.out.println("::::::::::::::::::::::::"+project);
         return commonService.sendForm(commonApiUrl, "/project/projectsList", HttpMethod.POST , project ,List.class);
     }
 
@@ -143,7 +142,7 @@ public class ProjectService {
             result = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/deselect", HttpMethod.POST, project, Project.class);
         }
 
-        result = commonService.sendForm(commonApiUrl, "/project/qualityGateProjectLiked", HttpMethod.POST, project, Project.class);
+        result = commonService.sendForm(commonApiUrl, "/project/qualityGateProjectLiked", HttpMethod.PUT, project, Project.class);
 
 
         return result;

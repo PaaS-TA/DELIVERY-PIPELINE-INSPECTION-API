@@ -46,4 +46,9 @@ public class QualityIssuesCotroller {
     public List getQualityIssuesDetail(QualityIssues qualityIssues){
         return qualityIssuesService.getQualityIssuesDetail(qualityIssues);
     }
+
+    @RequestMapping(value = "/setSeverity", method = RequestMethod.POST)
+    public Object setSeverity(@RequestBody QualityIssues qualityIssues){
+        return qualityIssuesService.setSeverity(qualityIssues);
+    }
 }

@@ -82,7 +82,6 @@ public class QualityProfileService {
 
 
     List getQualityProfileList(String serviceInstancesId){
-        System.out.println(" ::::::::::::::"+serviceInstancesId);
         return commonService.sendForm(commonApiUrl , "/qualityProfile/qualityProfileList?serviceInstancesId="+serviceInstancesId,HttpMethod.GET, null, List.class);
     }
 

@@ -164,5 +164,10 @@ public class ProjectService {
         return project;
     }
 
+    //projectKey data 가져오기
+    public Project getProjectKey(Project project){
+        return commonService.sendForm(commonApiUrl, "/project/projectKey", HttpMethod.POST, project, Project.class);
+    }
+
 }
 

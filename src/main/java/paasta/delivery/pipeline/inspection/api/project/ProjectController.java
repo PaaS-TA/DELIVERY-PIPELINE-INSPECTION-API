@@ -159,4 +159,16 @@ public class ProjectController {
         return projectService.testsSourceShow(project);
     }
 
+
+    /**
+     *  getProjectKey
+     *
+     * @param  project
+     * @return Project
+     */
+    @RequestMapping(value = "/projectKey" , method = RequestMethod.POST)
+    public Project getProjectKey(@RequestBody Project project){
+        return projectService.getProjectKey(project);
+    }
+
 }

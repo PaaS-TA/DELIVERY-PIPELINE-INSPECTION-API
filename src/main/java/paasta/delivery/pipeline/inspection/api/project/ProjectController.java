@@ -23,22 +23,26 @@ public class ProjectController {
     @Autowired
     ProjectController(ProjectService projectService) {this.projectService = projectService;}
 
-
-    @RequestMapping(method = RequestMethod.GET)
-    public Map getProjectList() throws IOException {
-        // TODO :: MAY NOT BE USE
-        return projectService.getProjectList();
-    }
-
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Project getProject(@PathVariable Long id) {
-        return projectService.getProject(id);
-    }
-
-
+    /**
+     *  getProjectList
+     *
+     * @param  project
+     * @return List
+     */
     @RequestMapping(value="/projectList" , method = RequestMethod.POST)
     public List getProjectsList(@RequestBody Project project){
         return projectService.getProjecstList(project);
+    }
+
+    /**
+     *  getProject(pipelineId별 리스트)
+     *
+     * @param  project
+     * @return List
+     */
+    @RequestMapping(value = "/getProject" , method = RequestMethod.POST)
+    public List getProject(@RequestBody Project project){
+        return projectService.getProject(project);
     }
 
 
@@ -49,6 +53,7 @@ public class ProjectController {
      * @return project
      */
     @RequestMapping(value = "/projectsCreate", method = RequestMethod.POST)
+    @ResponseBody
     public Project createProjects(@RequestBody Project project){
         return projectService.createProjects(project);
     }
@@ -144,10 +149,10 @@ public class ProjectController {
     }
 
     /**
-     *  tests source
+     *  tests source detail
      *
      * @param  project
-     * @return List
+     * @return Project
      */
     @RequestMapping(value = "/testsSourceShow", method = RequestMethod.GET)
     public Project testsSourceShow(@ModelAttribute Project project){

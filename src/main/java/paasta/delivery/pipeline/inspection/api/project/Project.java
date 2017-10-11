@@ -26,6 +26,8 @@ public class Project {
     private String qualityGateId;
     private String resultStatus;
     private String resultMessage;
+    private int pipelineId;
+    private Long jobId;
 
     private String branch;
 
@@ -318,6 +320,22 @@ public class Project {
         this.projectKey = projectKey;
     }
 
+    public int getPipelineId() {
+        return pipelineId;
+    }
+
+    public void setPipelineId(int pipelineId) {
+        this.pipelineId = pipelineId;
+    }
+
+    public Long getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(Long jobId) {
+        this.jobId = jobId;
+    }
+
     @Override
     public String toString() {
         return "Project{" +
@@ -334,6 +352,8 @@ public class Project {
                 ", qualityGateId='" + qualityGateId + '\'' +
                 ", resultStatus='" + resultStatus + '\'' +
                 ", resultMessage='" + resultMessage + '\'' +
+                ", pipelineId=" + pipelineId +
+                ", jobId=" + jobId +
                 ", branch='" + branch + '\'' +
                 ", serviceInstancesId='" + serviceInstancesId + '\'' +
                 ", linked=" + linked +

@@ -27,7 +27,6 @@ public class Project {
     private String resultStatus;
     private String resultMessage;
 
-
     private int pipelineId;
     private Long jobId;
 

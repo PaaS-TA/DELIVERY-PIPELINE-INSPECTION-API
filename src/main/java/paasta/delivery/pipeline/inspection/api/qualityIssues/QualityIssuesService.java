@@ -48,6 +48,7 @@ public class QualityIssuesService {
         projectParam.setServiceInstancesId(qualityIssues.getServiceInstancesId());
         String sonarKey = "";
         String url = "";
+
         if(qualityIssues.getComponentKeys().equals("")){
             projectList = commonService.sendForm(commonApiUrl, "/project/projectsList", HttpMethod.POST,projectParam, List.class);
 
@@ -57,6 +58,7 @@ public class QualityIssuesService {
                 }
 
                 qualityIssues.setComponentKeys(sonarKey);
+
                 if(qualityIssues.getResolutions().equals("UNRESOLVED")){
                     url = "/api/issues/search?s=CREATION_DATE&ps="+qualityIssues.getPs()+"&severities="+qualityIssues.getSeverities()+"&statuses="+qualityIssues.getStatuses()+
                             "&resolved=false&componentKeys="+qualityIssues.getComponentKeys();
@@ -97,7 +99,9 @@ public class QualityIssuesService {
         Project projectParam = new Project();
         List<QualityIssues> list = new ArrayList();
         List<Map<String, String>> projectList = new ArrayList<>();
+
         int num = 0;
+
         String sonarKey = "";
         projectParam.setServiceInstancesId(qualityIssues.getServiceInstancesId());
 

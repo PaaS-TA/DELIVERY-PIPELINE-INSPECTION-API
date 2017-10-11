@@ -159,7 +159,6 @@ public class ProjectController {
         return projectService.testsSourceShow(project);
     }
 
-
     /**
      *  getProjectKey
      *

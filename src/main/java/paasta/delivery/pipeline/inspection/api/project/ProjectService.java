@@ -34,7 +34,6 @@ public class ProjectService {
     @Autowired
     ProjectService(CommonService commonService) {this.commonService = commonService;}
 
-
     //project List
     List getProjecstList(Project project){
         return commonService.sendForm(commonApiUrl, "/project/projectsList", HttpMethod.POST , project ,List.class);

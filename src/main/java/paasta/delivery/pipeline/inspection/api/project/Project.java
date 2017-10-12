@@ -28,7 +28,7 @@ public class Project {
     private String resultMessage;
 
     private int pipelineId;
-    private Long jobId;
+    private long jobId;
 
     private String branch;
 
@@ -329,11 +329,11 @@ public class Project {
         this.pipelineId = pipelineId;
     }
 
-    public Long getJobId() {
+    public long getJobId() {
         return jobId;
     }
 
-    public void setJobId(Long jobId) {
+    public void setJobId(long jobId) {
         this.jobId = jobId;
     }
 

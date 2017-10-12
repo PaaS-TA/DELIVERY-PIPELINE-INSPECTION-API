@@ -55,7 +55,7 @@ public class ProjectService {
         //sona에서 가져온 id 셋팅
         project.setId(result.getId());
 
-        result = commonService.sendForm(commonApiUrl, "/project/projectsCreate", HttpMethod.PUT, project, Project.class);
+        result = commonService.sendForm(commonApiUrl, "/project/projectsCreate", HttpMethod.POST, project, Project.class);
         return result;
     }
 

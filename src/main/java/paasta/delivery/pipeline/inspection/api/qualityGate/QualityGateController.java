@@ -136,6 +136,7 @@ public class QualityGateController {
      * @return
      */
     @RequestMapping(value="/qualityGateCopy", method = RequestMethod.POST)
+    @ResponseBody
     public QualityGate copyQualityGate(@RequestBody QualityGate qualityGate){
         return qualityGateService.copyQualityGate(qualityGate);
     }

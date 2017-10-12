@@ -208,7 +208,7 @@ public class QualityGateService {
 
         result.setServiceInstancesId(qualityGate.getServiceInstancesId());
         result.setDefaultYn(qualityGate.getDefaultYn());
-        result = commonService.sendForm(commonApiUrl, "/qualityGate/qualityGateCreate", HttpMethod.PUT, result,QualityGate.class);
+        result = commonService.sendForm(commonApiUrl, "/qualityGate/qualityGateCreate", HttpMethod.POST, result,QualityGate.class);
 
 
         return result;

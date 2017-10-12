@@ -11,6 +11,9 @@ import java.util.List;
 public class Project {
 
     private Long id;
+
+    private String sonarName;
+
     private String name;
 
     private String key;
@@ -70,12 +73,12 @@ public class Project {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getSonarName() {
+        return sonarName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSonarName(String sonarName) {
+        this.sonarName = sonarName;
     }
 
     public String getKey() {
@@ -337,10 +340,19 @@ public class Project {
         this.jobId = jobId;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         return "Project{" +
                 "id=" + id +
+                ", sonarName='" + sonarName + '\'' +
                 ", name='" + name + '\'' +
                 ", key='" + key + '\'' +
                 ", sonarKey='" + sonarKey + '\'' +

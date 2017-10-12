@@ -47,15 +47,18 @@ public class ProjectService {
     //project create
     public Project createProjects(Project project){
         Project result = new Project();
+
+
+
         //프로젝트 키 셋팅
         project.setKey(UUID.randomUUID().toString().replace("-", ""));
         project.setSonarKey(project.getKey());
-
         result = commonService.sendForm(inspectionServerUrl, "/api/projects/create" , HttpMethod.POST, project, Project.class);
         //sona에서 가져온 id 셋팅
         project.setId(result.getId());
 
         result = commonService.sendForm(commonApiUrl, "/project/projectsCreate", HttpMethod.POST, project, Project.class);
+
         return result;
     }
 
@@ -106,7 +109,7 @@ public class ProjectService {
             commonService.sendForm(inspectionServerUrl, "/api/qualityprofiles/remove_project", HttpMethod.POST, project, Project.class);
         }
 
-        project = commonService.sendForm(commonApiUrl, "/project/qualityProfileProjectLiked", HttpMethod.POST, project, Project.class);
+        project = commonService.sendForm(commonApiUrl, "/project/qualityProfileProjectLiked", HttpMethod.PUT, project, Project.class);
 
 
         return project;

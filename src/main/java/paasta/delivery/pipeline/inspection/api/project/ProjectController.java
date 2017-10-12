@@ -87,6 +87,7 @@ public class ProjectController {
      * @return
      */
     @RequestMapping(value="/qualityGateProjectLiked", method = RequestMethod.POST)
+    @ResponseBody
     public Project qualityGateProjectLiked(@RequestBody Project project){
         return projectService.qualityGateProjectLiked(project);
     }

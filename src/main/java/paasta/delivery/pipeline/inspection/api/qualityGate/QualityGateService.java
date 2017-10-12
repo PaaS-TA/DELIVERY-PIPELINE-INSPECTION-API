@@ -180,7 +180,7 @@ public class QualityGateService {
         resultModel.put("serviceInstancesId", qualityGate.getServiceInstancesId());
         resultModel.put("defaultYn",qualityGate.getDefaultYn());
 
-        qualityGate = commonService.sendForm(inspectionServerUrl,"api/qualitygates/copy", HttpMethod.POST,  resultModel, QualityGate.class);
+        qualityGate = commonService.sendForm(inspectionServerUrl,"/api/qualitygates/copy", HttpMethod.POST,  resultModel, QualityGate.class);
         qualityGate.setServiceInstancesId(resultModel.get("serviceInstancesId"));
         qualityGate.setDefaultYn(resultModel.get("defaultYn"));
         qualityGate = commonService.sendForm(commonApiUrl, "/qualityGate/qualityGateCopy", HttpMethod.POST, qualityGate, QualityGate.class);

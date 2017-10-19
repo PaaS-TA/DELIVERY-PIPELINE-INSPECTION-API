@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class QualityGate {
 
-    private Long id;
+    private long id;
     //    private String id;
     private String uuid;
     private String name;
@@ -45,15 +45,18 @@ public class QualityGate {
     private String defaultKey;
 
 
-    private String defaultYn;
+    private String gateDefaultYn;
     private List domains;
 
 
-    public Long getId() {
+    //삭제 예정
+    private String defaultYn;
+
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -259,6 +262,14 @@ public class QualityGate {
         this.domains = domains;
     }
 
+    public String getGateDefaultYn() {
+        return gateDefaultYn;
+    }
+
+    public void setGateDefaultYn(String gateDefaultYn) {
+        this.gateDefaultYn = gateDefaultYn;
+    }
+
     public String getDefaultYn() {
         return defaultYn;
     }
@@ -295,8 +306,9 @@ public class QualityGate {
                 ", linked=" + linked +
                 ", qualitygates=" + qualitygates +
                 ", defaultKey='" + defaultKey + '\'' +
-                ", defaultYn='" + defaultYn + '\'' +
+                ", gateDefaultYn='" + gateDefaultYn + '\'' +
                 ", domains=" + domains +
+                ", defaultYn='" + defaultYn + '\'' +
                 '}';
     }
 }

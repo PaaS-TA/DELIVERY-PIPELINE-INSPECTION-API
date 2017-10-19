@@ -140,7 +140,7 @@ public class QualityGateService {
     public QualityGate updateQualityGateCond(QualityGate qualityGate){
         //id가 long 타입이라서 바꿔줘야함
         Map<String, String> resultModel = new HashMap<>();
-        resultModel.put("id", qualityGate.getId().toString());
+        resultModel.put("id", Long.toString(qualityGate.getId()));
         resultModel.put("gateId", qualityGate.getGateId());
         resultModel.put("metric", qualityGate.getMetric());
         resultModel.put("error", qualityGate.getError());
@@ -175,14 +175,14 @@ public class QualityGateService {
 //        QualityGate qualityGate = new QualityGate();
 
         Map<String, String> resultModel = new HashMap<>();
-        resultModel.put("id", qualityGate.getId().toString());
+        resultModel.put("id", Long.toString(qualityGate.getId()));
         resultModel.put("name", qualityGate.getName());
         resultModel.put("serviceInstancesId", qualityGate.getServiceInstancesId());
-        resultModel.put("defaultYn",qualityGate.getDefaultYn());
+        resultModel.put("gateDefaultYn",qualityGate.getGateDefaultYn());
 
         qualityGate = commonService.sendForm(inspectionServerUrl,"/api/qualitygates/copy", HttpMethod.POST,  resultModel, QualityGate.class);
         qualityGate.setServiceInstancesId(resultModel.get("serviceInstancesId"));
-        qualityGate.setDefaultYn(resultModel.get("defaultYn"));
+        qualityGate.setGateDefaultYn(resultModel.get("gateDefaultYn"));
         qualityGate = commonService.sendForm(commonApiUrl, "/qualityGate/qualityGateCopy", HttpMethod.POST, qualityGate, QualityGate.class);
 
         return qualityGate;
@@ -207,7 +207,7 @@ public class QualityGateService {
         result = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/create", HttpMethod.POST,qualityGate, QualityGate.class);
 
         result.setServiceInstancesId(qualityGate.getServiceInstancesId());
-        result.setDefaultYn(qualityGate.getDefaultYn());
+        result.setGateDefaultYn(qualityGate.getGateDefaultYn());
         result = commonService.sendForm(commonApiUrl, "/qualityGate/qualityGateCreate", HttpMethod.POST, result,QualityGate.class);
 
 
@@ -224,10 +224,10 @@ public class QualityGateService {
      */
     QualityGate updateQualityGate(QualityGate qualityGate) {
         Map<String, String> resultModel = new HashMap<>();
-        resultModel.put("id", qualityGate.getId().toString());
+        resultModel.put("id", Long.toString(qualityGate.getId()));
         resultModel.put("name", qualityGate.getName());
         resultModel.put("ServiceInstancesId",qualityGate.getServiceInstancesId());
-        resultModel.put("defaultYn", qualityGate.getDefaultYn());
+        resultModel.put("gateDefaultYn", qualityGate.getGateDefaultYn());
 
         qualityGate = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/rename", HttpMethod.POST, resultModel,QualityGate.class);
         qualityGate = commonService.sendForm(commonApiUrl, "/qualityGate/qualityGateUpdate", HttpMethod.PUT, resultModel,QualityGate.class);
@@ -249,7 +249,7 @@ public class QualityGateService {
 
     QualityGate deleteQualityGate(QualityGate qualityGate) {
         Map<String, String> resultModel = new HashMap<>();
-        resultModel.put("id", qualityGate.getId().toString());
+        resultModel.put("id", Long.toString(qualityGate.getId()));
         resultModel.put("serviceInstancesId",qualityGate.getServiceInstancesId());
         QualityGate result = new QualityGate();
 
@@ -267,7 +267,7 @@ public class QualityGateService {
      */
     public QualityGate qualityGateDefaultSetting(QualityGate qualityGate){
         Map<String, String> resultModel = new HashMap<>();
-        resultModel.put("id", qualityGate.getId().toString());
+        resultModel.put("id", Long.toString(qualityGate.getId()));
         commonService.sendForm(inspectionServerUrl, "/api/qualitygates/set_as_default" , HttpMethod.POST,resultModel, null);
         commonService.sendForm(commonApiUrl,"/qualityGate/qualityGateDefaultSetting",HttpMethod.PUT,qualityGate, String.class);
         qualityGate.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
@@ -281,5 +281,14 @@ public class QualityGateService {
      */
     public QualityGate getQualityGateDomains(){
         return commonService.sendForm(inspectionServerUrl, "/api/metrics/domains",HttpMethod.GET, null,QualityGate.class);
+    }
+
+    /**
+     * 품질 게이트 id로 검색
+     * @param
+     * @return
+     */
+    public QualityGate getiQualityGate(long id){
+        return commonService.sendForm(commonApiUrl,"/qualityGate/getQualityGate?id="+id, HttpMethod.GET ,null, QualityGate.class);
     }
 }

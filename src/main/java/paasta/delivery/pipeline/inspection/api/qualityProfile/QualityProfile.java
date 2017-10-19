@@ -9,7 +9,7 @@ import java.util.List;
 public class QualityProfile {
 
 
-    private Long id;
+    private long id;
     private String key;
     private String name;
     private String language;
@@ -24,7 +24,7 @@ public class QualityProfile {
     private String resultStatus;
     private String resultMessage;
     private String serviceInstancesId;
-    private String defaultYn;
+    private String profileDefaultYn;
     //////////////////////
     //프로파일 복제
     private String fromKey;
@@ -37,11 +37,15 @@ public class QualityProfile {
     //언어 리스트
     private List languages;
 
-    public Long getId() {
+    //삭제 예정
+    private String defaultYn;
+
+
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -197,6 +201,14 @@ public class QualityProfile {
         this.serviceInstancesId = serviceInstancesId;
     }
 
+    public String getProfileDefaultYn() {
+        return profileDefaultYn;
+    }
+
+    public void setProfileDefaultYn(String profileDefaultYn) {
+        this.profileDefaultYn = profileDefaultYn;
+    }
+
     public String getDefaultYn() {
         return defaultYn;
     }
@@ -223,12 +235,13 @@ public class QualityProfile {
                 ", resultStatus='" + resultStatus + '\'' +
                 ", resultMessage='" + resultMessage + '\'' +
                 ", serviceInstancesId='" + serviceInstancesId + '\'' +
-                ", defaultYn='" + defaultYn + '\'' +
+                ", profileDefaultYn='" + profileDefaultYn + '\'' +
                 ", fromKey='" + fromKey + '\'' +
                 ", toName='" + toName + '\'' +
                 ", sonarKey='" + sonarKey + '\'' +
                 ", profileKey='" + profileKey + '\'' +
                 ", languages=" + languages +
+                ", defaultYn='" + defaultYn + '\'' +
                 '}';
     }
 }

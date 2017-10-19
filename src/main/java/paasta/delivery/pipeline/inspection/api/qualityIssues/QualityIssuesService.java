@@ -2,6 +2,7 @@ package paasta.delivery.pipeline.inspection.api.qualityIssues;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.tomcat.util.bcel.classfile.Constant;
+import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,6 +50,9 @@ public class QualityIssuesService {
         String sonarKey = "";
         String url = "";
 
+        //ps - 페이지 사이즈 , serverities - 이슈 수준 , stateuses - 상태 , resolved = 미해결 ,
+
+
         if(qualityIssues.getComponentKeys().equals("")){
             projectList = commonService.sendForm(commonApiUrl, "/project/projectsList", HttpMethod.POST,projectParam, List.class);
 
@@ -60,10 +64,10 @@ public class QualityIssuesService {
                 qualityIssues.setComponentKeys(sonarKey);
 
                 if(qualityIssues.getResolutions().equals("UNRESOLVED")){
-                    url = "/api/issues/search?s=CREATION_DATE&ps="+qualityIssues.getPs()+"&severities="+qualityIssues.getSeverities()+"&statuses="+qualityIssues.getStatuses()+
+                    url = "/api/issues/search?additionalFields=_all&ps="+qualityIssues.getPs()+"&severities="+qualityIssues.getSeverities()+"&statuses="+qualityIssues.getStatuses()+
                             "&resolved=false&componentKeys="+qualityIssues.getComponentKeys();
                 }else{
-                    url = "/api/issues/search?s=CREATION_DATE&ps="+qualityIssues.getPs()+"&severities="+qualityIssues.getSeverities()+"&statuses="+qualityIssues.getStatuses()+
+                    url = "/api/issues/search?additionalFields=_all&ps="+qualityIssues.getPs()+"&severities="+qualityIssues.getSeverities()+"&statuses="+qualityIssues.getStatuses()+
                             "&componentKeys="+qualityIssues.getComponentKeys()+"&resolutions="+qualityIssues.getResolutions();
                 }
 
@@ -76,10 +80,10 @@ public class QualityIssuesService {
 
         }else{
             if(qualityIssues.getResolutions().equals("UNRESOLVED")){
-                url = "/api/issues/search?s=CREATION_DATE&ps="+qualityIssues.getPs()+"&severities="+qualityIssues.getSeverities()+"&statuses="+qualityIssues.getStatuses()+
+                url = "/api/issues/search?additionalFields=_all&ps="+qualityIssues.getPs()+"&severities="+qualityIssues.getSeverities()+"&statuses="+qualityIssues.getStatuses()+
                         "&resolved=false&componentKeys="+qualityIssues.getComponentKeys();
             }else{
-                url = "/api/issues/search?s=CREATION_DATE&ps="+qualityIssues.getPs()+"&severities="+qualityIssues.getSeverities()+"&statuses="+qualityIssues.getStatuses()+
+                url = "/api/issues/search?additionalFields=_all&ps="+qualityIssues.getPs()+"&severities="+qualityIssues.getSeverities()+"&statuses="+qualityIssues.getStatuses()+
                         "&componentKeys="+qualityIssues.getComponentKeys()+"&resolutions="+qualityIssues.getResolutions();
             }
 
@@ -105,8 +109,9 @@ public class QualityIssuesService {
         String sonarKey = "";
         projectParam.setServiceInstancesId(qualityIssues.getServiceInstancesId());
 
+
         //project check시
-        if(qualityIssues.getComponentKeys() != null) {
+        if(qualityIssues.getComponentKeys() != null && !qualityIssues.getComponentKeys().equals("")) {
             sonarKey = qualityIssues.getComponentKeys();
         }else{
             projectList = commonService.sendForm(commonApiUrl, "/project/projectsList", HttpMethod.POST, projectParam, List.class);
@@ -128,7 +133,7 @@ public class QualityIssuesService {
 
 
         for(int i=1;i<=num;i++){
-            list.add(commonService.sendForm(inspectionServerUrl, "/api/issues/search?s=CREATION_DATE&additionalFields=_all&ps=500&pageIndex="+i+"&componentKeys="+sonarKey, HttpMethod.GET,null, QualityIssues.class));
+            list.add(commonService.sendForm(inspectionServerUrl, "/api/issues/search?additionalFields=_all&ps=500&pageIndex="+i+"&componentKeys="+sonarKey, HttpMethod.GET,null, QualityIssues.class));
         }
 
         return list;

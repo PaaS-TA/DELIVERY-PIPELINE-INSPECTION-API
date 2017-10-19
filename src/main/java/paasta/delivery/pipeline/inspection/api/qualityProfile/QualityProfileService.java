@@ -81,7 +81,7 @@ public class QualityProfileService {
 //    commonService.sendForm(inspectionServerUrl,"api/qualitygates/copy", HttpMethod.POST,  resultModel, QualityGate.class);
 
 
-    List getQualityProfileList(String serviceInstancesId){
+    public List getQualityProfileList(String serviceInstancesId){
         return commonService.sendForm(commonApiUrl , "/qualityProfile/qualityProfileList?serviceInstancesId="+serviceInstancesId,HttpMethod.GET, null, List.class);
     }
 
@@ -95,7 +95,7 @@ public class QualityProfileService {
         result = commonService.sendForm(inspectionServerUrl , "/api/qualityprofiles/copy",HttpMethod.POST, qualityProfile, QualityProfile.class);
 
         result.setServiceInstancesId(qualityProfile.getServiceInstancesId());
-        result.setDefaultYn(qualityProfile.getDefaultYn());
+        result.setProfileDefaultYn(qualityProfile.getProfileDefaultYn());
         //sona에서 가져오 키값 셋팅해서 db로 저장
         result = commonService.sendForm(commonApiUrl , "/qualityProfile/qualityProfileCopy",HttpMethod.PUT, result, QualityProfile.class);
 
@@ -177,4 +177,16 @@ public class QualityProfileService {
     public List getCodingRulesList(QualityProfile qualityProfile){
         return commonService.sendForm(inspectionServerUrl,"/api/profiles?language="+qualityProfile.getLanguage()+"&name="+qualityProfile.getName(),HttpMethod.GET,null,List.class);
     }
+
+
+    /**
+     *  QualityProfile 한건 검색
+     *
+     * @param  id
+     * @return QualityProfile
+     */
+    public QualityProfile getQualityProfile(long id){
+        return commonService.sendForm(commonApiUrl,"/qualityProfile/getQualityProfile?id="+id,HttpMethod.GET,null,QualityProfile.class);
+    }
+
 }

@@ -7,9 +7,15 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import paasta.delivery.pipeline.inspection.api.common.CommonService;
 import paasta.delivery.pipeline.inspection.api.common.Constants;
+import paasta.delivery.pipeline.inspection.api.qualityGate.QualityGate;
+import paasta.delivery.pipeline.inspection.api.qualityGate.QualityGateService;
+import paasta.delivery.pipeline.inspection.api.qualityProfile.QualityProfile;
+import paasta.delivery.pipeline.inspection.api.qualityProfile.QualityProfileService;
 
 import java.awt.*;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
@@ -20,6 +26,9 @@ import java.util.List;
 public class ProjectService {
 
     private final CommonService commonService;
+    private final QualityGateService qualityGateService;
+    private final QualityProfileService qualityProfileService;
+
 
     /**
      * The Delivery server url.
@@ -32,7 +41,11 @@ public class ProjectService {
     private String commonApiUrl;
 
     @Autowired
-    ProjectService(CommonService commonService) {this.commonService = commonService;}
+    ProjectService(CommonService commonService, QualityGateService qualityGateService, QualityProfileService qualityProfileService) {
+        this.commonService = commonService;
+        this.qualityGateService = qualityGateService;
+        this.qualityProfileService = qualityProfileService;
+    }
 
     //project List
     List getProjecstList(Project project){
@@ -48,16 +61,42 @@ public class ProjectService {
     public Project createProjects(Project project){
         Project result = new Project();
 
-
-
         //프로젝트 키 셋팅
         project.setKey(UUID.randomUUID().toString().replace("-", ""));
         project.setSonarKey(project.getKey());
+        SimpleDateFormat formatter = new SimpleDateFormat ( "yyyyMMddkkmmss" );
+
+        Date currentTime = new Date();
+        String dTime = formatter.format ( currentTime );
+
+        project.setSonarName(UUID.randomUUID().toString().replace("-", "")+"_"+dTime);
+
         result = commonService.sendForm(inspectionServerUrl, "/api/projects/create" , HttpMethod.POST, project, Project.class);
         //sona에서 가져온 id 셋팅
         project.setId(result.getId());
 
         result = commonService.sendForm(commonApiUrl, "/project/projectsCreate", HttpMethod.POST, project, Project.class);
+
+        QualityProfile profileParam = new QualityProfile();
+        QualityGate gateParam = new QualityGate();
+
+        long profileId = Long.parseLong(project.getQualityProfileId());
+        long gateId = Long.parseLong(project.getQualityGateId());
+
+        profileParam = qualityProfileService.getQualityProfile(profileId);
+        gateParam = qualityGateService.getiQualityGate(gateId);
+
+        if(profileParam.getProfileDefaultYn().equals("N")){
+            project.setProfileKey(profileParam.getKey());
+            project.setLinked(true);
+            qualityProfileProjectLinked(project);
+        }
+
+        if(gateParam.getGateDefaultYn().equals("N")){
+            project.setLinked(true);
+            project.setProjectKey(project.getKey());
+            qualityGateProjectLiked(project);
+        }
 
         return result;
     }
@@ -77,7 +116,45 @@ public class ProjectService {
 
     //project update
     public Project updateProjects(Project project){
-        return commonService.sendForm(commonApiUrl, "/project/projectsUpdate", HttpMethod.PUT, project, Project.class);
+        Project result = new Project();
+
+        //테스트용
+/*        project.setProfileKey("java-quality-copy-55679");
+        project.setProjectKey("84445a412f5a419fbe14615c8aa5077d");
+        project.setGateDefaultYn("N");
+        project.setProfileDefaultYn("N");*/
+
+
+
+        result =  commonService.sendForm(commonApiUrl, "/project/projectsUpdate", HttpMethod.PUT, project, Project.class);
+
+        QualityProfile profileParam = new QualityProfile();
+        QualityGate gateParam = new QualityGate();
+        Project projectKey = new Project();
+
+        projectKey = getProjectKey(project);
+        long profileId = Long.parseLong(project.getQualityProfileId());
+        long gateId = Long.parseLong(project.getQualityGateId());
+
+        profileParam = qualityProfileService.getQualityProfile(profileId);
+        gateParam = qualityGateService.getiQualityGate(gateId);
+
+        if(profileParam.getProfileDefaultYn().equals("N")){
+
+            project.setLinked(true);
+            project.setProjectKey(projectKey.getSonarKey());
+            project.setProfileKey(profileParam.getKey());
+
+            result = qualityProfileProjectLinked(project);
+        }
+
+        if(gateParam.getGateDefaultYn().equals("N")){
+            project.setLinked(true);
+            project.setProjectId(project.getId().toString());
+            result = qualityGateProjectLiked(project);
+        }
+
+        return result;
     }
 
     //qualityGate project 연결
@@ -110,7 +187,6 @@ public class ProjectService {
         }
 
         project = commonService.sendForm(commonApiUrl, "/project/qualityProfileProjectLiked", HttpMethod.PUT, project, Project.class);
-
 
         return project;
     }

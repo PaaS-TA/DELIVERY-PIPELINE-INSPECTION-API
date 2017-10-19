@@ -65,6 +65,10 @@ public class Project {
     private List scm;
     private List issues;
 
+    //프로젝트 추가, 수정시 게이트와 프로파일 default 상태
+    private String gateDefaultYn;
+    private String profileDefaultYn;
+
     public Long getId() {
         return id;
     }
@@ -348,6 +352,22 @@ public class Project {
         this.name = name;
     }
 
+    public String getGateDefaultYn() {
+        return gateDefaultYn;
+    }
+
+    public void setGateDefaultYn(String gateDefaultYn) {
+        this.gateDefaultYn = gateDefaultYn;
+    }
+
+    public String getProfileDefaultYn() {
+        return profileDefaultYn;
+    }
+
+    public void setProfileDefaultYn(String profileDefaultYn) {
+        this.profileDefaultYn = profileDefaultYn;
+    }
+
     @Override
     public String toString() {
         return "Project{" +
@@ -386,6 +406,8 @@ public class Project {
                 ", sources=" + sources +
                 ", scm=" + scm +
                 ", issues=" + issues +
+                ", gateDefaultYn='" + gateDefaultYn + '\'' +
+                ", profileDefaultYn='" + profileDefaultYn + '\'' +
                 '}';
     }
 

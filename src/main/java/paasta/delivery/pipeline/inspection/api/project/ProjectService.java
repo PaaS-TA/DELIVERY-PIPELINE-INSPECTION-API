@@ -71,6 +71,9 @@ public class ProjectService {
 
         project.setSonarName(UUID.randomUUID().toString().replace("-", "")+"_"+dTime);
 
+        //수정후 삭제 예정
+        project.setProjectName(project.getName());
+
         result = commonService.sendForm(inspectionServerUrl, "/api/projects/create" , HttpMethod.POST, project, Project.class);
         //sona에서 가져온 id 셋팅
         project.setId(result.getId());

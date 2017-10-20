@@ -86,15 +86,18 @@ public class ProjectService {
         profileParam = qualityProfileService.getQualityProfile(profileId);
         gateParam = qualityGateService.getiQualityGate(gateId);
 
+
+
         if(profileParam.getProfileDefaultYn().equals("N")){
             project.setProfileKey(profileParam.getKey());
+            project.setProjectKey(project.getKey());
             project.setLinked(true);
             qualityProfileProjectLinked(project);
         }
 
         if(gateParam.getGateDefaultYn().equals("N")){
             project.setLinked(true);
-            project.setProjectKey(project.getKey());
+
             qualityGateProjectLiked(project);
         }
 
@@ -139,20 +142,15 @@ public class ProjectService {
         profileParam = qualityProfileService.getQualityProfile(profileId);
         gateParam = qualityGateService.getiQualityGate(gateId);
 
-        if(profileParam.getProfileDefaultYn().equals("N")){
 
             project.setLinked(true);
             project.setProjectKey(projectKey.getSonarKey());
             project.setProfileKey(profileParam.getKey());
+            project.setProjectId(project.getId().toString());
 
             result = qualityProfileProjectLinked(project);
-        }
-
-        if(gateParam.getGateDefaultYn().equals("N")){
-            project.setLinked(true);
-            project.setProjectId(project.getId().toString());
             result = qualityGateProjectLiked(project);
-        }
+
 
         return result;
     }

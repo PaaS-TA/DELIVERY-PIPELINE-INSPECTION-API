@@ -31,51 +31,6 @@ public class QualityGateService {
     @Autowired
     QualityGateService(CommonService commonService) {this.commonService = commonService;}
 
-    /**
-     * 품질 게이트 목록 조회
-     * @return
-     */
-//    Map getQualityGateList() {
-//        Map<String, Object> resultModel = new HashMap<>();
-//        resultModel = (Map)commonService.sendRequestToCommon(resultModel, Constants.RESULT_STATUS_SUCCESS, "/qualityGate", HttpMethod.GET);
-//        List<QualityGate> qualityGateList = (List)resultModel.remove("resultList");
-//        resultModel.put("qualityGates", qualityGateList);
-//
-//        return resultModel;
-//    }
-
-    /**
-     * 품질 게이트 조회 by id
-     * @param id
-     * @return
-     */
-    QualityGate getQualityGate(Long id) {
-        QualityGate qualityGate = new QualityGate();
-        qualityGate = (QualityGate) commonService.sendRequestToCommon(qualityGate, Constants.RESULT_STATUS_SUCCESS, "/qualityGate/"+id, HttpMethod.GET);
-        return qualityGate;
-    }
-
-
-
-    /**
-     * 품질 게이트 이름변경
-     * @param qualityGate
-     * @return
-     */
-    QualityGate renameQualityGate(Long id, QualityGate qualityGate) {
-        qualityGate = (QualityGate) commonService.sendRequestToSonar(qualityGate, "/api/qualitygates/rename?id="+id, HttpMethod.POST);
-        qualityGate = (QualityGate) commonService.sendRequestToCommon(qualityGate, qualityGate.getResultStatus(), "/qualityGate/"+id, HttpMethod.PUT);
-
-        return qualityGate;
-    }
-
-
-
-
-
-
-
-    /////////////////////////////////////////////////////////
 
     /**
      *  QualityGate 목록 조회
@@ -118,7 +73,7 @@ public class QualityGateService {
      * @param id
      * @return
      */
-    QualityGate getQualityGateCondition(Long id){
+    QualityGate getQualityGateCondition(long id){
         return commonService.sendForm(inspectionServerUrl, "/api/qualitygates/show?id="+id, HttpMethod.GET,null ,QualityGate.class );
 
     }

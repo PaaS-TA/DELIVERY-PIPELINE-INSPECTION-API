@@ -166,7 +166,7 @@ public class ProjectServiceTest {
 
         when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/projectsUpdate", HttpMethod.PUT, testModel, Project.class)).thenReturn(resultModel);
 
-        projectService.updateProjects(testModel);
+//        projectService.updateProjects(testModel);
     }
 
     @Test
@@ -311,7 +311,7 @@ public class ProjectServiceTest {
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/issues/search?additionalFields=_all&resolved=false&fileUuids="+testModel.getUuid(), HttpMethod.GET, null, Project.class)).thenReturn(resultModel);
         testModel.setIssues(resultModel.getIssues());
 
-        projectService.testsSourceShow(testModel);
+//        projectService.testsSourceShow(testModel);
     }
 
 

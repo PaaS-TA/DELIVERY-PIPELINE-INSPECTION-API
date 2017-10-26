@@ -35,52 +35,10 @@ public class QualityProfileService {
     QualityProfileService(CommonService commonService) {this.commonService = commonService;}
 
 
-
-    /**
-     * 품질 프로파일 조회 by id
-     * @param id
-     * @return
-     */
-    QualityProfile getQualityProfile(Long id) {
-        QualityProfile qualityProfile = new QualityProfile();
-        qualityProfile = (QualityProfile) commonService.sendRequestToCommon(qualityProfile, Constants.RESULT_STATUS_SUCCESS, "/qualityProfile/"+id, HttpMethod.GET);
-        return qualityProfile;
-    }
-
-
-
-
-
-    /**
-     * 품질 프로파일 삭제
-     * @param id
-     * @return
-     */
-//    String deleteQualityProfile(Long id) {
-//        Map<String, String> resultModel = new LinkedHashMap<>();
-//        QualityProfile qualityProfile = getQualityProfile(id);
-//        resultModel = (Map)commonService.sendRequestToSonar(resultModel, "/api/qualityprofiles/delete?profileKey="+qualityProfile.getKey(), HttpMethod.POST);
-//        resultModel = (Map)commonService.sendRequestToCommon(resultModel, resultModel.get("resultStatus"),"/qualityProfile/"+id, HttpMethod.DELETE);
-//        return resultModel.get("resultStatus");
-//    }
-
-
-    /////////////////////////////////////////////////////////////////////////
-
     /**
      * 품질 프로파일 목록 조회
      * @return Map
      */
-//    Map getQualityProfileList() {
-//        Map<String, Object> resultModel = new HashMap<>();
-//        resultModel = (Map)commonService.sendRequestToCommon(resultModel, Constants.RESULT_STATUS_SUCCESS, "/qualityProfile", HttpMethod.GET);
-//        List<QualityProfile> qualityProfileList = (List)resultModel.remove("resultList");
-//        resultModel.put("qualityProfiles", qualityProfileList);
-//        return resultModel;
-//    }
-//    commonService.sendForm(inspectionServerUrl,"api/qualitygates/copy", HttpMethod.POST,  resultModel, QualityGate.class);
-
-
     public List getQualityProfileList(String serviceInstancesId){
         return commonService.sendForm(commonApiUrl , "/qualityProfile/qualityProfileList?serviceInstancesId="+serviceInstancesId,HttpMethod.GET, null, List.class);
     }

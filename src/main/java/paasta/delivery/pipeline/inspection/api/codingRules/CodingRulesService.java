@@ -32,11 +32,9 @@ public class CodingRulesService {
     CodingRules getCodingRulesList(CodingRules codingRules) {
         CodingRules param = new CodingRules();
 
-        param = commonService.sendForm(inspectionServerUrl, "/api/rules/search", HttpMethod.POST , codingRules ,CodingRules.class);
+   /*     param = commonService.sendForm(inspectionServerUrl, "/api/rules/search", HttpMethod.POST , codingRules ,CodingRules.class);
 
-        param.getTotal();
-
-
+        param.getTotal();*/
 
         return commonService.sendForm(inspectionServerUrl, "/api/rules/search", HttpMethod.POST , codingRules ,CodingRules.class);
 
@@ -59,7 +57,18 @@ public class CodingRulesService {
         //        return (List)commonService.sendRequestToSonar(codingRules, "/api/rules/search?severities="+codingRules.getSeverities(), HttpMethod.GET);
     }
 
-
+    /**
+     *  CodingRules 프로파일 추가
+     *  rule_key : "squid:S2204",
+     *  profile_key : "java-sonar-way-15680",
+     *  severity : "INFO",
+     *  reset: "true"
+     *
+     *
+     *
+     * @param
+     * @return
+     */
     public CodingRules createCodingRulesProfile(CodingRules codingRules){
         CodingRules result = new CodingRules();
         commonService.sendForm(inspectionServerUrl, "/api/qualityprofiles/activate_rule", HttpMethod.POST, codingRules, null);

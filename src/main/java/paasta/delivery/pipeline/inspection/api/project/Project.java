@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class Project {
 
-    private Long id;
+    private long id;
 
     private String sonarName;
 
@@ -69,11 +69,11 @@ public class Project {
     private String gateDefaultYn;
     private String profileDefaultYn;
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

@@ -149,7 +149,7 @@ public class ProjectService {
             project.setLinked(true);
             project.setProjectKey(projectKey.getSonarKey());
             project.setProfileKey(profileParam.getKey());
-            project.setProjectId(project.getId().toString());
+            project.setProjectId(Long.toString(project.getId()));
 
             result = qualityProfileProjectLinked(project);
             result = qualityGateProjectLiked(project);
@@ -163,7 +163,7 @@ public class ProjectService {
 
 
         Project result = new Project();
-        project.setProjectId(project.getId().toString());
+        project.setProjectId(Long.toString(project.getId()));
         project.setGateId(project.getQualityGateId());
 
         if(project.getLinked().equals(true)){

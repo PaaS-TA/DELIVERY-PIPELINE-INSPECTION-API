@@ -69,6 +69,7 @@ public class ProjectServiceTest {
         testModel.setServiceInstancesId("09f060c6-ef13-464b-b0c5-d23f863c4960");
         when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/projectsList", HttpMethod.POST , testModel ,List.class)).thenReturn(resultModel);
 
+        projectService.getProjecstList(testModel);
     }
 
     @Test
@@ -81,6 +82,8 @@ public class ProjectServiceTest {
         testModel.setPipelineId(293);
 
         when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/getProject", HttpMethod.POST , testModel, List.class)).thenReturn(resultModel);
+
+        projectService.getProject(testModel);
     }
 
     @Test
@@ -145,6 +148,8 @@ public class ProjectServiceTest {
 
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/projects/delete" , HttpMethod.POST, testModel, Project.class)).thenReturn(resultModel);
         when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/projectsDelete", HttpMethod.DELETE, testModel, Project.class)).thenReturn(resultModel);
+
+        projectService.deleteProjects(testModel);
     }
 
     @Test
@@ -160,6 +165,8 @@ public class ProjectServiceTest {
         testModel.setProfileDefaultYn("N");
 
         when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/projectsUpdate", HttpMethod.PUT, testModel, Project.class)).thenReturn(resultModel);
+
+        projectService.updateProjects(testModel);
     }
 
     @Test
@@ -176,6 +183,7 @@ public class ProjectServiceTest {
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualitygates/select", HttpMethod.POST, testModel, Project.class)).thenReturn(resultModel);
         when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/qualityGateProjectLiked", HttpMethod.PUT, testModel, Project.class)).thenReturn(resultModel);
 
+        projectService.qualityGateProjectLiked(testModel);
     }
 
     @Test
@@ -192,6 +200,7 @@ public class ProjectServiceTest {
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualitygates/deselect", HttpMethod.POST, testModel, Project.class)).thenReturn(resultModel);
         when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/qualityGateProjectLiked", HttpMethod.PUT, testModel, Project.class)).thenReturn(resultModel);
 
+        projectService.qualityGateProjectLiked(testModel);
     }
 
     @Test
@@ -209,6 +218,7 @@ public class ProjectServiceTest {
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualityprofiles/add_project", HttpMethod.POST, testModel, Project.class)).thenReturn(resultModel);
         when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/qualityProfileProjectLiked", HttpMethod.PUT, testModel, Project.class)).thenReturn(resultModel);
 
+        projectService.qualityProfileProjectLinked(testModel);
     }
 
     @Test
@@ -225,6 +235,8 @@ public class ProjectServiceTest {
 
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualityprofiles/remove_project", HttpMethod.POST, testModel, Project.class)).thenReturn(resultModel);
         when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/qualityProfileProjectLiked", HttpMethod.PUT, testModel, Project.class)).thenReturn(resultModel);
+
+        projectService.qualityProfileProjectLinked(testModel);
     }
 
 
@@ -235,6 +247,8 @@ public class ProjectServiceTest {
 
         testModel.setProjectKey("09f060c6-ef13-464b-b0c5-d23f863c4960");
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/resources?resource="+testModel.getProjectKey(), HttpMethod.GET, null, List.class)).thenReturn(resultModel);
+
+        projectService.getProjectSonarKey(testModel);
     }
 
     @Test
@@ -245,6 +259,7 @@ public class ProjectServiceTest {
         testModel.setUuid("AV9S2Eokknh2OSbD9w8E");
 
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/components/app?uuid="+testModel.getUuid(), HttpMethod.GET, null, Project.class)).thenReturn(resultModel);
+        projectService.qualityManagementList(testModel);
     }
 
     @Test
@@ -258,6 +273,8 @@ public class ProjectServiceTest {
                 ",lines_to_cover,branch_coverage,uncovered_conditions,conditions_to_cover,new_line_coverage"+
                 ",tests,test_execution_time,test_errors,test_failures,skipped_tests,test_success_density,new_coverage,ncloc&includetrends=true";
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, coverageUrl, HttpMethod.GET, null, List.class)).thenReturn(resultModel);
+
+        projectService.qualityCoverageList(testModel);
     }
 
 
@@ -269,6 +286,8 @@ public class ProjectServiceTest {
         testModel.setMetrics("branch_coverage");
         testModel.setProjectKey("09f060c6-ef13-464b-b0c5-d23f863c4960");
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/resources?metrics="+testModel.getMetrics()+"&depth=-1&resource="+testModel.getProjectKey(), HttpMethod.GET, null, List.class)).thenReturn(resultModel);
+
+        projectService.testsSourceList(testModel);
     }
 
     @Test
@@ -279,11 +298,24 @@ public class ProjectServiceTest {
 
         testModel.setKey("09f060c6-ef13-464b-b0c5-d23f863c4960");
         testModel.setUuid("AV9S2Eokknh2OSbD9w8E");
+
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/resources?metrics=coverage_line_hits_data,covered_conditions_by_line&resource="+testModel.getKey(), HttpMethod.GET, null, List.class)).thenReturn(listModel);
+        testModel.setMsr(listModel);
+
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/sources/show?key="+testModel.getKey(), HttpMethod.GET, null, Project.class)).thenReturn(resultModel);
+        testModel.setSources(resultModel.getSources());
+
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/sources/scm?key="+testModel.getKey(), HttpMethod.GET, null, Project.class)).thenReturn(resultModel);
+        testModel.setScm(resultModel.getScm());
+
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/issues/search?additionalFields=_all&resolved=false&fileUuids="+testModel.getUuid(), HttpMethod.GET, null, Project.class)).thenReturn(resultModel);
+        testModel.setIssues(resultModel.getIssues());
+
+        projectService.testsSourceShow(testModel);
     }
+
+
+
 
     @Test
     public void getProjectKey_Valid_Return() throws Exception {
@@ -291,6 +323,8 @@ public class ProjectServiceTest {
         Project resultModel = new Project();
         testModel.setId(110);
         when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/projectKey", HttpMethod.POST, testModel, Project.class)).thenReturn(resultModel);
+
+        projectService.getProjectKey(testModel);
     }
 
 }

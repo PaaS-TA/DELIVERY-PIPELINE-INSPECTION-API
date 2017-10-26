@@ -8,10 +8,7 @@ import org.springframework.stereotype.Service;
 import paasta.delivery.pipeline.inspection.api.common.CommonService;
 import paasta.delivery.pipeline.inspection.api.common.Constants;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Dojun on 2017-06-19.
@@ -55,7 +52,7 @@ public class QualityProfileService {
         result.setServiceInstancesId(qualityProfile.getServiceInstancesId());
         result.setProfileDefaultYn(qualityProfile.getProfileDefaultYn());
         //sona에서 가져오 키값 셋팅해서 db로 저장
-        result = commonService.sendForm(commonApiUrl , "/qualityProfile/qualityProfileCopy",HttpMethod.PUT, result, QualityProfile.class);
+        result = commonService.sendForm(commonApiUrl , "/qualityProfile/qualityProfileCopy",HttpMethod.POST, result, QualityProfile.class);
 
         return result;
     }
@@ -66,8 +63,8 @@ public class QualityProfileService {
      */
     public QualityProfile deleteQualityProfile(QualityProfile qualityProfile){
         QualityProfile result = new QualityProfile();
-        commonService.sendForm(inspectionServerUrl , "/api/qualityprofiles/delete",HttpMethod.POST, qualityProfile, QualityProfile.class);
-        commonService.sendForm(commonApiUrl , "/qualityProfile/qualityProfileDelete",HttpMethod.POST, qualityProfile, String.class);
+        commonService.sendForm(inspectionServerUrl , "/api/qualityprofiles/delete",HttpMethod.POST, qualityProfile, null);
+        commonService.sendForm(commonApiUrl , "/qualityProfile/qualityProfileDelete",HttpMethod.DELETE, qualityProfile, String.class);
         commonService.sendForm(commonApiUrl,"/project/qualityProfileDelete",HttpMethod.PUT,qualityProfile,String.class);
         result.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
         return result;
@@ -78,8 +75,8 @@ public class QualityProfileService {
      */
     public QualityProfile updateQualityProfile(QualityProfile qualityProfile){
         QualityProfile result = new QualityProfile();
-        commonService.sendForm(inspectionServerUrl , "/api/qualityprofiles/rename",HttpMethod.POST, qualityProfile, QualityProfile.class);
-        result = commonService.sendForm(commonApiUrl , "/qualityProfile/qualityProfileUpdate",HttpMethod.POST, qualityProfile, QualityProfile.class);
+        commonService.sendForm(inspectionServerUrl , "/api/qualityprofiles/rename",HttpMethod.POST, qualityProfile, null);
+        result = commonService.sendForm(commonApiUrl , "/qualityProfile/qualityProfileUpdate",HttpMethod.PUT, qualityProfile, QualityProfile.class);
         return result;
     }
 
@@ -97,17 +94,14 @@ public class QualityProfileService {
      * @return qualityProfile
      */
     QualityProfile createQualityProfile(QualityProfile qualityProfile) {
-/*
-        qualityProfile = (QualityProfile) commonService.sendRequestToSonar(qualityProfile, "/api/qualityprofiles/create", HttpMethod.POST);
-        qualityProfile = (QualityProfile) commonService.sendRequestToCommon(qualityProfile, qualityProfile.getResultStatus(), "/qualityProfile", HttpMethod.POST);
-*/
+
         JsonNode result = commonService.sendForm(inspectionServerUrl, "/api/qualityprofiles/create", HttpMethod.POST, qualityProfile, JsonNode.class);
+
         qualityProfile.setName(result.get("profile").get("name").asText());
         qualityProfile.setKey(result.get("profile").get("key").asText());
         qualityProfile.setLanguage(result.get("profile").get("language").asText());
         qualityProfile.setLanguageName(result.get("profile").get("languageName").asText());
-        qualityProfile = commonService.sendForm(commonApiUrl, "/qualityProfile/qualityProfilCreate",HttpMethod.PUT, qualityProfile, QualityProfile.class);
-
+        qualityProfile = commonService.sendForm(commonApiUrl, "/qualityProfile/qualityProfilCreate",HttpMethod.POST, qualityProfile, QualityProfile.class);
 
         return qualityProfile;
     }
@@ -118,13 +112,13 @@ public class QualityProfileService {
      * @param
      * @return
      */
-    public QualityProfile defaultQualityProfile(QualityProfile qualityProfile){
+/*    public QualityProfile defaultQualityProfile(QualityProfile qualityProfile){
 
         commonService.sendForm(inspectionServerUrl , "/api/qualityprofiles/set_default",HttpMethod.POST, qualityProfile, QualityProfile.class);
         commonService.sendForm(commonApiUrl,"/qualityProfile/qualityProfilDefaultSetting",HttpMethod.PUT,qualityProfile,String.class);
         qualityProfile.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
         return qualityProfile;
-    }
+    }*/
 
     /**
      *  QualityProfile codingRules

@@ -134,10 +134,10 @@ public class QualityProfileController {
      * @param
      * @return
      */
-    @RequestMapping(value = "/qualityProfileDefault",method = RequestMethod.POST)
+/*    @RequestMapping(value = "/qualityProfileDefault",method = RequestMethod.POST)
     public QualityProfile defaultQualityProfile(@RequestBody QualityProfile qualityProfile){
         return qualityProfileService.defaultQualityProfile(qualityProfile);
-    }
+    }*/
 
     /**
      *  QualityProfile codingRules

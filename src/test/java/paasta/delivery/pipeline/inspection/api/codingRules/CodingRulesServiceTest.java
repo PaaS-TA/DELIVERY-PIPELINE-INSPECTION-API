@@ -121,7 +121,7 @@ public class CodingRulesServiceTest {
         testModel.setSeverity("INFO");
         testModel.setReset(true);
 //        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualityprofiles/activate_rule", HttpMethod.POST, testModel, null)).thenReturn(result);
-        when( codingRulesService.createCodingRulesProfile(testModel)).thenReturn(resultModel);
+        when(codingRulesService.createCodingRulesProfile(testModel)).thenReturn(resultModel);
 //        codingRulesService.createCodingRulesProfile(testModel);
 
     }

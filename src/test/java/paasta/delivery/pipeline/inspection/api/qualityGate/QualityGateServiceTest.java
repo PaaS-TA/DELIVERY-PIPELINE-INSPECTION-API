@@ -1,5 +1,6 @@
 package paasta.delivery.pipeline.inspection.api.qualityGate;
 
+import javafx.beans.binding.When;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 /**
@@ -175,28 +177,138 @@ public class QualityGateServiceTest {
         testModel.setId(33);
         testModel.setName("copy-gate");
         testModel.setServiceInstancesId("09f060c6-ef13-464b-b0c5-d23f863c4960");
-        testModel.setDefaultYn("Y");
+        testModel.setGateDefaultYn("Y");
 
         mapModel.put("id",Long.toString(testModel.getId()));
         mapModel.put("name",testModel.getName());
-        mapModel.put("serviceInstancesId",testModel.getServiceInstancesId());
-        mapModel.put("gateDefaultYn", testModel.getGateDefaultYn());
 
-        when(commonService.sendForm(Constants.TARGET_INSPECTION_API,"/api/qualitygates/copy",HttpMethod.POST,mapModel, QualityGate.class));
 
-        resultModel = commonService.sendForm(Constants.TARGET_INSPECTION_API,"/api/qualitygates/copy",HttpMethod.POST,mapModel, QualityGate.class);
-
+        when(commonService.sendForm(Constants.TARGET_INSPECTION_API,"/api/qualitygates/copy",HttpMethod.POST,mapModel, QualityGate.class)).thenReturn(resultModel);
         assertThat(resultModel).isNotNull();
 
+//        resultModel = commonService.sendForm(Constants.TARGET_INSPECTION_API,"/api/qualitygates/copy",HttpMethod.POST,mapModel, QualityGate.class);
+
+
+        mapModel.put("serviceInstancesId",testModel.getServiceInstancesId());
+        mapModel.put("gateDefaultYn", testModel.getGateDefaultYn());
         resultModel.setServiceInstancesId(mapModel.get("serviceInstancesId"));
         resultModel.setGateDefaultYn(mapModel.get("gateDefaultYn"));
 
         when(commonService.sendForm(Constants.TARGET_COMMON_API, "/qualityGate/qualityGateCopy", HttpMethod.POST, resultModel, QualityGate.class)).thenReturn(resultModel);
+        assertThat(resultModel).isNotNull();
+//        qualityGateService.copyQualityGate(resultModel);
 
+//        assertEquals(Constants.RESULT_STATUS_SUCCESS, resultModel.getResultStatus());
     }
 
 
+    /**
+     *  QualityGate 생성
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void createQualityGate_Valid_Return() throws Exception{
+
+        QualityGate testModel = new QualityGate();
+        QualityGate resultModel = new QualityGate();
+
+        testModel.setName("create-gate");
+        testModel.setServiceInstancesId("09f060c6-ef13-464b-b0c5-d23f863c4960");
+        testModel.setGateDefaultYn("N");
+
+        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualitygates/create", HttpMethod.POST,testModel, QualityGate.class)).thenReturn(resultModel);
+        assertThat(resultModel).isNotNull();
+
+        resultModel.setServiceInstancesId(testModel.getServiceInstancesId());
+        resultModel.setGateDefaultYn(testModel.getGateDefaultYn());
+        when(commonService.sendForm(Constants.TARGET_COMMON_API, "/qualityGate/qualityGateCreate", HttpMethod.POST, resultModel,QualityGate.class)).thenReturn(resultModel);
+
+    }
+
+    /**
+     *  QualityGate 수정
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void updateQualityGate_Valid_Return() throws Exception{
+
+        QualityGate testModel = new QualityGate();
+        QualityGate resultModel = new QualityGate();
+        Map<String, String> mapModel = new HashMap<>();
+
+        testModel.setId(33);
+        testModel.setName("update-gate");
+        testModel.setServiceInstancesId("09f060c6-ef13-464b-b0c5-d23f863c4960");
+        testModel.setGateDefaultYn("N");
+
+        mapModel.put("id",Long.toString(testModel.getId()));
+        mapModel.put("name",testModel.getName());
+        mapModel.put("serviceInstancesId", testModel.getServiceInstancesId());
+        mapModel.put("gateDefaultYn",testModel.getGateDefaultYn());
+
+        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualitygates/rename", HttpMethod.POST, mapModel,QualityGate.class)).thenReturn(resultModel);
+
+        when(commonService.sendForm(Constants.TARGET_COMMON_API, "/qualityGate/qualityGateUpdate", HttpMethod.PUT, mapModel,QualityGate.class)).thenReturn(resultModel);
+    }
+
+    /**
+     *  QualityGate 삭제
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void deleteQualityGate_Valid_Return() throws Exception{
+
+        QualityGate testModel = new QualityGate();
+
+        Map<String, String> mapModel = new HashMap<>();
+        String result = "";
+
+        testModel.setId(33);
+        testModel.setServiceInstancesId("09f060c6-ef13-464b-b0c5-d23f863c4960");
+
+        mapModel.put("id",Long.toString(testModel.getId()));
+        mapModel.put("serviceInstancesId", testModel.getServiceInstancesId());
 
 
+
+        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualitygates/destroy", HttpMethod.POST,mapModel, null)).thenReturn(null);
+        when(commonService.sendForm(Constants.TARGET_COMMON_API, "/qualityGate/qualityGateDelete", HttpMethod.DELETE, mapModel , null)).thenReturn(null);
+        when(commonService.sendForm(Constants.TARGET_COMMON_API,"/project/qualityGateDelete",HttpMethod.PUT,mapModel,String.class)).thenReturn(result);
+
+        QualityGate resultModel = qualityGateService.deleteQualityGate(testModel);
+        assertThat(resultModel).isNotNull();
+        assertEquals(Constants.RESULT_STATUS_SUCCESS, resultModel.getResultStatus());
+
+    }
+
+    /**
+     *  QualityGate 조건 domain
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void getQualityGateDomains_Valid_Return() throws Exception{
+
+        QualityGate resultModel = new QualityGate();
+        when(qualityGateService.getQualityGateDomains()).thenReturn(resultModel);
+    }
+
+    /**
+     * 품질 게이트 1건 검색
+     * @param
+     * @return
+     */
+    @Test
+    public void getiQualityGate_Valid_Return() throws Exception{
+
+        QualityGate resultModel = new QualityGate();
+
+        long id = 33;
+
+        when(qualityGateService.getiQualityGate(id)).thenReturn(resultModel);
+    }
 
 }

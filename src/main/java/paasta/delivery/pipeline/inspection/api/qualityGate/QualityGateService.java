@@ -220,6 +220,7 @@ public class QualityGateService {
      * @param
      * @return
      */
+    /*
     public QualityGate qualityGateDefaultSetting(QualityGate qualityGate){
         Map<String, String> resultModel = new HashMap<>();
         resultModel.put("id", Long.toString(qualityGate.getId()));
@@ -228,6 +229,8 @@ public class QualityGateService {
         qualityGate.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
         return qualityGate;
     }
+    */
+
 
     /**
      * 품질 게이트 조건 domain

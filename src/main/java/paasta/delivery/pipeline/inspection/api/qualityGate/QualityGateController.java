@@ -181,9 +181,9 @@ public class QualityGateController {
      *
      * @return created qualityGate
      */
-    @RequestMapping(value = "/qualityGateDefaultSetting", method = RequestMethod.POST)
-    public QualityGate qualityGateDefaultSetting(@RequestBody QualityGate qualityGate){
-        return qualityGateService.qualityGateDefaultSetting(qualityGate);
-    }
+//    @RequestMapping(value = "/qualityGateDefaultSetting", method = RequestMethod.POST)
+//    public QualityGate qualityGateDefaultSetting(@RequestBody QualityGate qualityGate){
+//        return qualityGateService.qualityGateDefaultSetting(qualityGate);
+//    }
 
 }

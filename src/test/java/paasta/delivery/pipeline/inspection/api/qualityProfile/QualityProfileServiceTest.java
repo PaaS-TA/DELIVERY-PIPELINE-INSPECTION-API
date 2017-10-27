@@ -98,6 +98,7 @@ public class QualityProfileServiceTest {
 
         when(commonService.sendForm(Constants.TARGET_COMMON_API , "/qualityProfile/qualityProfileCopy",HttpMethod.POST, resultModel, QualityProfile.class)).thenReturn(resultModel);
 
+//        qualityProfileService.qualityProfileCopy(testModel);
     }
 
     /**
@@ -149,6 +150,8 @@ public class QualityProfileServiceTest {
         assertThat(resultModel).isNotNull();
         assertEquals(Constants.RESULT_STATUS_SUCCESS, resultModel.getResultStatus());
 
+        qualityProfileService.deleteQualityProfile(testModel);
+
     }
 
 
@@ -175,7 +178,7 @@ public class QualityProfileServiceTest {
 
 //        assertThat(result).isNotNull();
 //        assertEquals(Constants.RESULT_STATUS_SUCCESS, result.getResultStatus());
-
+        qualityProfileService.updateQualityProfile(testModel);
     }
 
     /**
@@ -188,7 +191,10 @@ public class QualityProfileServiceTest {
 
         QualityProfile resultModel = new QualityProfile();
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API , "/api/languages/list",HttpMethod.GET, null, QualityProfile.class)).thenReturn(resultModel);
+
+        qualityProfileService.qualityProfileLangList();
     }
+
 
     /**
      *  QualityProfile codingRules 개수
@@ -206,6 +212,7 @@ public class QualityProfileServiceTest {
 
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API,"/api/profiles?language="+testModel.getLanguage()+"&name="+testModel.getName(),HttpMethod.GET,null,List.class)).thenReturn(resultList);
 
+        qualityProfileService.getCodingRulesList(testModel);
     }
 
     /**
@@ -221,5 +228,6 @@ public class QualityProfileServiceTest {
 
         when(commonService.sendForm(Constants.TARGET_COMMON_API,"/qualityProfile/getQualityProfile?id="+id,HttpMethod.GET,null,QualityProfile.class)).thenReturn(resultModel);
 
+        qualityProfileService.getQualityProfile(id);
     }
 }

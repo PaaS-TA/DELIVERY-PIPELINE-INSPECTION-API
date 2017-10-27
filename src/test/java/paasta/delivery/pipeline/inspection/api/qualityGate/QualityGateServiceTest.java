@@ -71,6 +71,8 @@ public class QualityGateServiceTest {
         testServiceInstancesId = "09f060c6-ef13-464b-b0c5-d23f863c4960";
 
         when(qualityGateService.getQualityGateList(testServiceInstancesId)).thenReturn(listResult);
+
+        qualityGateService.getQualityGateList(testServiceInstancesId);
     }
 
     /**
@@ -83,6 +85,8 @@ public class QualityGateServiceTest {
         List listResult = new ArrayList<>();
 
         when(qualityGateService.getMetricsList()).thenReturn(listResult);
+
+        qualityGateService.getMetricsList();
     }
 
     /**
@@ -95,6 +99,8 @@ public class QualityGateServiceTest {
         QualityGate resultModel = new QualityGate();
         long id = 1;
         when(qualityGateService.getQualityGateCondition(id)).thenReturn(resultModel);
+
+        qualityGateService.getQualityGateCondition(id);
     }
 
     /**
@@ -114,6 +120,8 @@ public class QualityGateServiceTest {
         testModel.setOp("EQ");
 
         when(qualityGateService.createQualityGateCond(testModel)).thenReturn(resultModel);
+
+        qualityGateService.createQualityGateCond(testModel);
     }
 
     /**
@@ -159,6 +167,8 @@ public class QualityGateServiceTest {
         String id = "34";
         when(qualityGateService.deleteQualityGateCond(id)).thenReturn(resultModel);
 
+        qualityGateService.deleteQualityGateCond(id);
+
     }
 
     /**
@@ -199,6 +209,8 @@ public class QualityGateServiceTest {
 //        qualityGateService.copyQualityGate(resultModel);
 
 //        assertEquals(Constants.RESULT_STATUS_SUCCESS, resultModel.getResultStatus());
+
+//        qualityGateService.copyQualityGate(testModel);
     }
 
 
@@ -224,6 +236,7 @@ public class QualityGateServiceTest {
         resultModel.setGateDefaultYn(testModel.getGateDefaultYn());
         when(commonService.sendForm(Constants.TARGET_COMMON_API, "/qualityGate/qualityGateCreate", HttpMethod.POST, resultModel,QualityGate.class)).thenReturn(resultModel);
 
+//        qualityGateService.createQualityGate(testModel);
     }
 
     /**
@@ -251,6 +264,8 @@ public class QualityGateServiceTest {
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualitygates/rename", HttpMethod.POST, mapModel,QualityGate.class)).thenReturn(resultModel);
 
         when(commonService.sendForm(Constants.TARGET_COMMON_API, "/qualityGate/qualityGateUpdate", HttpMethod.PUT, mapModel,QualityGate.class)).thenReturn(resultModel);
+
+        qualityGateService.updateQualityGate(testModel);
     }
 
     /**
@@ -282,6 +297,7 @@ public class QualityGateServiceTest {
         assertThat(resultModel).isNotNull();
         assertEquals(Constants.RESULT_STATUS_SUCCESS, resultModel.getResultStatus());
 
+        qualityGateService.deleteQualityGate(testModel);
     }
 
     /**
@@ -294,6 +310,8 @@ public class QualityGateServiceTest {
 
         QualityGate resultModel = new QualityGate();
         when(qualityGateService.getQualityGateDomains()).thenReturn(resultModel);
+
+        qualityGateService.getQualityGateDomains();
     }
 
     /**
@@ -309,6 +327,8 @@ public class QualityGateServiceTest {
         long id = 33;
 
         when(qualityGateService.getiQualityGate(id)).thenReturn(resultModel);
+
+        qualityGateService.getiQualityGate(id);
     }
 
 }

@@ -34,6 +34,27 @@ import static org.mockito.Mockito.when;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ProjectServiceTest {
 
+    private static final long ID = 110;
+    private static final String SERVICE_INSTANCES_ID = "09f060c6-ef13-464b-b0c5-d23f863c4960";
+    private static final int PIPELINE_ID = 293;
+    private static final String KEY = "116ed8ded2e6927caa0dbb975b8ea87a";
+    private static final String SONAR_KEY = "116ed8ded2e6927caa0dbb975b8ea87a";
+    private static final String SONAR_NAME = "116ed8ded2e6927caa0dbb975b8ea90e_20171026071922";
+    private static final String PROJECT_NAME = "testProject";
+    private static final String QUALITY_PROFILE_ID = "10";
+    private static final String QUALITY_GATE_ID = "1";
+    private static final String NAME = "testProject";
+
+    private static final String PROFILE_KEY = "java-quality-copy-55679";
+    private static final String PROJECT_KEY = "84445a412f5a419fbe14615c8aa5077d";
+    private static final String GATE_DEFAULT_YN = "N";
+    private static final String PROFILE_DEFAULT_YN = "N";
+    private static final String PROJECT_ID = "110";
+    private static final String GATE_ID = "10";
+
+
+
+
     @InjectMocks
     private ProjectService projectService;
     private QualityProfileService qualityProfileService;
@@ -50,6 +71,8 @@ public class ProjectServiceTest {
      */
     @Before
     public void setUp() throws Exception {
+
+
     }
 
 
@@ -64,9 +87,11 @@ public class ProjectServiceTest {
 
     @Test
     public void getProjectList_Valid_Return() throws Exception {
-        Project testModel = new Project();
+
         List resultModel = new ArrayList();
-        testModel.setServiceInstancesId("09f060c6-ef13-464b-b0c5-d23f863c4960");
+        Project testModel = new Project();
+        testModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
+
         when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/projectsList", HttpMethod.POST , testModel ,List.class)).thenReturn(resultModel);
 
         projectService.getProjecstList(testModel);
@@ -78,8 +103,8 @@ public class ProjectServiceTest {
         Project testModel = new Project();
         List resultModel = new ArrayList();
 
-        testModel.setServiceInstancesId("09f060c6-ef13-464b-b0c5-d23f863c4960");
-        testModel.setPipelineId(293);
+        testModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
+        testModel.setPipelineId(PIPELINE_ID);
 
         when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/getProject", HttpMethod.POST , testModel, List.class)).thenReturn(resultModel);
 
@@ -95,16 +120,15 @@ public class ProjectServiceTest {
         QualityProfile profileTest = new QualityProfile();
         QualityGate gateTest = new QualityGate();
 
+        testModel.setKey(KEY);
+        testModel.setSonarKey(SONAR_KEY);
+        testModel.setSonarName(SONAR_NAME);
+        testModel.setProjectName(PROJECT_NAME);
+        testModel.setQualityProfileId(QUALITY_PROFILE_ID);
+        testModel.setQualityGateId(QUALITY_GATE_ID);
 
-        testModel.setKey("116ed8ded2e6927caa0dbb975b8ea87a");
-        testModel.setSonarKey("116ed8ded2e6927caa0dbb975b8ea87a");
-        testModel.setSonarName("116ed8ded2e6927caa0dbb975b8ea90e_20171026071922");
-        testModel.setProjectName("testProject");
-        testModel.setQualityProfileId("10");
-        testModel.setQualityGateId("1");
 
-
-        testModel.setName("testProject");
+        testModel.setName(NAME);
 
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/projects/create" , HttpMethod.POST, testModel, Project.class)).thenReturn(resultModel);
 
@@ -144,7 +168,7 @@ public class ProjectServiceTest {
         Project resultModel = new Project();
 
         testModel.setId(110);
-        testModel.setKey("116ed8ded2e6927caa0dbb975b8ea87a");
+        testModel.setKey(KEY);
 
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/projects/delete" , HttpMethod.POST, testModel, Project.class)).thenReturn(resultModel);
         when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/projectsDelete", HttpMethod.DELETE, testModel, Project.class)).thenReturn(resultModel);
@@ -158,11 +182,11 @@ public class ProjectServiceTest {
         Project testModel = new Project();
         Project resultModel = new Project();
 
-        testModel.setId(110);
-        testModel.setProfileKey("java-quality-copy-55679");
-        testModel.setProjectKey("84445a412f5a419fbe14615c8aa5077d");
-        testModel.setGateDefaultYn("N");
-        testModel.setProfileDefaultYn("N");
+        testModel.setId(ID);
+        testModel.setProfileKey(PROFILE_KEY);
+        testModel.setProjectKey(PROJECT_KEY);
+        testModel.setGateDefaultYn(GATE_DEFAULT_YN);
+        testModel.setProfileDefaultYn(PROFILE_DEFAULT_YN);
 
         when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/projectsUpdate", HttpMethod.PUT, testModel, Project.class)).thenReturn(resultModel);
 
@@ -174,10 +198,10 @@ public class ProjectServiceTest {
         Project testModel = new Project();
         Project resultModel = new Project();
 
-        testModel.setId(110);
-        testModel.setProjectId("110");
-        testModel.setGateId("10");
-        testModel.setQualityGateId("10");
+        testModel.setId(ID);
+        testModel.setProjectId(PROJECT_ID);
+        testModel.setGateId(GATE_ID);
+        testModel.setQualityGateId(QUALITY_GATE_ID);
         testModel.setLinked(true);
 
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualitygates/select", HttpMethod.POST, testModel, Project.class)).thenReturn(resultModel);
@@ -191,10 +215,10 @@ public class ProjectServiceTest {
         Project testModel = new Project();
         Project resultModel = new Project();
 
-        testModel.setId(110);
-        testModel.setProjectId("110");
-        testModel.setGateId("10");
-        testModel.setQualityGateId("10");
+        testModel.setId(ID);
+        testModel.setProjectId(PROJECT_ID);
+        testModel.setGateId(GATE_ID);
+        testModel.setQualityGateId(QUALITY_GATE_ID);
         testModel.setLinked(false);
 
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualitygates/deselect", HttpMethod.POST, testModel, Project.class)).thenReturn(resultModel);
@@ -208,11 +232,11 @@ public class ProjectServiceTest {
         Project testModel = new Project();
         Project resultModel = new Project();
 
-        testModel.setQualityProfileId("104");
-        testModel.setProjectKey("09f060c6-ef13-464b-b0c5-d23f863c4960");
-        testModel.setProfileKey("copy-egov-profile");
-        testModel.setSonarKey("09f060c6-ef13-464b-b0c5-d23f863c4960");
-        testModel.setId(110);
+        testModel.setQualityProfileId(QUALITY_GATE_ID);
+        testModel.setProjectKey(PROJECT_KEY);
+        testModel.setProfileKey(PROFILE_KEY);
+        testModel.setSonarKey(SONAR_KEY);
+        testModel.setId(ID);
         testModel.setLinked(true);
 
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualityprofiles/add_project", HttpMethod.POST, testModel, Project.class)).thenReturn(resultModel);
@@ -226,11 +250,11 @@ public class ProjectServiceTest {
         Project testModel = new Project();
         Project resultModel = new Project();
 
-        testModel.setQualityProfileId("104");
-        testModel.setProjectKey("09f060c6-ef13-464b-b0c5-d23f863c4960");
-        testModel.setProfileKey("copy-egov-profile");
-        testModel.setSonarKey("09f060c6-ef13-464b-b0c5-d23f863c4960");
-        testModel.setId(110);
+        testModel.setQualityProfileId(QUALITY_GATE_ID);
+        testModel.setProjectKey(PROJECT_KEY);
+        testModel.setProfileKey(PROFILE_KEY);
+        testModel.setSonarKey(SONAR_KEY);
+        testModel.setId(ID);
         testModel.setLinked(false);
 
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualityprofiles/remove_project", HttpMethod.POST, testModel, Project.class)).thenReturn(resultModel);
@@ -245,7 +269,7 @@ public class ProjectServiceTest {
         Project testModel = new Project();
         List resultModel = new ArrayList();
 
-        testModel.setProjectKey("09f060c6-ef13-464b-b0c5-d23f863c4960");
+        testModel.setProjectKey(PROJECT_KEY);
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/resources?resource="+testModel.getProjectKey(), HttpMethod.GET, null, List.class)).thenReturn(resultModel);
 
         projectService.getProjectSonarKey(testModel);
@@ -296,7 +320,7 @@ public class ProjectServiceTest {
         Project resultModel = new Project();
         List listModel = new ArrayList();
 
-        testModel.setKey("09f060c6-ef13-464b-b0c5-d23f863c4960");
+        testModel.setKey(KEY);
         testModel.setUuid("AV9S2Eokknh2OSbD9w8E");
 
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/resources?metrics=coverage_line_hits_data,covered_conditions_by_line&resource="+testModel.getKey(), HttpMethod.GET, null, List.class)).thenReturn(listModel);
@@ -321,7 +345,7 @@ public class ProjectServiceTest {
     public void getProjectKey_Valid_Return() throws Exception {
         Project testModel = new Project();
         Project resultModel = new Project();
-        testModel.setId(110);
+        testModel.setId(ID);
         when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/projectKey", HttpMethod.POST, testModel, Project.class)).thenReturn(resultModel);
 
         projectService.getProjectKey(testModel);

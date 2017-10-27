@@ -73,7 +73,7 @@ public class CodingRulesServiceTest {
 
 
         when(codingRulesService.getCodingRulesList(testModel)).thenReturn(result);
-//        assertThat(result).isNotNull();
+        codingRulesService.getCodingRulesList(testModel);
     }
 
     /**
@@ -86,6 +86,8 @@ public class CodingRulesServiceTest {
 
         Map <String, Object> mapResult = new HashMap<>();
         when(codingRulesService.getCodingRulesCondition()).thenReturn(mapResult);
+
+        codingRulesService.getCodingRulesCondition();
     }
 
     /**
@@ -103,6 +105,8 @@ public class CodingRulesServiceTest {
         testModel.setActives("false");
 
         when(codingRulesService.getCodingRulesDeteil(testModel)).thenReturn(mapReturn);
+
+        codingRulesService.getCodingRulesDeteil(testModel);
     }
 
     /**
@@ -123,7 +127,7 @@ public class CodingRulesServiceTest {
 //        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualityprofiles/activate_rule", HttpMethod.POST, testModel, null)).thenReturn(result);
         when(codingRulesService.createCodingRulesProfile(testModel)).thenReturn(resultModel);
 //        codingRulesService.createCodingRulesProfile(testModel);
-
+        codingRulesService.createCodingRulesProfile(testModel);
     }
 
     /**
@@ -140,6 +144,8 @@ public class CodingRulesServiceTest {
         testModel.setProfile_key("java-egov-qualityprofile-79840");
 
         when(codingRulesService.deleteCodingRulesProfile(testModel)).thenReturn(resultModel);
+
+        codingRulesService.deleteCodingRulesProfile(testModel);
     }
 
     /**
@@ -158,6 +164,8 @@ public class CodingRulesServiceTest {
         testModel.setReset(true);
 
         when(codingRulesService.updateCodingRulesProfile(testModel)).thenReturn(resultModel);
+
+        codingRulesService.updateCodingRulesProfile(testModel);
 
     }
 

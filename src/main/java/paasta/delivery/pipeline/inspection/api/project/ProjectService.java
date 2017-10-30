@@ -64,7 +64,7 @@ public class ProjectService {
         //프로젝트 키 셋팅
         project.setKey(UUID.randomUUID().toString().replace("-", ""));
         project.setSonarKey(project.getKey());
-        SimpleDateFormat formatter = new SimpleDateFormat ( "yyyyMMddkkmmss" );
+        SimpleDateFormat formatter = new SimpleDateFormat ( "yyyyMMddkkmmss" ,Locale.KOREAN);
 
         Date currentTime = new Date();
         String dTime = formatter.format ( currentTime );
@@ -146,13 +146,13 @@ public class ProjectService {
         gateParam = qualityGateService.getiQualityGate(gateId);
 
 
-            project.setLinked(true);
-            project.setProjectKey(projectKey.getSonarKey());
-            project.setProfileKey(profileParam.getKey());
-            project.setProjectId(Long.toString(project.getId()));
+        project.setLinked(true);
+        project.setProjectKey(projectKey.getSonarKey());
+        project.setProfileKey(profileParam.getKey());
+        project.setProjectId(Long.toString(project.getId()));
 
-            result = qualityProfileProjectLinked(project);
-            result = qualityGateProjectLiked(project);
+        result = qualityProfileProjectLinked(project);
+        result = qualityGateProjectLiked(project);
 
 
         return result;

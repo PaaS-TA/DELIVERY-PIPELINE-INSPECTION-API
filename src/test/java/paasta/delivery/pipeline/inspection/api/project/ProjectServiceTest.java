@@ -34,30 +34,53 @@ import static org.mockito.Mockito.when;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ProjectServiceTest {
 
-    private static final long ID = 110;
-    private static final String SERVICE_INSTANCES_ID = "09f060c6-ef13-464b-b0c5-d23f863c4960";
-    private static final int PIPELINE_ID = 293;
-    private static final String KEY = "116ed8ded2e6927caa0dbb975b8ea87a";
-    private static final String SONAR_KEY = "116ed8ded2e6927caa0dbb975b8ea87a";
-    private static final String SONAR_NAME = "116ed8ded2e6927caa0dbb975b8ea90e_20171026071922";
-    private static final String PROJECT_NAME = "testProject";
+    private static final long ID = 1L;
+    private static final String SONAR_NAME = "test-sonarName";
+    private static final String NAME = "test-project-name";
+    private static final String KEY = "test-key";
+    private static final String SONAR_KEY = "test-sonarKey";
+    private static final String QUALIFIER = "test-qualifier";
     private static final String QUALITY_PROFILE_ID = "10";
     private static final String QUALITY_GATE_ID = "1";
-    private static final String NAME = "testProject";
-
-    private static final String PROFILE_KEY = "java-quality-copy-55679";
-    private static final String PROJECT_KEY = "84445a412f5a419fbe14615c8aa5077d";
+    private static final String SERVICE_INSTANCES_ID = "test-serviceInstances-id";
+    private static final int PIPELINE_ID = 293;
+    private static final long JOB_ID = 2L;
+    private static final String BRANCH = "test-branch";
+    private static final String PROJECT_NAME = "testProject";
+    private static final String PROFILE_KEY = "test-profile-key";
+    private static final String PROJECT_KEY = "test-key";
     private static final String GATE_DEFAULT_YN = "N";
     private static final String PROFILE_DEFAULT_YN = "N";
-    private static final String PROJECT_ID = "110";
-    private static final String GATE_ID = "10";
+    private static final String PROJECT_ID = "1";
+    private static final String GATE_ID = "1";
+
+    private static final String RESOURCE = "test-resource";
+    private static final String METRICS = "test-metrics";
+    private static final String BASE_COMPONENT_KEY = "test-basecomponentkey";
+
+    private static final long PROFILEID = 1L;
+    private static final long GATEID = 1L;
+
+    private static final String QUALITY_PROFILE_NAME = "test-qualityProfileName";
+    private static final String QUALITY_GATE_NAME = "test-qualityGateeName";
 
 
+    private static Project testModel = null;
+    private static Project resultModel = null;
+    private static QualityProfile profileModel = null;
+    private static QualityGate gateModel = null;
 
+
+    private static List<Map<String, Object>> testResultList = null;
+    private static List<Map<String, Object>> testList = null;
 
     @InjectMocks
     private ProjectService projectService;
+
+    @Mock
     private QualityProfileService qualityProfileService;
+
+    @Mock
     private QualityGateService qualityGateService;
 
     @Mock
@@ -71,7 +94,93 @@ public class ProjectServiceTest {
      */
     @Before
     public void setUp() throws Exception {
+        Map<String, Object> testResultMap = new HashMap<>();
 
+        testList = new ArrayList();
+        Map<String, Object> testMap = new HashMap<>();
+
+
+
+        testModel = new Project();
+
+        testModel.setId(ID);
+        testModel.setSonarName(SONAR_NAME);
+        testModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
+        testModel.setName(NAME);
+        testModel.setKey(KEY);
+        testModel.setSonarKey(SONAR_KEY);
+        testModel.setQualifier(QUALIFIER);
+        testModel.setQualityProfileId(QUALITY_PROFILE_ID);
+        testModel.setQualityGateId(QUALITY_GATE_ID);
+        testModel.setProfileKey(PROFILE_KEY);
+        testModel.setProjectKey(PROJECT_KEY);
+        testModel.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
+        testModel.setProjectId(PROJECT_ID);
+        testModel.setJobId(JOB_ID);
+        testModel.setBranch(BRANCH);
+        testModel.setGateDefaultYn(GATE_DEFAULT_YN);
+        testModel.setProfileDefaultYn(PROFILE_DEFAULT_YN);
+        testModel.setGateId(GATE_ID);
+        testModel.setProjectId(PROJECT_ID);
+
+
+
+        resultModel = new Project();
+
+        testMap.put("scm","test-Scm");
+        testMap.put("issues","test-issues");
+        testMap.put("components","test-Components");
+        testMap.put("baseComponent","test-baseComponent");
+        testMap.put("sources","test-sources");
+        testList.add(testMap);
+
+        resultModel.setId(ID);
+        resultModel.setMetrics(METRICS);
+        resultModel.setResource(RESOURCE);
+        resultModel.setBaseComponent(testList);
+        resultModel.setBaseComponentKey(BASE_COMPONENT_KEY);
+        resultModel.setComponents(testList);
+        resultModel.setSources(testList);
+        resultModel.setScm(testList);
+        resultModel.setIssues(testList);
+
+        resultModel.setProjectName(PROJECT_NAME);
+        resultModel.setSonarName(SONAR_NAME);
+        resultModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
+        resultModel.setSonarKey(SONAR_KEY);
+        resultModel.setQualityProfileId(QUALITY_PROFILE_ID);
+        resultModel.setQualityGateId(QUALITY_GATE_ID);
+        resultModel.setJobId(JOB_ID);
+
+
+
+
+        gateModel = new QualityGate();
+        gateModel.setName(QUALITY_GATE_NAME);
+        gateModel.setGateDefaultYn(GATE_DEFAULT_YN);
+        gateModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
+
+
+        profileModel = new QualityProfile();
+        profileModel.setName(QUALITY_PROFILE_NAME);
+        profileModel.setSonarKey(SONAR_KEY);
+        profileModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
+        profileModel.setProfileDefaultYn(PROFILE_DEFAULT_YN);
+
+
+
+        testResultMap.put("id",ID);
+        testResultMap.put("projectName",PROJECT_NAME);
+        testResultMap.put("sonarName",SONAR_NAME);
+        testResultMap.put("serviceInstancesId",SERVICE_INSTANCES_ID);
+        testResultMap.put("sonarKey", SONAR_KEY);
+        testResultMap.put("qualityProfileId",QUALITY_PROFILE_ID);
+        testResultMap.put("qualityGateId",QUALITY_GATE_ID);
+        testResultMap.put("jobId",JOB_ID);
+
+        testResultList = new ArrayList<>();
+
+        testResultList.add(testResultMap);
 
     }
 
@@ -87,76 +196,35 @@ public class ProjectServiceTest {
 
     @Test
     public void getProjectList_Valid_Return() throws Exception {
-
-        List resultModel = new ArrayList();
-        Project testModel = new Project();
-        testModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
-
-        when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/projectsList", HttpMethod.POST , testModel ,List.class)).thenReturn(resultModel);
-
-        projectService.getProjecstList(testModel);
+        when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/projectsList", HttpMethod.POST , testModel ,List.class)).thenReturn(testResultList);
+        testResultList = projectService.getProjecstList(testModel);
     }
 
     @Test
     public void getProject_Valid_Return() throws Exception{
 
-        Project testModel = new Project();
-        List resultModel = new ArrayList();
-
-        testModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
-        testModel.setPipelineId(PIPELINE_ID);
-
-        when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/getProject", HttpMethod.POST , testModel, List.class)).thenReturn(resultModel);
-
-        projectService.getProject(testModel);
+        when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/getProject", HttpMethod.POST , testModel, List.class)).thenReturn(testResultList);
+        testResultList = projectService.getProject(testModel);
     }
 
     @Test
     public void createProjects_Vaild_Return() throws Exception{
 
-        Project testModel = new Project();
-        Project resultModel = new Project();
-
-        QualityProfile profileTest = new QualityProfile();
-        QualityGate gateTest = new QualityGate();
-
-        testModel.setKey(KEY);
-        testModel.setSonarKey(SONAR_KEY);
-        testModel.setSonarName(SONAR_NAME);
-        testModel.setProjectName(PROJECT_NAME);
-        testModel.setQualityProfileId(QUALITY_PROFILE_ID);
-        testModel.setQualityGateId(QUALITY_GATE_ID);
-
-
-        testModel.setName(NAME);
+        testModel.setLinked(true);
 
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/projects/create" , HttpMethod.POST, testModel, Project.class)).thenReturn(resultModel);
 
-        testModel.setId(resultModel.getId());
-
         when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/projectsCreate", HttpMethod.POST, testModel, Project.class)).thenReturn(resultModel);
 
-/*        long profileId = Long.parseLong(testModel.getQualityProfileId());
-        long gateId = Long.parseLong(testModel.getQualityGateId());
+        when(qualityProfileService.getQualityProfile(PROFILEID)).thenReturn(profileModel);
 
-        when(qualityProfileService.getQualityProfile(profileId)).thenReturn(profileTest);
-        when(qualityGateService.getiQualityGate(gateId)).thenReturn(gateTest);*/
+        when(qualityGateService.getiQualityGate(GATEID)).thenReturn(gateModel);
 
+        when(projectService.qualityGateProjectLiked(testModel)).thenReturn(resultModel);
 
+        when(projectService.qualityProfileProjectLinked(testModel)).thenReturn(resultModel);
 
-
-
-/*        profileTest.setProfileDefaultYn("N");
-        gateTest.setGateDefaultYn("N");
-
-        testModel.setProfileKey(testModel.getKey());
-        testModel.
-
-        project.setProfileKey(profileTest.getKey());
-        project.setProjectKey(profileTest.getKey());
-        project.setLinked(true);
-        qualityProfileProjectLinked(project);*/
-
+//        resultModel = projectService.createProjects(testModel);
 
     }
 
@@ -164,44 +232,37 @@ public class ProjectServiceTest {
     @Test
     public void deleteProjects_Valid_Return() throws Exception {
 
-        Project testModel = new Project();
-        Project resultModel = new Project();
-
-        testModel.setId(110);
-        testModel.setKey(KEY);
 
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/projects/delete" , HttpMethod.POST, testModel, Project.class)).thenReturn(resultModel);
         when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/projectsDelete", HttpMethod.DELETE, testModel, Project.class)).thenReturn(resultModel);
 
-        projectService.deleteProjects(testModel);
+        resultModel = projectService.deleteProjects(testModel);
     }
 
     @Test
     public void updateProjects_Valid_Return() throws Exception {
 
-        Project testModel = new Project();
-        Project resultModel = new Project();
 
-        testModel.setId(ID);
-        testModel.setProfileKey(PROFILE_KEY);
-        testModel.setProjectKey(PROJECT_KEY);
-        testModel.setGateDefaultYn(GATE_DEFAULT_YN);
-        testModel.setProfileDefaultYn(PROFILE_DEFAULT_YN);
+        testModel.setLinked(true);
+
+        long profileId = Long.parseLong(testModel.getQualityProfileId());
+        long gateId = Long.parseLong(testModel.getQualityGateId());
 
         when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/projectsUpdate", HttpMethod.PUT, testModel, Project.class)).thenReturn(resultModel);
+        when(projectService.getProjectKey(testModel)).thenReturn(resultModel);
 
-//        projectService.updateProjects(testModel);
+        when(qualityProfileService.getQualityProfile(profileId)).thenReturn(profileModel);
+        when(qualityGateService.getiQualityGate(gateId)).thenReturn(gateModel);
+
+        when(projectService.qualityProfileProjectLinked(testModel)).thenReturn(resultModel);
+        when(projectService.qualityGateProjectLiked(testModel)).thenReturn(resultModel);
+
+
+        projectService.updateProjects(testModel);
     }
 
     @Test
     public void qualityGateProjectLikedTrue_Valid_Return() throws Exception {
-        Project testModel = new Project();
-        Project resultModel = new Project();
-
-        testModel.setId(ID);
-        testModel.setProjectId(PROJECT_ID);
-        testModel.setGateId(GATE_ID);
-        testModel.setQualityGateId(QUALITY_GATE_ID);
         testModel.setLinked(true);
 
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualitygates/select", HttpMethod.POST, testModel, Project.class)).thenReturn(resultModel);
@@ -212,13 +273,6 @@ public class ProjectServiceTest {
 
     @Test
     public void qualityGateProjectLikedFalse_Valid_Return() throws Exception {
-        Project testModel = new Project();
-        Project resultModel = new Project();
-
-        testModel.setId(ID);
-        testModel.setProjectId(PROJECT_ID);
-        testModel.setGateId(GATE_ID);
-        testModel.setQualityGateId(QUALITY_GATE_ID);
         testModel.setLinked(false);
 
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualitygates/deselect", HttpMethod.POST, testModel, Project.class)).thenReturn(resultModel);
@@ -229,14 +283,6 @@ public class ProjectServiceTest {
 
     @Test
     public void qualityProfileProjectLinkedTrue_Valid_Return() throws Exception {
-        Project testModel = new Project();
-        Project resultModel = new Project();
-
-        testModel.setQualityProfileId(QUALITY_GATE_ID);
-        testModel.setProjectKey(PROJECT_KEY);
-        testModel.setProfileKey(PROFILE_KEY);
-        testModel.setSonarKey(SONAR_KEY);
-        testModel.setId(ID);
         testModel.setLinked(true);
 
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualityprofiles/add_project", HttpMethod.POST, testModel, Project.class)).thenReturn(resultModel);
@@ -247,14 +293,7 @@ public class ProjectServiceTest {
 
     @Test
     public void qualityProfileProjectLinkedFalse_Valid_Return() throws Exception {
-        Project testModel = new Project();
-        Project resultModel = new Project();
 
-        testModel.setQualityProfileId(QUALITY_GATE_ID);
-        testModel.setProjectKey(PROJECT_KEY);
-        testModel.setProfileKey(PROFILE_KEY);
-        testModel.setSonarKey(SONAR_KEY);
-        testModel.setId(ID);
         testModel.setLinked(false);
 
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualityprofiles/remove_project", HttpMethod.POST, testModel, Project.class)).thenReturn(resultModel);
@@ -266,37 +305,24 @@ public class ProjectServiceTest {
 
     @Test
     public void getProjectSonarKey_Valid_Return() throws Exception {
-        Project testModel = new Project();
-        List resultModel = new ArrayList();
 
-        testModel.setProjectKey(PROJECT_KEY);
-        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/resources?resource="+testModel.getProjectKey(), HttpMethod.GET, null, List.class)).thenReturn(resultModel);
-
+        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/resources?resource="+testModel.getProjectKey(), HttpMethod.GET, null, List.class)).thenReturn(testResultList);
         projectService.getProjectSonarKey(testModel);
     }
 
     @Test
     public void qualityManagementList_Valid_Return() throws Exception {
-        Project testModel = new Project();
-        Project resultModel = new Project();
-
-        testModel.setUuid("AV9S2Eokknh2OSbD9w8E");
-
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/components/app?uuid="+testModel.getUuid(), HttpMethod.GET, null, Project.class)).thenReturn(resultModel);
         projectService.qualityManagementList(testModel);
     }
 
     @Test
     public void qualityCoverageList_Valid_Return() throws Exception {
-        Project testModel = new Project();
-        List resultModel = new ArrayList();
-
-        testModel.setResource("09f060c6-ef13-464b-b0c5-d23f863c4960");
 
         String coverageUrl = "/api/resources?resource="+testModel.getResource()+"&metrics=coverage,line_coverage,uncovered_lines" +
                 ",lines_to_cover,branch_coverage,uncovered_conditions,conditions_to_cover,new_line_coverage"+
                 ",tests,test_execution_time,test_errors,test_failures,skipped_tests,test_success_density,new_coverage,ncloc&includetrends=true";
-        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, coverageUrl, HttpMethod.GET, null, List.class)).thenReturn(resultModel);
+        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, coverageUrl, HttpMethod.GET, null, List.class)).thenReturn(testResultList);
 
         projectService.qualityCoverageList(testModel);
     }
@@ -304,38 +330,23 @@ public class ProjectServiceTest {
 
     @Test
     public void testsSourceList_Valid_Return() throws Exception {
-        Project testModel = new Project();
-        List resultModel = new ArrayList();
 
-        testModel.setMetrics("branch_coverage");
-        testModel.setProjectKey("09f060c6-ef13-464b-b0c5-d23f863c4960");
-        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/resources?metrics="+testModel.getMetrics()+"&depth=-1&resource="+testModel.getProjectKey(), HttpMethod.GET, null, List.class)).thenReturn(resultModel);
-
+        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/resources?metrics="+testModel.getMetrics()+"&depth=-1&resource="+testModel.getProjectKey(), HttpMethod.GET, null, List.class)).thenReturn(testResultList);
         projectService.testsSourceList(testModel);
     }
 
     @Test
     public void testsSourceShow_Valid_Return() throws Exception {
-        Project testModel = new Project();
-        Project resultModel = new Project();
-        List listModel = new ArrayList();
 
-        testModel.setKey(KEY);
-        testModel.setUuid("AV9S2Eokknh2OSbD9w8E");
-
-        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/resources?metrics=coverage_line_hits_data,covered_conditions_by_line&resource="+testModel.getKey(), HttpMethod.GET, null, List.class)).thenReturn(listModel);
-        testModel.setMsr(listModel);
+        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/resources?metrics=coverage_line_hits_data,covered_conditions_by_line&resource="+testModel.getKey(), HttpMethod.GET, null, List.class)).thenReturn(testList);
 
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/sources/show?key="+testModel.getKey(), HttpMethod.GET, null, Project.class)).thenReturn(resultModel);
-        testModel.setSources(resultModel.getSources());
 
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/sources/scm?key="+testModel.getKey(), HttpMethod.GET, null, Project.class)).thenReturn(resultModel);
-        testModel.setScm(resultModel.getScm());
 
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/issues/search?additionalFields=_all&resolved=false&fileUuids="+testModel.getUuid(), HttpMethod.GET, null, Project.class)).thenReturn(resultModel);
-        testModel.setIssues(resultModel.getIssues());
 
-//        projectService.testsSourceShow(testModel);
+//        resultModel = projectService.testsSourceShow(testModel);
     }
 
 
@@ -343,12 +354,10 @@ public class ProjectServiceTest {
 
     @Test
     public void getProjectKey_Valid_Return() throws Exception {
-        Project testModel = new Project();
-        Project resultModel = new Project();
-        testModel.setId(ID);
+
         when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/projectKey", HttpMethod.POST, testModel, Project.class)).thenReturn(resultModel);
 
-        projectService.getProjectKey(testModel);
+        resultModel = projectService.getProjectKey(testModel);
     }
 
 }

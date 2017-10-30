@@ -12,9 +12,13 @@ import paasta.delivery.pipeline.inspection.api.common.CommonService;
 import paasta.delivery.pipeline.inspection.api.common.Constants;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 /**
@@ -25,8 +29,34 @@ import static org.mockito.Mockito.when;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CodingRulesServiceTest {
 
+    private static final long ID = 1;
+    private static final String NAME = "test-name";
+    private static final String S = "test-seach-name";
+    private static final String SEVERITY = "test-serverrity";
+    private static final String SEVERITIES = "test-severities";
+    private static final String LANGUAGES = "test-langguages";
+    private static final String PS = "1";
+    private static final String SERVICE_INSTANCES_ID  = "test-instances-id";
+    private static final String QPROFILE = "test-profile";
+    private static final String ACTIVATION = "testOn";
+    private static final String Q = "E";
+    private static final String KEY = "test-key";
+    private static final String ACTIVES = "false";
+    private static final String PROJECT_KEY = "test-key";
+    private static final String RULE_KEY = "test-rule-key";
+    private static final String PROFILE_KEY = "test-profile-key";
+    private static final Boolean RESET = true;
+    private static final String TOTAL = "50";
+
+    private static CodingRules testModel = null;
+    private static CodingRules resultModel = null;
+//    private static  Map<String, Object> testMap = null;
+    private static  Map<String, Object> resultMap = null;
+
     @Mock
     private CommonService commonService;
+
+
 
 
     @InjectMocks
@@ -39,6 +69,64 @@ public class CodingRulesServiceTest {
      */
     @Before
     public void setUp() throws Exception {
+        testModel = new CodingRules();
+        testModel.setId(ID);
+        testModel.setName(NAME);
+        testModel.setS(S);
+        testModel.setTotal(TOTAL);
+        testModel.setSeverity(SEVERITY);
+        testModel.setLanguages(LANGUAGES);
+        testModel.setPs(PS);
+        testModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
+        testModel.setQprofile(QPROFILE);
+        testModel.setActivation(ACTIVATION);
+        testModel.setQ(Q);
+        testModel.setKey(KEY);
+        testModel.setActives(ACTIVES);
+        testModel.setRule_key(RULE_KEY);
+        testModel.setProfile_key(PROJECT_KEY);
+        testModel.setReset(RESET);
+        testModel.setProfile_key(PROFILE_KEY);
+        testModel.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
+        testModel.setResultMessage("SUCCESS");
+
+
+
+        resultModel = new CodingRules();
+        resultModel.setTotal(TOTAL);
+        resultModel.setPs(PS);
+        resultModel.setSeverity(SEVERITY);
+        resultModel.setRules(null);
+        resultModel.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
+
+
+/*
+        testMap = new HashMap<>();
+        testMap.put("key","test-key");
+        testMap.put("name","test-name");
+        testMap.put("htmlDesc","test-html");
+        testMap.put("severity","test-severity");
+        testMap.put("languages","java");
+        testMap.put("rules","rules-test");
+*/
+
+
+        resultMap = new HashMap<>();
+        resultMap.put("key","test-key");
+        resultMap.put("name","test-name");
+        resultMap.put("htmlDesc","test-html");
+        resultMap.put("severity","test-severity");
+        resultMap.put("rule","test-rule");
+        resultMap.put("severity","test-severity");
+        resultMap.put("status","test-status");
+        resultMap.put("qProfile","test-qProfile");
+
+
+
+
+
+
+
 
     }
 
@@ -58,22 +146,9 @@ public class CodingRulesServiceTest {
      */
     @Test
     public void getCodingRulesList_Valid_Return() throws Exception{
+        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/rules/search", HttpMethod.POST , testModel ,CodingRules.class)).thenReturn(resultModel);
+        resultModel = codingRulesService.getCodingRulesList(testModel);
 
-        CodingRules testModel = new CodingRules();
-        CodingRules result = new CodingRules();
-
-        testModel.setS("name");
-        testModel.setSeverity("MAJOR");
-        testModel.setLanguages("java");
-        testModel.setPs("50");
-        testModel.setServiceInstancesId("09f060c6-ef13-464b-b0c5-d23f863c4960");
-        testModel.setQprofile("java-egov-qualityprofile-79840");
-        testModel.setActivation("profileOn");
-        testModel.setQ("e");
-
-
-        when(codingRulesService.getCodingRulesList(testModel)).thenReturn(result);
-        codingRulesService.getCodingRulesList(testModel);
     }
 
     /**
@@ -83,11 +158,9 @@ public class CodingRulesServiceTest {
      */
     @Test
     public void getCodingRulesCondition_Valid_Return() throws Exception{
+        when(commonService.sendForm(Constants.TARGET_INSPECTION_API,"/api/languages/list", HttpMethod.POST , null ,Object.class)).thenReturn(resultMap);
 
-        Map <String, Object> mapResult = new HashMap<>();
-        when(codingRulesService.getCodingRulesCondition()).thenReturn(mapResult);
-
-        codingRulesService.getCodingRulesCondition();
+        resultMap =  codingRulesService.getCodingRulesCondition();
     }
 
     /**
@@ -98,15 +171,8 @@ public class CodingRulesServiceTest {
     @Test
     public void getCodingRulesDeteil_Valid_Return() throws Exception{
 
-        CodingRules testModel = new CodingRules();
-        Map <String, Object> mapReturn = new HashMap<>();
-
-        testModel.setKey("squid:S2204");
-        testModel.setActives("false");
-
-        when(codingRulesService.getCodingRulesDeteil(testModel)).thenReturn(mapReturn);
-
-        codingRulesService.getCodingRulesDeteil(testModel);
+        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/rules/show?key="+testModel.getKey()+"&actives="+testModel.getActives(), HttpMethod.GET , null,Object.class)).thenReturn(resultMap);
+        resultMap = codingRulesService.getCodingRulesDeteil(testModel);
     }
 
     /**
@@ -117,17 +183,10 @@ public class CodingRulesServiceTest {
     @Test
     public void createCodingRulesProfile_Valid_Return() throws Exception{
 
-        CodingRules testModel = new CodingRules();
-        CodingRules resultModel = new CodingRules();
+        when( commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualityprofiles/activate_rule", HttpMethod.POST, testModel, null)).thenReturn(null);
 
-        testModel.setRule_key("squid:S2204");
-        testModel.setProfile_key("java-egov-qualityprofile-79840");
-        testModel.setSeverity("INFO");
-        testModel.setReset(true);
-//        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualityprofiles/activate_rule", HttpMethod.POST, testModel, null)).thenReturn(result);
-        when(codingRulesService.createCodingRulesProfile(testModel)).thenReturn(resultModel);
-//        codingRulesService.createCodingRulesProfile(testModel);
-        codingRulesService.createCodingRulesProfile(testModel);
+        resultModel = codingRulesService.createCodingRulesProfile(testModel);
+
     }
 
     /**
@@ -137,15 +196,10 @@ public class CodingRulesServiceTest {
      */
     @Test
     public void deleteCodingRulesProfile_Valid_Return() throws Exception{
-        CodingRules testModel = new CodingRules();
-        CodingRules resultModel = new CodingRules();
 
-        testModel.setRule_key("squid:S2204");
-        testModel.setProfile_key("java-egov-qualityprofile-79840");
+        when( commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualityprofiles/deactivate_rule", HttpMethod.POST, testModel, null)).thenReturn(null);
+        resultModel = codingRulesService.deleteCodingRulesProfile(testModel);
 
-        when(codingRulesService.deleteCodingRulesProfile(testModel)).thenReturn(resultModel);
-
-        codingRulesService.deleteCodingRulesProfile(testModel);
     }
 
     /**
@@ -155,17 +209,9 @@ public class CodingRulesServiceTest {
      */
     @Test
     public void updateCodingRulesProfile_Valid_Return() throws Exception{
-        CodingRules testModel = new CodingRules();
-        CodingRules resultModel = new CodingRules();
 
-        testModel.setRule_key("squid:S2204");
-        testModel.setProfile_key("java-egov-qualityprofile-79840");
-        testModel.setSeverity("INFO");
-        testModel.setReset(true);
-
-        when(codingRulesService.updateCodingRulesProfile(testModel)).thenReturn(resultModel);
-
-        codingRulesService.updateCodingRulesProfile(testModel);
+        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualityprofiles/activate_rule", HttpMethod.POST, testModel, null)).thenReturn(null);
+        resultModel = codingRulesService.updateCodingRulesProfile(testModel);
 
     }
 

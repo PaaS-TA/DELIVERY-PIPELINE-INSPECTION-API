@@ -5,16 +5,16 @@ import java.util.List;
 
 public class CodingRules {
 
-    private  Long id;
+    private long id;
     private String name;
     private String key;
     private String orgName;
     private String languages;
     private String resultStatus;
     private String resultMessage;
-    private String orgGuid;
-    private String userName;
-    private String userGuid;
+//    private String orgGuid;
+//    private String userName;
+//    private String userGuid;
     private List<Object> rulesList;
     private String severities;
 
@@ -49,17 +49,17 @@ public class CodingRules {
         return orgName;
     }
 
-    public String getOrgGuid() {
-        return orgGuid;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public String getUserGuid() {
-        return userGuid;
-    }
+//    public String getOrgGuid() {
+//        return orgGuid;
+//    }
+//
+//    public String getUserName() {
+//        return userName;
+//    }
+//
+//    public String getUserGuid() {
+//        return userGuid;
+//    }
 
     public void setName(String name) {
         this.name = name;
@@ -69,17 +69,17 @@ public class CodingRules {
         this.orgName = orgName;
     }
 
-    public void setOrgGuid(String orgGuid) {
-        this.orgGuid = orgGuid;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public void setUserGuid(String userGuid) {
-        this.userGuid = userGuid;
-    }
+//    public void setOrgGuid(String orgGuid) {
+//        this.orgGuid = orgGuid;
+//    }
+//
+//    public void setUserName(String userName) {
+//        this.userName = userName;
+//    }
+//
+//    public void setUserGuid(String userGuid) {
+//        this.userGuid = userGuid;
+//    }
 
     public String getLanguages() {
         return languages;
@@ -89,11 +89,11 @@ public class CodingRules {
         this.languages = languages;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -259,9 +259,9 @@ public class CodingRules {
                 ", languages='" + languages + '\'' +
                 ", resultStatus='" + resultStatus + '\'' +
                 ", resultMessage='" + resultMessage + '\'' +
-                ", orgGuid='" + orgGuid + '\'' +
-                ", userName='" + userName + '\'' +
-                ", userGuid='" + userGuid + '\'' +
+//                ", orgGuid='" + orgGuid + '\'' +
+//                ", userName='" + userName + '\'' +
+//                ", userGuid='" + userGuid + '\'' +
                 ", rulesList=" + rulesList +
                 ", severities='" + severities + '\'' +
                 ", qprofile='" + qprofile + '\'' +

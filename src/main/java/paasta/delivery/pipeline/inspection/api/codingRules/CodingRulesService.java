@@ -54,7 +54,7 @@ public class CodingRulesService {
         Map <String, Object> objectHashMap = new HashMap<>();
         objectHashMap = (Map)resultJson;
         return objectHashMap;
-        //        return (List)commonService.sendRequestToSonar(codingRules, "/api/rules/search?severities="+codingRules.getSeverities(), HttpMethod.GET);
+
     }
 
     /**

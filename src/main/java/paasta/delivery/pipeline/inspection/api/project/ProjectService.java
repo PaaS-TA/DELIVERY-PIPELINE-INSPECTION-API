@@ -48,7 +48,7 @@ public class ProjectService {
     }
 
     //project List
-    List getProjecstList(Project project){
+    public List getProjectsList(Project project){
         return commonService.sendForm(commonApiUrl, "/project/projectsList", HttpMethod.POST , project ,List.class);
     }
 

@@ -152,17 +152,12 @@ public class QualityGateService {
      */
     QualityGate createQualityGate(QualityGate qualityGate) {
 
-/*
-        qualityGate = (QualityGate) commonService.sendRequestToSonar(qualityGate, "/api/qualitygates/create", HttpMethod.POST);
-        qualityGate = (QualityGate) commonService.sendRequestToCommon(qualityGate, qualityGate.getResultStatus(), "/qualityGate/qualityGateCreate", HttpMethod.PUT);
-*/
-
         QualityGate result = new QualityGate();
 
         result = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/create", HttpMethod.POST,qualityGate, QualityGate.class);
-
         result.setServiceInstancesId(qualityGate.getServiceInstancesId());
         result.setGateDefaultYn(qualityGate.getGateDefaultYn());
+
         result = commonService.sendForm(commonApiUrl, "/qualityGate/qualityGateCreate", HttpMethod.POST, result,QualityGate.class);
 
 

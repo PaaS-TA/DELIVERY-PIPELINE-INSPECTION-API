@@ -197,7 +197,7 @@ public class ProjectServiceTest {
     @Test
     public void getProjectList_Valid_Return() throws Exception {
         when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/projectsList", HttpMethod.POST , testModel ,List.class)).thenReturn(testResultList);
-        testResultList = projectService.getProjecstList(testModel);
+        testResultList = projectService.getProjectsList(testModel);
     }
 
     @Test

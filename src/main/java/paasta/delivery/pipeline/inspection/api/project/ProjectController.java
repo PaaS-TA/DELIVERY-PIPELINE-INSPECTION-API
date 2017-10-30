@@ -31,7 +31,7 @@ public class ProjectController {
      */
     @RequestMapping(value="/projectList" , method = RequestMethod.POST)
     public List getProjectsList(@RequestBody Project project){
-        return projectService.getProjecstList(project);
+        return projectService.getProjectsList(project);
     }
 
     /**

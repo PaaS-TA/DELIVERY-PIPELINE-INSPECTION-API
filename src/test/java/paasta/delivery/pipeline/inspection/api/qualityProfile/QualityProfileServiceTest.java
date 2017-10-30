@@ -98,7 +98,7 @@ public class QualityProfileServiceTest {
 
         when(commonService.sendForm(Constants.TARGET_COMMON_API , "/qualityProfile/qualityProfileCopy",HttpMethod.POST, resultModel, QualityProfile.class)).thenReturn(resultModel);
 
-//        qualityProfileService.qualityProfileCopy(testModel);
+//        qualityProfileService.qualityProfileCopy(resultModel);
     }
 
     /**

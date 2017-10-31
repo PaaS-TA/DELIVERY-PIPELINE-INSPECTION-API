@@ -8,10 +8,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.RestTemplate;
 import paasta.delivery.pipeline.inspection.api.common.CommonService;
 import paasta.delivery.pipeline.inspection.api.common.Constants;
 
@@ -22,6 +27,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -43,7 +49,7 @@ public class QualityGateServiceTest {
     private static final String WARNING = "test-warning";
     private static final String OP = "test-op";
     private static final String SERVICE_INSTANCES_ID = "test-serviceInstances-id";
-    private static final String GATE_DEFAUTL_YN = "N";
+    private static final String GATE_DEFAULT_YN = "N";
 
     private static QualityGate testModel = null;
     private static QualityGate resultModel = null;
@@ -51,9 +57,11 @@ public class QualityGateServiceTest {
     private static Map<String, Object> testResultMap = null;
 
 
-
     @Mock
     private CommonService commonService;
+
+    @Mock
+    private RestTemplate restTemplate;
 
     @InjectMocks
     private  QualityGateService qualityGateService;
@@ -66,6 +74,9 @@ public class QualityGateServiceTest {
     @Before
     public void setUp() throws Exception {
 
+
+
+
         testModel = new QualityGate();
         resultModel = new QualityGate();
         testResultList = new ArrayList<>();
@@ -75,7 +86,7 @@ public class QualityGateServiceTest {
 
         testModel.setId(ID);
         testModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
-        testModel.setGateDefaultYn(GATE_DEFAUTL_YN);
+        testModel.setGateDefaultYn(GATE_DEFAULT_YN);
         testModel.setName(NAME);
         testModel.setOp(OP);
         testModel.setWarning(WARNING);
@@ -83,19 +94,21 @@ public class QualityGateServiceTest {
         testModel.setUuid(UUID);
         testModel.setGateId(GATE_ID);
         testModel.setMetric(METRIC);
+        testModel.setDefaultYn(GATE_DEFAULT_YN);
 
         resultModel.setId(ID);
         resultModel.setName(NAME);
-        resultModel.setGateDefaultYn(GATE_DEFAUTL_YN);
+        resultModel.setGateDefaultYn(GATE_DEFAULT_YN);
         resultModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
+        resultModel.setDefaultYn(GATE_DEFAULT_YN);
 
 
 
         testResultMap.put("id",ID);
         testResultMap.put("name",NAME);
-        testResultMap.put("gateDefaultYn",GATE_DEFAUTL_YN);
+        testResultMap.put("gateDefaultYn",GATE_DEFAULT_YN);
         testResultMap.put("serviceInstancesId",SERVICE_INSTANCES_ID);
-
+        testResultMap.put("defaultYn",GATE_DEFAULT_YN);
 
         testResultMap.put("gateId", GATE_ID);
         testResultMap.put("metric", METRIC);
@@ -227,13 +240,11 @@ public class QualityGateServiceTest {
      */
     @Test
     public void createQualityGate_Valid_Return() throws Exception{
+        ResponseEntity responseEntity = new ResponseEntity<Map>(HttpStatus.OK);
+        when(restTemplate.exchange(Matchers.anyString(), any(HttpMethod.class),  Matchers.<HttpEntity<?>>any(),  Matchers.<Class<Map>>any())).thenReturn(responseEntity);
 
-
-        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualitygates/create", HttpMethod.POST,testModel, QualityGate.class)).thenReturn(resultModel);
-
-
-
-        when(commonService.sendForm(Constants.TARGET_COMMON_API, "/qualityGate/qualityGateCreate", HttpMethod.POST, testModel,QualityGate.class)).thenReturn(resultModel);
+//        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualitygates/create", HttpMethod.POST,testModel, Map.class)).thenReturn(testResultMap);
+        when(commonService.sendForm(Constants.TARGET_COMMON_API, "/qualityGate/qualityGateCreate", HttpMethod.POST, testResultMap,QualityGate.class)).thenReturn(resultModel);
 
 //        qualityGateService.createQualityGate(testModel);
     }
@@ -250,8 +261,6 @@ public class QualityGateServiceTest {
      */
     @Test
     public void updateQualityGate_Valid_Return() throws Exception{
-
-
 
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualitygates/rename", HttpMethod.POST, testResultMap,QualityGate.class)).thenReturn(resultModel);
 

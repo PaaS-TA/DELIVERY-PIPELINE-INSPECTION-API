@@ -6,6 +6,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import paasta.delivery.pipeline.inspection.api.common.CommonService;
 import paasta.delivery.pipeline.inspection.api.common.Constants;
+import paasta.delivery.pipeline.inspection.api.qualityProfile.QualityProfile;
 
 import java.util.*;
 
@@ -150,15 +151,20 @@ public class QualityGateService {
      * @param qualityGate
      * @return
      */
-    QualityGate createQualityGate(QualityGate qualityGate) {
+    public QualityGate createQualityGate(QualityGate qualityGate) {
 
         QualityGate result = new QualityGate();
+        Map<String, Object> mapParam = new HashMap<>();
 
-        result = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/create", HttpMethod.POST,qualityGate, QualityGate.class);
-        result.setServiceInstancesId(qualityGate.getServiceInstancesId());
-        result.setGateDefaultYn(qualityGate.getGateDefaultYn());
+        mapParam = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/create", HttpMethod.POST,qualityGate, Map.class);
 
-        result = commonService.sendForm(commonApiUrl, "/qualityGate/qualityGateCreate", HttpMethod.POST, result,QualityGate.class);
+        mapParam.put("serviceInstancesId",qualityGate.getServiceInstancesId());
+        mapParam.put("gateDefaultYn",qualityGate.getGateDefaultYn());
+
+//        result.setServiceInstancesId(qualityGate.getServiceInstancesId());
+//        result.setGateDefaultYn(qualityGate.getGateDefaultYn());
+
+        result = commonService.sendForm(commonApiUrl, "/qualityGate/qualityGateCreate", HttpMethod.POST, mapParam, QualityGate.class);
 
 
         return result;

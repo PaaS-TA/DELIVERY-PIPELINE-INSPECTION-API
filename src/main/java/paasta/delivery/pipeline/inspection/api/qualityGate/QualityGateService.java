@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import paasta.delivery.pipeline.inspection.api.common.CommonService;
 import paasta.delivery.pipeline.inspection.api.common.Constants;
 
@@ -139,9 +138,12 @@ public class QualityGateService {
         resultModel.put("serviceInstancesId", qualityGate.getServiceInstancesId());
         resultModel.put("gateDefaultYn",qualityGate.getGateDefaultYn());
 
+
         param = commonService.sendForm(inspectionServerUrl,"/api/qualitygates/copy", HttpMethod.POST,  resultModel, QualityGate.class);
         param.setServiceInstancesId(resultModel.get("serviceInstancesId"));
         param.setGateDefaultYn(resultModel.get("gateDefaultYn"));
+//        param.setServiceInstancesId(qualityGate.getServiceInstancesId());
+//        param.setGateDefaultYn(qualityGate.getGateDefaultYn());
         result = commonService.sendForm(commonApiUrl, "/qualityGate/qualityGateCopy", HttpMethod.POST, param, QualityGate.class);
 
         return result;
@@ -160,12 +162,18 @@ public class QualityGateService {
         QualityGate param = new QualityGate();
         QualityGate result = new QualityGate();
 
-        resultModel = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/create", HttpMethod.POST,qualityGate, QualityGate.class);
+//        Map<String, Object> mapParam = new HashMap<>();
+//        mapParam = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/create", HttpMethod.POST,qualityGate, Map.class);
+//        mapParam.put("serviceInstancesId",qualityGate.getServiceInstancesId());
+//        mapParam.put("gateDefaultYn",qualityGate.getGateDefaultYn());
 
+        resultModel= commonService.sendForm(inspectionServerUrl, "/api/qualitygates/create", HttpMethod.POST,qualityGate, QualityGate.class);
         resultModel.setServiceInstancesId(qualityGate.getServiceInstancesId());
         resultModel.setGateDefaultYn(qualityGate.getGateDefaultYn());
 
-        result = commonService.sendForm(commonApiUrl, "/qualityGate/qualityGateCreate", HttpMethod.POST, param, QualityGate.class);
+        result = commonService.sendForm(commonApiUrl, "/qualityGate/qualityGateCreate", HttpMethod.POST, resultModel, QualityGate.class);
+
+
 
         return result;
     }

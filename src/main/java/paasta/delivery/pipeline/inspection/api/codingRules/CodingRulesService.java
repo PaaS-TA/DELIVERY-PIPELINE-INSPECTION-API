@@ -1,20 +1,16 @@
 package paasta.delivery.pipeline.inspection.api.codingRules;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+
 import paasta.delivery.pipeline.inspection.api.common.CommonService;
 import paasta.delivery.pipeline.inspection.api.common.Constants;
 
-import java.util.ArrayList;
+
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service

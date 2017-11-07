@@ -266,7 +266,6 @@ public class ProjectServiceTest {
         when(qualityGateService.getiQualityGate(gateModel.getId())).thenReturn(gateModel);
 
         when(projectService.qualityGateProjectLiked(testModel)).thenReturn(resultModel);
-
         when(projectService.qualityProfileProjectLinked(testModel)).thenReturn(resultModel);
         projectService.createProjects(testModel);
 //        assertNotNull(result);
@@ -305,9 +304,9 @@ public class ProjectServiceTest {
 
 
         when(qualityGateService.getiQualityGate(gateModel.getId())).thenReturn(gateModel);
-
         when(projectService.qualityGateProjectLiked(testModel)).thenReturn(resultModel);
 
+        when(projectService.qualityProfileProjectLinked(testModel)).thenReturn(resultModel);
         projectService.createProjects(testModel);
 
     }
@@ -321,6 +320,9 @@ public class ProjectServiceTest {
         when(restTemplate.exchange(Matchers.anyString(), any(HttpMethod.class), Matchers.<HttpEntity<?>>any(), Matchers.<Class<Project>>any())).thenReturn(responseEntity);
         when(commonService.sendForm(anyString(),anyString(),any(HttpMethod.class),any(Project.class),any())).thenReturn(resultModel);
         when(commonService.sendForm(Matchers.matches("http://localhost:8081"),anyString(),any(HttpMethod.class),any(Project.class),any())).thenReturn(resultModel);
+
+        when(qualityGateService.getiQualityGate(gateModel.getId())).thenReturn(gateModel);
+        when(projectService.qualityGateProjectLiked(testModel)).thenReturn(resultModel);
         projectService.createProjects(testModel);
 
     }

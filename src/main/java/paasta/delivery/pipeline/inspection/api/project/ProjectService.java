@@ -1,20 +1,15 @@
 package paasta.delivery.pipeline.inspection.api.project;
 
-import com.fasterxml.jackson.databind.JsonNode;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import paasta.delivery.pipeline.inspection.api.common.CommonService;
-import paasta.delivery.pipeline.inspection.api.common.Constants;
 import paasta.delivery.pipeline.inspection.api.qualityGate.QualityGate;
 import paasta.delivery.pipeline.inspection.api.qualityGate.QualityGateService;
 import paasta.delivery.pipeline.inspection.api.qualityProfile.QualityProfile;
 import paasta.delivery.pipeline.inspection.api.qualityProfile.QualityProfileService;
-
-import java.awt.*;
-import java.io.IOException;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;

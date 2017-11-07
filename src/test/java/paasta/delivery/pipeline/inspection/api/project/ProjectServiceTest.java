@@ -254,7 +254,8 @@ public class ProjectServiceTest {
     public void createProjectsCase1_Vaild_Return() throws Exception{
 
         testModel.setLinked(true);
-
+        profileModel.setProfileDefaultYn("N");
+        gateModel.setGateDefaultYn("N");
 
         ResponseEntity responseEntity = new ResponseEntity<>(HttpStatus.OK);
         when(restTemplate.exchange(Matchers.anyString(), any(HttpMethod.class), Matchers.<HttpEntity<?>>any(), Matchers.<Class<Project>>any())).thenReturn(responseEntity);
@@ -273,6 +274,56 @@ public class ProjectServiceTest {
 
     }
 
+
+    @Test
+    public void createProjectsCase2_Vaild_Return() throws Exception{
+        testModel.setLinked(true);
+        profileModel.setProfileDefaultYn("Y");
+        gateModel.setGateDefaultYn("N");
+        ResponseEntity responseEntity = new ResponseEntity<>(HttpStatus.OK);
+        when(restTemplate.exchange(Matchers.anyString(), any(HttpMethod.class), Matchers.<HttpEntity<?>>any(), Matchers.<Class<Project>>any())).thenReturn(responseEntity);
+        when(commonService.sendForm(anyString(),anyString(),any(HttpMethod.class),any(Project.class),any())).thenReturn(resultModel);
+        when(commonService.sendForm(Matchers.matches("http://localhost:8081"),anyString(),any(HttpMethod.class),any(Project.class),any())).thenReturn(resultModel);
+
+        when(qualityProfileService.getQualityProfile(profileModel.getId())).thenReturn(profileModel);
+        when(qualityGateService.getiQualityGate(gateModel.getId())).thenReturn(gateModel);
+
+        when(projectService.qualityGateProjectLiked(testModel)).thenReturn(resultModel);
+        projectService.createProjects(testModel);
+
+    }
+
+    @Test
+    public void createProjectsCase3_Vaild_Return() throws Exception{
+        testModel.setLinked(true);
+        profileModel.setProfileDefaultYn("N");
+        gateModel.setGateDefaultYn("Y");
+        ResponseEntity responseEntity = new ResponseEntity<>(HttpStatus.OK);
+        when(restTemplate.exchange(Matchers.anyString(), any(HttpMethod.class), Matchers.<HttpEntity<?>>any(), Matchers.<Class<Project>>any())).thenReturn(responseEntity);
+        when(commonService.sendForm(anyString(),anyString(),any(HttpMethod.class),any(Project.class),any())).thenReturn(resultModel);
+        when(commonService.sendForm(Matchers.matches("http://localhost:8081"),anyString(),any(HttpMethod.class),any(Project.class),any())).thenReturn(resultModel);
+
+
+        when(qualityGateService.getiQualityGate(gateModel.getId())).thenReturn(gateModel);
+
+        when(projectService.qualityGateProjectLiked(testModel)).thenReturn(resultModel);
+
+        projectService.createProjects(testModel);
+
+    }
+
+    @Test
+    public void createProjectsCase4_Vaild_Return() throws Exception{
+        testModel.setLinked(true);
+        profileModel.setProfileDefaultYn("Y");
+        gateModel.setGateDefaultYn("Y");
+        ResponseEntity responseEntity = new ResponseEntity<>(HttpStatus.OK);
+        when(restTemplate.exchange(Matchers.anyString(), any(HttpMethod.class), Matchers.<HttpEntity<?>>any(), Matchers.<Class<Project>>any())).thenReturn(responseEntity);
+        when(commonService.sendForm(anyString(),anyString(),any(HttpMethod.class),any(Project.class),any())).thenReturn(resultModel);
+        when(commonService.sendForm(Matchers.matches("http://localhost:8081"),anyString(),any(HttpMethod.class),any(Project.class),any())).thenReturn(resultModel);
+        projectService.createProjects(testModel);
+
+    }
 
 
     @Test

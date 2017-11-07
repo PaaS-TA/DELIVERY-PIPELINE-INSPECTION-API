@@ -1,22 +1,13 @@
 package paasta.delivery.pipeline.inspection.api.qualityIssues;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import org.apache.tomcat.util.bcel.classfile.Constant;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import paasta.delivery.pipeline.inspection.api.common.CommonService;
 import paasta.delivery.pipeline.inspection.api.common.Constants;
 import paasta.delivery.pipeline.inspection.api.project.Project;
-
-import java.beans.Transient;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

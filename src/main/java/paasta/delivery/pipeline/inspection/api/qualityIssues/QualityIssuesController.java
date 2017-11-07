@@ -11,12 +11,12 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/qualityIssues")
-public class QualityIssuesCotroller {
+public class QualityIssuesController {
 
     private final QualityIssuesService qualityIssuesService;
 
     @Autowired
-    QualityIssuesCotroller(QualityIssuesService qualityIssuesService){
+    QualityIssuesController(QualityIssuesService qualityIssuesService){
         this.qualityIssuesService = qualityIssuesService;
     }
 

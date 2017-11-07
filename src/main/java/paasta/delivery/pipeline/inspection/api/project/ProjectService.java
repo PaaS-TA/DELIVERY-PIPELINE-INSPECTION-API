@@ -228,6 +228,7 @@ public class ProjectService {
     public Project testsSourceShow(Project project){
 
         Project result = new Project();
+
         project.setMsr(commonService.sendForm(inspectionServerUrl, "/api/resources?metrics=coverage_line_hits_data,covered_conditions_by_line&resource="+project.getKey(), HttpMethod.GET, null, List.class));
 
         result = commonService.sendForm(inspectionServerUrl, "/api/sources/show?key="+project.getKey(), HttpMethod.GET, null, Project.class);
@@ -238,7 +239,6 @@ public class ProjectService {
 
         result = commonService.sendForm(inspectionServerUrl, "/api/issues/search?additionalFields=_all&resolved=false&fileUuids="+project.getUuid(), HttpMethod.GET, null, Project.class);
         project.setIssues(result.getIssues());
-
 
         return project;
     }

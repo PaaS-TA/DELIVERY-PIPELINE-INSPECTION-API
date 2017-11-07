@@ -1,35 +1,29 @@
 package paasta.delivery.pipeline.inspection.api.qualityGate;
 
-import javafx.beans.binding.When;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
-import org.mockito.InjectMocks;
-import org.mockito.Matchers;
-import org.mockito.Mock;
+import org.mockito.*;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 import paasta.delivery.pipeline.inspection.api.common.CommonService;
 import paasta.delivery.pipeline.inspection.api.common.Constants;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertNotNull;
+
+import static org.mockito.Mockito.*;
 
 /**
  * Created by kim on 2017-10-26.
@@ -38,9 +32,12 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+
 public class QualityGateServiceTest {
 
-    private static final long ID = 1L;
+
+    private static final long ID =22221;
+    private static final String STRING_ID = "1";
     private static final String UUID = "test-uuid";
     private static final String NAME = "test-gate-name";
     private static final String GATE_ID = "1";
@@ -51,11 +48,48 @@ public class QualityGateServiceTest {
     private static final String SERVICE_INSTANCES_ID = "test-serviceInstances-id";
     private static final String GATE_DEFAULT_YN = "N";
 
+
+    private static List<Long> PROJECT_ID_LIST = null;
+    private static List CONDITIONS = null;
+    private static List METRICS = null;
+    private static List QUALITY_GATES = null;
+    private static List DOMAINS = null;
+    private static final Boolean LINKED = true;
+    private static final String DEFAULT_KEY = "test-default-key";
     private static QualityGate testModel = null;
     private static QualityGate resultModel = null;
-    private static List<Map<String, Object>> testResultList = null;
-    private static Map<String, Object> testResultMap = null;
 
+    private static List<Map<String, String>> testResultList = null;
+    private static Map<String, String> testResultMap = null;
+
+    private static final String CREATED = "";
+    private static final String LAST_MODIFIED = "";
+    private static final String CREATED_STRING = "";
+    private static final String LASTMODIFIED_STRING = "";
+    private static final String RESULT_STATUS = "";
+    private static final String RESULT_MESSAGE = "SUCCESS";
+
+
+
+
+
+    @Value("${inspection.server.url}")
+    private String inspectionServerUrl;
+
+    @Value("${commonApi.url}")
+    private String commonApiUrl;
+
+    @Value("${inspection.server.admin.username}")
+    public String adminUserName;
+    /**
+     * The Admin password.
+     */
+    @Value("${inspection.server.admin.password}")
+    public String adminPassword;
+
+
+    @Mock
+    private MockRestServiceServer mockServer;
 
     @Mock
     private CommonService commonService;
@@ -65,6 +99,9 @@ public class QualityGateServiceTest {
 
     @InjectMocks
     private  QualityGateService qualityGateService;
+
+
+
 
     /*
      * Sets up.
@@ -76,11 +113,11 @@ public class QualityGateServiceTest {
 
 
 
-
         testModel = new QualityGate();
         resultModel = new QualityGate();
         testResultList = new ArrayList<>();
         testResultMap = new HashMap<>();
+
 
 
 
@@ -95,30 +132,64 @@ public class QualityGateServiceTest {
         testModel.setGateId(GATE_ID);
         testModel.setMetric(METRIC);
         testModel.setDefaultYn(GATE_DEFAULT_YN);
+        testModel.setLinked(LINKED);
+        testModel.setCreated(CREATED);
+        testModel.setResultMessage(RESULT_MESSAGE);
+        testModel.setLastModified(LAST_MODIFIED);
+        testModel.setLastModifiedString(LASTMODIFIED_STRING);
+        testModel.setCreatedString(CREATED_STRING);
+        testModel.setDefaultKey(DEFAULT_KEY);
 
         resultModel.setId(ID);
         resultModel.setName(NAME);
         resultModel.setGateDefaultYn(GATE_DEFAULT_YN);
         resultModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
         resultModel.setDefaultYn(GATE_DEFAULT_YN);
+        resultModel.setMetrics(METRICS);
+        resultModel.setDomains(DOMAINS);
+        resultModel.setConditions(CONDITIONS);
+        resultModel.setProjectIdList(PROJECT_ID_LIST);
+        resultModel.setDefaultKey(DEFAULT_KEY);
+        resultModel.setOp(OP);
+        resultModel.setWarning(WARNING);
+        resultModel.setError(ERROR);
+        resultModel.setUuid(UUID);
+        resultModel.setGateId(GATE_ID);
+        resultModel.setMetric(METRIC);
+        resultModel.setDefaultYn(GATE_DEFAULT_YN);
+        resultModel.setLinked(LINKED);
+        resultModel.setLastModified(LAST_MODIFIED);
+        resultModel.setCreated(CREATED);
+        resultModel.setResultMessage(RESULT_MESSAGE);
+        resultModel.setLastModifiedString(LASTMODIFIED_STRING);
+        resultModel.setCreatedString(CREATED_STRING);
 
 
 
-        testResultMap.put("id",ID);
-        testResultMap.put("name",NAME);
-        testResultMap.put("gateDefaultYn",GATE_DEFAULT_YN);
-        testResultMap.put("serviceInstancesId",SERVICE_INSTANCES_ID);
+        testResultMap.put("id", STRING_ID);
+        testResultMap.put("name",testModel.getName());
+        testResultMap.put("gateDefaultYn",testModel.getGateDefaultYn());
+        testResultMap.put("serviceInstancesId",testModel.getServiceInstancesId());
         testResultMap.put("defaultYn",GATE_DEFAULT_YN);
-
         testResultMap.put("gateId", GATE_ID);
         testResultMap.put("metric", METRIC);
         testResultMap.put("error", ERROR);
         testResultMap.put("warning", WARNING);
         testResultMap.put("op", OP);
 
+
         testResultList.add(testResultMap);
 
+        MockitoAnnotations.initMocks(this);
 
+
+        mockServer = MockRestServiceServer.createServer(restTemplate);
+
+        ReflectionTestUtils.setField(qualityGateService, "inspectionServerUrl", inspectionServerUrl);
+        ReflectionTestUtils.setField(qualityGateService, "commonApiUrl", commonApiUrl);
+//        ReflectionTestUtils.setField(qualityGateService, "adminUserName", adminUserName);
+//        ReflectionTestUtils.setField(qualityGateService, "adminPassword", adminPassword);
+//        ReflectionTestUtils.setField(qualityGateService, "restTemplate", restTemplate);
     }
 
     /*
@@ -140,10 +211,10 @@ public class QualityGateServiceTest {
 
         String testServiceInstancesId = "";
         testServiceInstancesId = "test-serviceInstanceId";
-
         when(qualityGateService.getQualityGateList(testServiceInstancesId)).thenReturn(testResultList);
 
-        testResultList = qualityGateService.getQualityGateList(testServiceInstancesId);
+        List<Map<String, String>> result = qualityGateService.getQualityGateList(testServiceInstancesId);
+
     }
 
     /**
@@ -182,7 +253,8 @@ public class QualityGateServiceTest {
 
         when(qualityGateService.createQualityGateCond(testModel)).thenReturn(resultModel);
 
-        resultModel = qualityGateService.createQualityGateCond(testModel);
+        QualityGate result = qualityGateService.createQualityGateCond(testModel);
+        assertNotNull(result);
     }
 
     /**
@@ -240,17 +312,101 @@ public class QualityGateServiceTest {
      */
     @Test
     public void createQualityGate_Valid_Return() throws Exception{
-        ResponseEntity responseEntity = new ResponseEntity<Map>(HttpStatus.OK);
-        when(restTemplate.exchange(Matchers.anyString(), any(HttpMethod.class),  Matchers.<HttpEntity<?>>any(),  Matchers.<Class<Map>>any())).thenReturn(responseEntity);
+/*        QualityGate testQg = new QualityGate();
+        testQg.setName("test-gate");
 
-//        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualitygates/create", HttpMethod.POST,testModel, Map.class)).thenReturn(testResultMap);
-        when(commonService.sendForm(Constants.TARGET_COMMON_API, "/qualityGate/qualityGateCreate", HttpMethod.POST, testResultMap,QualityGate.class)).thenReturn(resultModel);
+        String authorization = adminUserName + ":" + adminPassword;
+        HttpHeaders reqHeaders = new HttpHeaders();
+        reqHeaders.add(AUTHORIZATION_HEADER_KEY, "Basic " + Base64Utils.encodeToString(authorization.getBytes(StandardCharsets.UTF_8)));
 
-//        qualityGateService.createQualityGate(testModel);
+        reqHeaders.setContentType(MediaType.APPLICATION_JSON);
+        reqHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        HttpEntity<Object> reqEntity = new HttpEntity<>(testQg, reqHeaders);
+
+        ResponseEntity resEntity = null;
+
+        when(restTemplate.exchange("http://localhost:9904/api/qualitygates/create",HttpMethod.POST,reqEntity, QualityGate.class)).thenReturn(resEntity);
+
+
+        System.out.println("데이터 값:::::::"+resEntity);*/
+
+
+//        when(restTemplate.postForEntity(anyString(), isA(HttpEntity.class), isA(Class.class))).thenReturn(any());
+
+//        ReflectionTestUtils.getField(testModel,"QualityGate", new ObjectMapper());
+//        ReflectionTestUtils.setField(resultModel, "restTemplate", restTemplate);
+//        resultModel.setServiceInstancesId(testModel.getServiceInstancesId());
+//        resultModel.setGateDefaultYn(testModel.getGateDefaultYn());
+
+
+
+/*
+        QualityGate inputModel = new QualityGate();
+        inputModel.setName("gate-test-name");
+        inputModel.setGateDefaultYn("N");
+        inputModel.setServiceInstancesId("service-test");
+
+        QualityGate outputModel = new QualityGate();
+        outputModel.setId(2221);
+        outputModel.setName(inputModel.getName());
+        outputModel.setGateDefaultYn(inputModel.getGateDefaultYn());
+        outputModel.setServiceInstancesId(inputModel.getServiceInstancesId());
+
+        when(commonService.sendForm(inspectionServerUrl, "/api/qualitygates/create", HttpMethod.POST,inputModel, QualityGate.class)).thenReturn(outputModel);
+        when(commonService.sendForm(commonApiUrl, "/qualityGate/qualityGateCreate", HttpMethod.POST, outputModel,QualityGate.class)).thenReturn(outputModel);
+
+*/
+/*        QualityGate mockedFoo = Mockito.mock(QualityGate.class);
+        when(mockedFoo.getId()).thenReturn(resultModel.getId());
+        when(mockedFoo.getName()).thenReturn(resultModel.getName());
+        when(mockedFoo.getServiceInstancesId()).thenReturn(resultModel.getServiceInstancesId());
+        when(mockedFoo.getGateDefaultYn()).thenReturn(resultModel.getGateDefaultYn());*/
+
+ /*       입력 데이터 확인QualityGate{id=182, uuid='null', name='test-mock-uu', projectIdList=null, created='null', lastModified='null', createdString='null', lastModifiedString='null', resultStatus='null', resultMessage='null', conditions=null, metrics=null, gateId='null', metric='null', error='null', warning='null', op='null', serviceInstancesId='09f060c6-ef13-464b-b0c5-d23f863c4960', linked=null, qualitygates=null, defaultKey='null', gateDefaultYn='N', domains=null, defaultYn='null'}
+        리턴 데이터 확인 :::::::QualityGate{id=182, uuid='null', name='test-mock-uu', projectIdList=null, created='1509944038241', lastModified='1509944038241', createdString='2017-11-06 13:53:58', lastModifiedString='2017-11-06 13:53:58', resultStatus='null', resultMessage='null', conditions=null, metrics=null, gateId='null', metric='null', error='null', warning='null', op='null', serviceInstancesId='09f060c6-ef13-464b-b0c5-d23f863c4960', linked=null, qualitygates=null, defaultKey='null', gateDefaultYn='N', domains=null, defaultYn='null'}
+
+*/
+
+        QualityGate inputModel = new QualityGate();
+        inputModel.setName("gate-test-name");
+        inputModel.setGateDefaultYn("N");
+        inputModel.setServiceInstancesId("service-test");
+
+        QualityGate outputModel = new QualityGate();
+        outputModel.setId(2221);
+        outputModel.setName(inputModel.getName());
+        outputModel.setGateDefaultYn(inputModel.getGateDefaultYn());
+        outputModel.setServiceInstancesId(inputModel.getServiceInstancesId());
+
+        QualityGate inputModel2 = new QualityGate();
+        inputModel2.setId(outputModel.getId());
+        inputModel2.setName(outputModel.getName());
+        inputModel2.setGateDefaultYn(outputModel.getGateDefaultYn());
+        inputModel2.setServiceInstancesId(outputModel.getServiceInstancesId());
+
+
+
+        QualityGate ouputModel2 = new QualityGate();
+        ouputModel2.setId(2221);
+        ouputModel2.setName(inputModel.getName());
+        ouputModel2.setGateDefaultYn(inputModel.getGateDefaultYn());
+        ouputModel2.setServiceInstancesId(inputModel.getServiceInstancesId());
+
+        when(commonService.sendForm(inspectionServerUrl, "/api/qualitygates/create", HttpMethod.POST,inputModel, QualityGate.class)).thenReturn(outputModel);
+
+        when(commonService.sendForm(commonApiUrl, "/qualityGate/qualityGateCreate", HttpMethod.POST, inputModel2,QualityGate.class)).thenReturn(ouputModel2);
+
+
+        when(qualityGateService.createQualityGate(testModel)).thenReturn(resultModel);
+
+        QualityGate result  = qualityGateService.createQualityGate(testModel);
+
+        assertThat(result).isNotNull();
+        assertEquals(resultModel.getId(), result.getId());
+        assertEquals(resultModel.getName(),result.getName());
+        assertEquals(resultModel.getGateDefaultYn(),result.getGateDefaultYn());
+        assertEquals(resultModel.getServiceInstancesId(),result.getServiceInstancesId());
     }
-
-
-
 
 
 

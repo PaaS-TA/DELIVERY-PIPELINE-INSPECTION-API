@@ -149,6 +149,7 @@ public class CodingRulesServiceTest {
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/rules/search", HttpMethod.POST , testModel ,CodingRules.class)).thenReturn(resultModel);
         resultModel = codingRulesService.getCodingRulesList(testModel);
 
+
     }
 
     /**

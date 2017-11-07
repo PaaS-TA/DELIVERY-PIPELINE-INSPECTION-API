@@ -21,10 +21,6 @@ public class Project {
     private String sonarKey;
 
     private String qualifier;
-    private String orgName;
-    private String orgGuid;
-    private String userName;
-    private String userGuid;
     private String qualityProfileId;
     private String qualityGateId;
     private String resultStatus;
@@ -100,40 +96,6 @@ public class Project {
     public void setQualifier(String qualifier) {
         this.qualifier = qualifier;
     }
-
-    public String getOrgName() {
-        return orgName;
-    }
-
-    public void setOrgName(String orgName) {
-        this.orgName = orgName;
-    }
-
-    public String getOrgGuid() {
-        return orgGuid;
-    }
-
-    public void setOrgGuid(String orgGuid) {
-        this.orgGuid = orgGuid;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getUserGuid() {
-        return userGuid;
-    }
-
-    public void setUserGuid(String userGuid) {
-        this.userGuid = userGuid;
-    }
-
-
 
     public String getResultStatus() {
         return resultStatus;
@@ -377,10 +339,6 @@ public class Project {
                 ", key='" + key + '\'' +
                 ", sonarKey='" + sonarKey + '\'' +
                 ", qualifier='" + qualifier + '\'' +
-                ", orgName='" + orgName + '\'' +
-                ", orgGuid='" + orgGuid + '\'' +
-                ", userName='" + userName + '\'' +
-                ", userGuid='" + userGuid + '\'' +
                 ", qualityProfileId='" + qualityProfileId + '\'' +
                 ", qualityGateId='" + qualityGateId + '\'' +
                 ", resultStatus='" + resultStatus + '\'' +

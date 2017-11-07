@@ -17,8 +17,6 @@ public class QualityProfile {
     private List<Long> projectIdList;
     private int activeRuleCount;
     private int activeDeprecatedRuleCount;
-    private Date created;
-    private Date lastModified;
     private String createdString;
     private String lastModifiedString;
     private String resultStatus;
@@ -38,8 +36,7 @@ public class QualityProfile {
     private List languages;
 
     //삭제 예정
-    private String defaultYn;
-
+//    private String defaultYn;
 
     public long getId() {
         return id;
@@ -103,22 +100,6 @@ public class QualityProfile {
 
     public void setActiveDeprecatedRuleCount(int activeDeprecatedRuleCount) {
         this.activeDeprecatedRuleCount = activeDeprecatedRuleCount;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Date getLastModified() {
-        return lastModified;
-    }
-
-    public void setLastModified(Date lastModified) {
-        this.lastModified = lastModified;
     }
 
     public String getCreatedString() {
@@ -209,13 +190,13 @@ public class QualityProfile {
         this.profileDefaultYn = profileDefaultYn;
     }
 
-    public String getDefaultYn() {
-        return defaultYn;
-    }
-
-    public void setDefaultYn(String defaultYn) {
-        this.defaultYn = defaultYn;
-    }
+//    public String getDefaultYn() {
+//        return defaultYn;
+//    }
+//
+//    public void setDefaultYn(String defaultYn) {
+//        this.defaultYn = defaultYn;
+//    }
 
     @Override
     public String toString() {
@@ -228,8 +209,6 @@ public class QualityProfile {
                 ", projectIdList=" + projectIdList +
                 ", activeRuleCount=" + activeRuleCount +
                 ", activeDeprecatedRuleCount=" + activeDeprecatedRuleCount +
-                ", created=" + created +
-                ", lastModified=" + lastModified +
                 ", createdString='" + createdString + '\'' +
                 ", lastModifiedString='" + lastModifiedString + '\'' +
                 ", resultStatus='" + resultStatus + '\'' +
@@ -241,7 +220,7 @@ public class QualityProfile {
                 ", sonarKey='" + sonarKey + '\'' +
                 ", profileKey='" + profileKey + '\'' +
                 ", languages=" + languages +
-                ", defaultYn='" + defaultYn + '\'' +
+//                ", defaultYn='" + defaultYn + '\'' +
                 '}';
     }
 }

@@ -51,10 +51,10 @@ public class QualityProfileService {
 
         result.setServiceInstancesId(qualityProfile.getServiceInstancesId());
         result.setProfileDefaultYn(qualityProfile.getProfileDefaultYn());
-        //sona에서 가져오 키값 셋팅해서 db로 저장
-        result = commonService.sendForm(commonApiUrl , "/qualityProfile/qualityProfileCopy",HttpMethod.POST, result, QualityProfile.class);
 
-        return result;
+        //sona에서 가져오 키값 셋팅해서 db로 저장
+        result = commonService.sendForm(commonApiUrl , "/qualityProfile/qualityProfileCopy",HttpMethod.POST, qualityProfile, QualityProfile.class);
+        return  result;
     }
 
     /**

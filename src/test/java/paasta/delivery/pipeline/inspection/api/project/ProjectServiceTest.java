@@ -8,11 +8,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.mockito.Spy;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpMethod;
+import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.RestTemplate;
 import paasta.delivery.pipeline.inspection.api.common.CommonService;
 import paasta.delivery.pipeline.inspection.api.common.Constants;
 import paasta.delivery.pipeline.inspection.api.qualityGate.QualityGate;
@@ -23,7 +27,9 @@ import paasta.delivery.pipeline.inspection.api.qualityProfile.QualityProfileServ
 import java.util.*;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 /**
@@ -34,7 +40,7 @@ import static org.mockito.Mockito.when;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ProjectServiceTest {
 
-    private static final long ID = 1L;
+    private static final long ID = 1;
     private static final String SONAR_NAME = "test-sonarName";
     private static final String NAME = "test-project-name";
     private static final String KEY = "test-key";
@@ -64,6 +70,11 @@ public class ProjectServiceTest {
     private static final String QUALITY_PROFILE_NAME = "test-qualityProfileName";
     private static final String QUALITY_GATE_NAME = "test-qualityGateeName";
 
+    private static final List MSR = new ArrayList();
+    private static final List COMPONENTS = new ArrayList();
+    private static final List SOURCES = new ArrayList();
+    private static final List SCM = new ArrayList();
+    private static final List ISSUES = new ArrayList();
 
     private static Project testModel = null;
     private static Project resultModel = null;
@@ -74,8 +85,21 @@ public class ProjectServiceTest {
     private static List<Map<String, Object>> testResultList = null;
     private static List<Map<String, Object>> testList = null;
 
+
+
+
+
+
+    @Value("${inspection.server.url}")
+    private String inspectionServerUrl;
+
     @InjectMocks
     private ProjectService projectService;
+
+
+
+
+
 
     @Mock
     private QualityProfileService qualityProfileService;
@@ -94,11 +118,13 @@ public class ProjectServiceTest {
      */
     @Before
     public void setUp() throws Exception {
+
+
+
         Map<String, Object> testResultMap = new HashMap<>();
 
         testList = new ArrayList();
         Map<String, Object> testMap = new HashMap<>();
-
 
 
         testModel = new Project();
@@ -134,7 +160,7 @@ public class ProjectServiceTest {
         testMap.put("sources","test-sources");
         testList.add(testMap);
 
-        resultModel.setId(ID);
+        resultModel.setId(testModel.getId());
         resultModel.setMetrics(METRICS);
         resultModel.setResource(RESOURCE);
         resultModel.setBaseComponent(testList);
@@ -152,7 +178,11 @@ public class ProjectServiceTest {
         resultModel.setQualityGateId(QUALITY_GATE_ID);
         resultModel.setJobId(JOB_ID);
 
-
+        resultModel.setScm(SCM);
+        resultModel.setIssues(ISSUES);
+        resultModel.setSources(SOURCES);
+        resultModel.setComponents(COMPONENTS);
+        resultModel.setMsr(MSR);
 
 
         gateModel = new QualityGate();
@@ -181,6 +211,12 @@ public class ProjectServiceTest {
         testResultList = new ArrayList<>();
 
         testResultList.add(testResultMap);
+
+
+
+
+
+
 
     }
 
@@ -211,8 +247,15 @@ public class ProjectServiceTest {
     public void createProjects_Vaild_Return() throws Exception{
 
         testModel.setLinked(true);
+        Project results = new Project();
 
-        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/projects/create" , HttpMethod.POST, testModel, Project.class)).thenReturn(resultModel);
+
+        when(commonService.sendForm(inspectionServerUrl, "/api/projects/create" , HttpMethod.POST, testModel, Project.class)).thenReturn(results);
+
+        System.out.println("            "+results);
+
+
+//        when(commonService.sendForm(inspectionServerUrl, "/api/projects/create" , HttpMethod.POST, testModel, Project.class)).thenReturn(resultModel);
 
         when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/projectsCreate", HttpMethod.POST, testModel, Project.class)).thenReturn(resultModel);
 
@@ -224,7 +267,8 @@ public class ProjectServiceTest {
 
         when(projectService.qualityProfileProjectLinked(testModel)).thenReturn(resultModel);
 
-//        resultModel = projectService.createProjects(testModel);
+        resultModel = projectService.createProjects(testModel);
+        assertNotNull(resultModel);
 
     }
 
@@ -338,15 +382,18 @@ public class ProjectServiceTest {
     @Test
     public void testsSourceShow_Valid_Return() throws Exception {
 
-        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/resources?metrics=coverage_line_hits_data,covered_conditions_by_line&resource="+testModel.getKey(), HttpMethod.GET, null, List.class)).thenReturn(testList);
+        when(commonService.sendForm(inspectionServerUrl, "/api/resources?metrics=coverage_line_hits_data,covered_conditions_by_line&resource="+testModel.getKey(), HttpMethod.GET, null, List.class)).thenReturn(testList);
 
-        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/sources/show?key="+testModel.getKey(), HttpMethod.GET, null, Project.class)).thenReturn(resultModel);
+        when(commonService.sendForm(inspectionServerUrl, "/api/sources/show?key="+testModel.getKey(), HttpMethod.GET, null, Project.class)).thenReturn(resultModel);
 
-        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/sources/scm?key="+testModel.getKey(), HttpMethod.GET, null, Project.class)).thenReturn(resultModel);
+        when(commonService.sendForm(inspectionServerUrl, "/api/sources/scm?key="+testModel.getKey(), HttpMethod.GET, null, Project.class)).thenReturn(resultModel);
 
-        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/issues/search?additionalFields=_all&resolved=false&fileUuids="+testModel.getUuid(), HttpMethod.GET, null, Project.class)).thenReturn(resultModel);
+        when(commonService.sendForm(inspectionServerUrl, "/api/issues/search?additionalFields=_all&resolved=false&fileUuids="+testModel.getUuid(), HttpMethod.GET, null, Project.class)).thenReturn(resultModel);
 
-//        resultModel = projectService.testsSourceShow(testModel);
+        resultModel.setMsr(testList);
+
+
+        Project result = projectService.testsSourceShow(testModel);
     }
 
 

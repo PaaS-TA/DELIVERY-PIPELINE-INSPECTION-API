@@ -11,6 +11,7 @@ import org.junit.runners.MethodSorters;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.context.junit4.SpringRunner;
 import paasta.delivery.pipeline.inspection.api.common.CommonService;
@@ -18,6 +19,7 @@ import paasta.delivery.pipeline.inspection.api.common.Constants;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -31,11 +33,46 @@ import java.util.List;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class QualityProfileServiceTest {
 
+
+    private static final long ID = 1;
+    private static final String KEY = "test-profile-key";
+    private static final String SONAR_KEY = "test-profile-key";
+    private static final String NAME = "test-profile-name";
+    private static final String LANGUAGE = "test-profile-language";
+    private static final String LANGUAGE_NAME = "test-profile-language-name";
+    private static final int ACTIVE_RULE_COUNT = 1;
+    private static final int ACTIVE_DEPRECATED_RULE_COUNT = 1;
+    private static final String SERVICE_INSTANCES_ID  = "test-instances-id";
+    private static final String PROFILE_DEFAULT_YN = "N";
+    private static final String TO_NAME = "test-to-name";
+    private static final String FROM_KEY = "test-from-key";
+    private static final String PROFILE_KEY = "test-profile-key";
+
+
+
+    private static QualityProfile testModel = null;
+    private static QualityProfile resultModel = null;
+
+/*
+    private List<Long> projectIdList;
+
+
+
+    //언어 리스트
+    private List languages;
+*/
+
+
+
     @Mock
     private CommonService commonService;
 
+
+
+
     @InjectMocks
     private QualityProfileService qualityProfileService;
+
 
     /*
  * Sets up.
@@ -44,6 +81,36 @@ public class QualityProfileServiceTest {
  */
     @Before
     public void setUp() throws Exception {
+        testModel = new QualityProfile();
+        resultModel = new QualityProfile();
+
+        testModel.setId(ID);
+        testModel.setSonarKey(SONAR_KEY);
+        testModel.setLanguageName(LANGUAGE_NAME);
+        testModel.setLanguage(LANGUAGE);
+        testModel.setName(NAME);
+        testModel.setProfileDefaultYn(PROFILE_DEFAULT_YN);
+        testModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
+        testModel.setKey(KEY);
+        testModel.setToName(TO_NAME);
+        testModel.setFromKey(FROM_KEY);
+        testModel.setProfileKey(PROFILE_KEY);
+        testModel.setActiveRuleCount(ACTIVE_RULE_COUNT);
+        testModel.setActiveDeprecatedRuleCount(ACTIVE_DEPRECATED_RULE_COUNT);
+
+        resultModel.setId(ID);
+        resultModel.setSonarKey(SONAR_KEY);
+        resultModel.setLanguageName(LANGUAGE_NAME);
+        resultModel.setLanguage(LANGUAGE);
+        resultModel.setName(NAME);
+        resultModel.setProfileDefaultYn(PROFILE_DEFAULT_YN);
+
+        resultModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
+        resultModel.setKey(KEY);
+        resultModel.setProfileKey(PROFILE_KEY);
+        resultModel.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
+        resultModel.setActiveDeprecatedRuleCount(ACTIVE_DEPRECATED_RULE_COUNT);
+        resultModel.setActiveRuleCount(ACTIVE_RULE_COUNT);
 
     }
 
@@ -82,24 +149,19 @@ public class QualityProfileServiceTest {
      */
     @Test
     public void qualityProfileCopy_Valid_Return() throws Exception{
-        QualityProfile testModel = new QualityProfile();
-        QualityProfile resultModel = new QualityProfile();
 
-        testModel.setFromKey("java-egov-qualityprofile-79840");
-        testModel.setToName("profile-copy");
-        testModel.setServiceInstancesId("09f060c6-ef13-464b-b0c5-d23f863c4960");
-        testModel.setProfileDefaultYn("Y");
-
-
-        when(commonService.sendForm(Constants.TARGET_INSPECTION_API , "/api/qualityprofiles/copy",HttpMethod.POST, testModel, QualityProfile.class)).thenReturn(resultModel);
-
-        resultModel.setServiceInstancesId(testModel.getServiceInstancesId());
-        resultModel.setDefaultYn(testModel.getProfileDefaultYn());
-
+  /*      when(commonService.sendForm(Constants.TARGET_INSPECTION_API , "/api/qualityprofiles/copy",HttpMethod.POST, testModel, QualityProfile.class)).thenReturn(resultModel);
+        resultModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
+        resultModel.setProfileDefaultYn(PROFILE_DEFAULT_YN);
         when(commonService.sendForm(Constants.TARGET_COMMON_API , "/qualityProfile/qualityProfileCopy",HttpMethod.POST, resultModel, QualityProfile.class)).thenReturn(resultModel);
+        */
+        when(qualityProfileService.qualityProfileCopy(testModel)).thenReturn(resultModel);
 
-//        qualityProfileService.qualityProfileCopy(resultModel);
+//        resultModel = qualityProfileService.qualityProfileCopy(testModel);
     }
+
+
+
 
     /**
      *  QualityProfile 생성
@@ -108,6 +170,7 @@ public class QualityProfileServiceTest {
      */
     @Test
     public void createQualityProfile_Valid_Return() throws Exception{
+
 
         QualityProfile testModel = new QualityProfile();
         QualityProfile resultModel = new QualityProfile();
@@ -121,6 +184,7 @@ public class QualityProfileServiceTest {
 
 
 //        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualityprofiles/create", HttpMethod.POST, testModel, JsonNode.class)).thenReturn(resultModel);
+
     }
 
     /**

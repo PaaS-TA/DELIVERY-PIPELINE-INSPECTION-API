@@ -10,10 +10,6 @@ public class QualityIssues {
     private long id;
     private String uuid;
     private String name;
-    private String orgName;
-    private String orgGuid;
-    private String userName;
-    private String userGuid;
     private String lastModified;
     private String createdString;
     private String lastModifiedString;
@@ -69,38 +65,6 @@ public class QualityIssues {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getOrgName() {
-        return orgName;
-    }
-
-    public void setOrgName(String orgName) {
-        this.orgName = orgName;
-    }
-
-    public String getOrgGuid() {
-        return orgGuid;
-    }
-
-    public void setOrgGuid(String orgGuid) {
-        this.orgGuid = orgGuid;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getUserGuid() {
-        return userGuid;
-    }
-
-    public void setUserGuid(String userGuid) {
-        this.userGuid = userGuid;
     }
 
     public String getLastModified() {
@@ -286,10 +250,6 @@ public class QualityIssues {
                 "id=" + id +
                 ", uuid='" + uuid + '\'' +
                 ", name='" + name + '\'' +
-                ", orgName='" + orgName + '\'' +
-                ", orgGuid='" + orgGuid + '\'' +
-                ", userName='" + userName + '\'' +
-                ", userGuid='" + userGuid + '\'' +
                 ", lastModified='" + lastModified + '\'' +
                 ", createdString='" + createdString + '\'' +
                 ", lastModifiedString='" + lastModifiedString + '\'' +

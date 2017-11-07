@@ -7,16 +7,24 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.RestTemplate;
 import paasta.delivery.pipeline.inspection.api.common.CommonService;
 import paasta.delivery.pipeline.inspection.api.common.Constants;
 import paasta.delivery.pipeline.inspection.api.project.Project;
 import paasta.delivery.pipeline.inspection.api.project.ProjectService;
+import paasta.delivery.pipeline.inspection.api.qualityGate.QualityGate;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -56,6 +64,10 @@ public class QualityIssuesServiceTest {
 
     @Mock
     private CommonService commonService;
+
+
+    @Mock
+    private RestTemplate restTemplate;
 
 /*    @Mock
     private ProjectService projectService;*/
@@ -128,7 +140,7 @@ public class QualityIssuesServiceTest {
     @Test
     public void qualityIssuesListCase1_Valid_Return() throws Exception{
 
-        Project projectParam = new Project();
+/*        Project projectParam = new Project();
         QualityIssues testModel = new QualityIssues();
         QualityIssues resultModel = new QualityIssues();
         List<Map<String, String>> projectList = new ArrayList<>();
@@ -143,10 +155,11 @@ public class QualityIssuesServiceTest {
 
 
         String  url = "/api/issues/search?additionalFields=_all&ps="+testModel.getPs()+"&severities="+testModel.getSeverities()+"&statuses="+testModel.getStatuses()+
+                "&resolved=false&componentKeys="+testModel.getComponentKeys();*/
+        List<Map<String, String>> projectList = new ArrayList<>();
+        String  url = "/api/issues/search?additionalFields=_all&ps="+testModel.getPs()+"&severities="+testModel.getSeverities()+"&statuses="+testModel.getStatuses()+
                 "&resolved=false&componentKeys="+testModel.getComponentKeys();
-
-        when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/projectsList", HttpMethod.POST,projectParam, List.class)).thenReturn(projectList);
-
+        when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/projectsList", HttpMethod.POST,testModel, List.class)).thenReturn(projectList);
 
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, url, HttpMethod.GET,null, QualityIssues.class)).thenReturn(resultModel);
 
@@ -179,18 +192,6 @@ public class QualityIssuesServiceTest {
 
     @Test
     public void qualityIssuesListCase3_Valid_Return() throws Exception{
-        Project projectParam = new Project();
-        QualityIssues testModel = new QualityIssues();
-        List<Map<String, String>> projectList = new ArrayList<>();
-
-        projectParam.setServiceInstancesId("09f060c6-ef13-464b-b0c5-d23f863c4960");
-        testModel.setComponentKeys("aa99e034f4f947e28a45ba5de35085fd,2491c49756c54a42bfb0c868eb33ecf9");
-        testModel.setResolutions("FIXED");
-        testModel.setPs("100");
-        testModel.setSeverities("MAJOR");
-        testModel.setStatuses("OPEN");
-
-        when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/projectsList", HttpMethod.POST,projectParam, List.class)).thenReturn(projectList);
 
         testModel.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
         qualityIssuesService.qualityIssuesList(testModel);
@@ -263,24 +264,13 @@ public class QualityIssuesServiceTest {
 
     @Test
     public void getQualityIssuesDetail_Valid_Return() throws Exception{
-        QualityIssues testModel = new QualityIssues();
-        QualityIssues resultModel = new QualityIssues();
+
         List list = new ArrayList();
-
-
-        testModel.setFileKey("AV9S2Eokknh2OSbD032S");
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/resources?metrics=lines,violations,coverage_line_hits_data,coverage&resource="+testModel.getFileKey(), HttpMethod.GET, null, List.class)).thenReturn(list);
-        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/sources/show?key="+testModel.getFileKey(), HttpMethod.GET, null, QualityIssues.class)).thenReturn(resultModel);
-        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/sources/scm?key="+testModel.getFileKey(), HttpMethod.GET, null, QualityIssues.class)).thenReturn(resultModel);
-        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/issues/search?additionalFields=_all&resolved=false&componentKeys="+testModel.getFileKey(), HttpMethod.GET, null, QualityIssues.class)).thenReturn(resultModel);
-
-        list.add(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/sources/show?key="+testModel.getFileKey(), HttpMethod.GET, null, QualityIssues.class));
-        list.add(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/sources/scm?key="+testModel.getFileKey(), HttpMethod.GET, null, QualityIssues.class));
-        list.add(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/issues/search?additionalFields=_all&resolved=false&componentKeys="+testModel.getFileKey(), HttpMethod.GET, null, QualityIssues.class));
-
-
-
-//        qualityIssuesService.getQualityIssuesDetail(testModel);
+        ResponseEntity responseEntity = new ResponseEntity<QualityIssues>(HttpStatus.OK);
+        when(restTemplate.exchange(Matchers.anyString(), any(HttpMethod.class), Matchers.<HttpEntity<?>>any(), Matchers.<Class<QualityGate>>any())).thenReturn(responseEntity);
+        when(commonService.sendForm(anyString(),anyString(),any(HttpMethod.class),any(Class.class),any())).thenReturn(resultModel);
+        qualityIssuesService.getQualityIssuesDetail(testModel);
 
     }
 

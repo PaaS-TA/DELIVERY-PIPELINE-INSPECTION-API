@@ -2,6 +2,9 @@ package paasta.delivery.pipeline.inspection.api.qualityProfile;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.TextNode;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -11,6 +14,7 @@ import org.junit.runners.MethodSorters;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpEntity;
@@ -29,6 +33,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -72,7 +77,8 @@ public class QualityProfileServiceTest {
     private List languages;
 */
 
-
+    @Value("${commonApi.url}")
+    private String commonApiUrl;
 
     @Mock
     private CommonService commonService;
@@ -190,20 +196,29 @@ public class QualityProfileServiceTest {
     public void createQualityProfile_Valid_Return() throws Exception{
 
 
-        QualityProfile testModel = new QualityProfile();
-        QualityProfile resultModel = new QualityProfile();
-        ObjectMapper mapper = new ObjectMapper();
-//        JsonNode jsonModel = mapper.readTree()
 
-        testModel.setLanguage("java");
-        testModel.setName("profile-create");
-        testModel.setServiceInstancesId("09f060c6-ef13-464b-b0c5-d23f863c4960");
-        testModel.setProfileDefaultYn("N");
+        ResponseEntity responseEntity = new ResponseEntity<>(HttpStatus.OK);
+        ObjectMapper m = new ObjectMapper();
+        when(restTemplate.exchange(anyString(), any(HttpMethod.class), Matchers.<HttpEntity<?>>any(), Matchers.<Class>any())).thenReturn(responseEntity);
+        String jsonData = "{\"profile\":{\"name\":\"test-profile-name\",\"key\":\"test-profile-key\",\"language\":\"test-language\",\"languageName\":\"test-profile-language-name\"}}";
+        JsonNode jsonResult = m.readTree(jsonData);
+        when(commonService.sendForm(anyString(),anyString(),any(HttpMethod.class),any(JsonNode.class),any())).thenReturn(jsonResult);
+        when(commonService.sendForm(Matchers.matches("http://localhost:8081"),anyString(),any(HttpMethod.class),any(Class.class),any())).thenReturn(resultModel);
 
 
-//        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualityprofiles/create", HttpMethod.POST, testModel, JsonNode.class)).thenReturn(resultModel);
+
+//        QualityProfile result = qualityProfileService.createQualityProfile(testModel);
+//        assertThat(result).isNotNull();
+//        assertEquals(resultModel.getName(), result.getName());
+//        assertEquals(resultModel.getKey(), result.getKey());
+//        assertEquals(resultModel.getLanguage(), result.getLanguage());
+//        assertEquals(resultModel.getName(), result.getLanguageName());
+
+
 
     }
+
+
 
     /**
      *  QualityProfile 삭제

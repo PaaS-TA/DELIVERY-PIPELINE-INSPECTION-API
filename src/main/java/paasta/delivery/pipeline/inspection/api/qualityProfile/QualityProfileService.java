@@ -95,15 +95,16 @@ public class QualityProfileService {
      */
     QualityProfile createQualityProfile(QualityProfile qualityProfile) {
 
+        QualityProfile resultModel = new QualityProfile();
         JsonNode result = commonService.sendForm(inspectionServerUrl, "/api/qualityprofiles/create", HttpMethod.POST, qualityProfile, JsonNode.class);
 
         qualityProfile.setName(result.get("profile").get("name").asText());
         qualityProfile.setKey(result.get("profile").get("key").asText());
         qualityProfile.setLanguage(result.get("profile").get("language").asText());
         qualityProfile.setLanguageName(result.get("profile").get("languageName").asText());
-        qualityProfile = commonService.sendForm(commonApiUrl, "/qualityProfile/qualityProfilCreate",HttpMethod.POST, qualityProfile, QualityProfile.class);
+        resultModel = commonService.sendForm(commonApiUrl, "/qualityProfile/qualityProfilCreate",HttpMethod.POST, qualityProfile, QualityProfile.class);
 
-        return qualityProfile;
+        return resultModel;
     }
 
     /**

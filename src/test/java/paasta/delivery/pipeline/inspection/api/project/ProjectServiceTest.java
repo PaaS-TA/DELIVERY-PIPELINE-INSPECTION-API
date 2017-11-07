@@ -1,5 +1,6 @@
 package paasta.delivery.pipeline.inspection.api.project;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.After;
 import org.junit.Before;
@@ -28,8 +29,10 @@ import java.util.*;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
@@ -64,8 +67,8 @@ public class ProjectServiceTest {
     private static final String METRICS = "test-metrics";
     private static final String BASE_COMPONENT_KEY = "test-basecomponentkey";
 
-    private static final long PROFILEID = 1L;
-    private static final long GATEID = 1L;
+    private static final long PROFILEID = 1;
+    private static final long GATEID = 10;
 
     private static final String QUALITY_PROFILE_NAME = "test-qualityProfileName";
     private static final String QUALITY_GATE_NAME = "test-qualityGateeName";
@@ -89,7 +92,6 @@ public class ProjectServiceTest {
 
 
 
-
     @Value("${inspection.server.url}")
     private String inspectionServerUrl;
 
@@ -99,7 +101,8 @@ public class ProjectServiceTest {
 
 
 
-
+    @Mock
+    private RestTemplate restTemplate;
 
     @Mock
     private QualityProfileService qualityProfileService;
@@ -186,16 +189,21 @@ public class ProjectServiceTest {
 
 
         gateModel = new QualityGate();
+        gateModel.setId(GATEID);
         gateModel.setName(QUALITY_GATE_NAME);
         gateModel.setGateDefaultYn(GATE_DEFAULT_YN);
         gateModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
+        gateModel.setDefaultYn(GATE_DEFAULT_YN);
 
 
         profileModel = new QualityProfile();
+        profileModel.setId(PROFILEID);
         profileModel.setName(QUALITY_PROFILE_NAME);
         profileModel.setSonarKey(SONAR_KEY);
         profileModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
         profileModel.setProfileDefaultYn(PROFILE_DEFAULT_YN);
+        profileModel.setLanguage("test-language");
+        profileModel.setLanguageName("test-languageName");
 
 
 
@@ -238,39 +246,33 @@ public class ProjectServiceTest {
 
     @Test
     public void getProject_Valid_Return() throws Exception{
-
         when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/getProject", HttpMethod.POST , testModel, List.class)).thenReturn(testResultList);
         testResultList = projectService.getProject(testModel);
     }
 
     @Test
-    public void createProjects_Vaild_Return() throws Exception{
+    public void createProjectsCase1_Vaild_Return() throws Exception{
 
         testModel.setLinked(true);
-        Project results = new Project();
 
 
-        when(commonService.sendForm(inspectionServerUrl, "/api/projects/create" , HttpMethod.POST, testModel, Project.class)).thenReturn(results);
+        ResponseEntity responseEntity = new ResponseEntity<>(HttpStatus.OK);
+        when(restTemplate.exchange(Matchers.anyString(), any(HttpMethod.class), Matchers.<HttpEntity<?>>any(), Matchers.<Class<Project>>any())).thenReturn(responseEntity);
+        when(commonService.sendForm(anyString(),anyString(),any(HttpMethod.class),any(Project.class),any())).thenReturn(resultModel);
+        when(commonService.sendForm(Matchers.matches("http://localhost:8081"),anyString(),any(HttpMethod.class),any(Project.class),any())).thenReturn(resultModel);
 
-        System.out.println("            "+results);
-
-
-//        when(commonService.sendForm(inspectionServerUrl, "/api/projects/create" , HttpMethod.POST, testModel, Project.class)).thenReturn(resultModel);
-
-        when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/projectsCreate", HttpMethod.POST, testModel, Project.class)).thenReturn(resultModel);
-
-        when(qualityProfileService.getQualityProfile(PROFILEID)).thenReturn(profileModel);
-
-        when(qualityGateService.getiQualityGate(GATEID)).thenReturn(gateModel);
+        when(qualityProfileService.getQualityProfile(profileModel.getId())).thenReturn(profileModel);
+        when(qualityGateService.getiQualityGate(gateModel.getId())).thenReturn(gateModel);
 
         when(projectService.qualityGateProjectLiked(testModel)).thenReturn(resultModel);
 
         when(projectService.qualityProfileProjectLinked(testModel)).thenReturn(resultModel);
+        projectService.createProjects(testModel);
+//        assertNotNull(result);
 
-//        resultModel = projectService.createProjects(testModel);
-//        assertNotNull(resultModel);
 
     }
+
 
 
     @Test
@@ -382,18 +384,15 @@ public class ProjectServiceTest {
     @Test
     public void testsSourceShow_Valid_Return() throws Exception {
 
-        when(commonService.sendForm(inspectionServerUrl, "/api/resources?metrics=coverage_line_hits_data,covered_conditions_by_line&resource="+testModel.getKey(), HttpMethod.GET, null, List.class)).thenReturn(testList);
-
-        when(commonService.sendForm(inspectionServerUrl, "/api/sources/show?key="+testModel.getKey(), HttpMethod.GET, null, Project.class)).thenReturn(resultModel);
-
-        when(commonService.sendForm(inspectionServerUrl, "/api/sources/scm?key="+testModel.getKey(), HttpMethod.GET, null, Project.class)).thenReturn(resultModel);
-
-        when(commonService.sendForm(inspectionServerUrl, "/api/issues/search?additionalFields=_all&resolved=false&fileUuids="+testModel.getUuid(), HttpMethod.GET, null, Project.class)).thenReturn(resultModel);
-
-        resultModel.setMsr(testList);
+        List resultList = new ArrayList();
+        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/resources?metrics=coverage_line_hits_data,covered_conditions_by_line&resource="+testModel.getKey(), HttpMethod.GET, null, List.class)).thenReturn(resultList);
+        resultModel.setMsr(resultList);
+        ResponseEntity responseEntity = new ResponseEntity<>(HttpStatus.OK);
+        when(restTemplate.exchange(anyString(), any(HttpMethod.class), Matchers.<HttpEntity<?>>any(), Matchers.<Class>any())).thenReturn(responseEntity);
+        when(commonService.sendForm(anyString(),anyString(),any(HttpMethod.class),any(Class.class),any())).thenReturn(resultModel);
 
 
-//        Project result = projectService.testsSourceShow(testModel);
+//        projectService.testsSourceShow(testModel);
     }
 
 

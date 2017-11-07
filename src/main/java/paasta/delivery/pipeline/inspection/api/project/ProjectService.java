@@ -91,14 +91,14 @@ public class ProjectService {
 
 
 
-        if(profileParam.getProfileDefaultYn().equals("N")){
+        if(profileParam != null && profileParam.getProfileDefaultYn().equals("N")){
             project.setProfileKey(profileParam.getKey());
             project.setProjectKey(project.getKey());
             project.setLinked(true);
             qualityProfileProjectLinked(project);
         }
 
-        if(gateParam.getGateDefaultYn().equals("N")){
+        if(gateParam != null && gateParam.getGateDefaultYn().equals("N")){
             project.setLinked(true);
 
             qualityGateProjectLiked(project);
@@ -229,7 +229,7 @@ public class ProjectService {
 
         Project result = new Project();
 
-        project.setMsr(commonService.sendForm(inspectionServerUrl, "/api/resources?metrics=coverage_line_hits_data,covered_conditions_by_line&resource="+project.getKey(), HttpMethod.GET, null, List.class));
+        result.setMsr(commonService.sendForm(inspectionServerUrl, "/api/resources?metrics=coverage_line_hits_data,covered_conditions_by_line&resource="+project.getKey(), HttpMethod.GET, null, List.class));
 
         result = commonService.sendForm(inspectionServerUrl, "/api/sources/show?key="+project.getKey(), HttpMethod.GET, null, Project.class);
         project.setSources(result.getSources());
@@ -240,8 +240,11 @@ public class ProjectService {
         result = commonService.sendForm(inspectionServerUrl, "/api/issues/search?additionalFields=_all&resolved=false&fileUuids="+project.getUuid(), HttpMethod.GET, null, Project.class);
         project.setIssues(result.getIssues());
 
+
+
         return project;
     }
+
 
     //projectKey data 가져오기
     public Project getProjectKey(Project project){

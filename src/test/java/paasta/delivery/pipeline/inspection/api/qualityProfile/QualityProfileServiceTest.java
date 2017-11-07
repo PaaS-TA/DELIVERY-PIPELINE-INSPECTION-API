@@ -9,21 +9,31 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.RestTemplate;
 import paasta.delivery.pipeline.inspection.api.common.CommonService;
 import paasta.delivery.pipeline.inspection.api.common.Constants;
+import paasta.delivery.pipeline.inspection.api.qualityGate.QualityGate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by kim on 2017-10-26.
@@ -68,6 +78,8 @@ public class QualityProfileServiceTest {
     private CommonService commonService;
 
 
+    @Mock
+    private RestTemplate restTemplate;
 
 
     @InjectMocks
@@ -149,15 +161,21 @@ public class QualityProfileServiceTest {
      */
     @Test
     public void qualityProfileCopy_Valid_Return() throws Exception{
+        ResponseEntity responseEntity = new ResponseEntity<Map>(HttpStatus.OK);
+        when(restTemplate.exchange(Matchers.anyString(), any(HttpMethod.class), Matchers.<HttpEntity<?>>any(), Matchers.<Class<QualityGate>>any())).thenReturn(responseEntity);
+        when(commonService.sendForm(anyString(),anyString(),any(HttpMethod.class),any(QualityGate.class),any())).thenReturn(testModel);
+        when(commonService.sendForm(Matchers.matches("http://localhost:8081"),anyString(),any(HttpMethod.class),any(Object.class),any())).thenReturn(resultModel);
 
-  /*      when(commonService.sendForm(Constants.TARGET_INSPECTION_API , "/api/qualityprofiles/copy",HttpMethod.POST, testModel, QualityProfile.class)).thenReturn(resultModel);
-        resultModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
-        resultModel.setProfileDefaultYn(PROFILE_DEFAULT_YN);
-        when(commonService.sendForm(Constants.TARGET_COMMON_API , "/qualityProfile/qualityProfileCopy",HttpMethod.POST, resultModel, QualityProfile.class)).thenReturn(resultModel);
-        */
-        when(qualityProfileService.qualityProfileCopy(testModel)).thenReturn(resultModel);
 
-//        resultModel = qualityProfileService.qualityProfileCopy(testModel);
+//
+//        when(commonService.sendForm(Constants.TARGET_INSPECTION_API , "/api/qualityprofiles/copy",HttpMethod.POST, testModel, QualityProfile.class)).thenReturn(resultModel);
+//        when(commonService.sendForm(Constants.TARGET_COMMON_API , "/qualityProfile/qualityProfileCopy",HttpMethod.POST, resultModel, QualityProfile.class)).thenReturn(resultModel);
+//        when(qualityProfileService.qualityProfileCopy(testModel)).thenReturn(resultModel);
+
+        QualityProfile result  = qualityProfileService.qualityProfileCopy(testModel);
+        assertThat(result).isNotNull();
+        assertEquals(resultModel.getId(), result.getId());
+
     }
 
 

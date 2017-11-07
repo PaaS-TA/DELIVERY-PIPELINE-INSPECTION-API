@@ -8,13 +8,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.mockito.*;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.client.MockRestServiceServer;
-
 import org.springframework.web.client.RestTemplate;
 import paasta.delivery.pipeline.inspection.api.common.CommonService;
 import paasta.delivery.pipeline.inspection.api.common.Constants;

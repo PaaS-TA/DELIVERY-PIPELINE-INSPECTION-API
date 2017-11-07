@@ -19,8 +19,6 @@ import java.util.*;
 public class QualityGateService {
 
     private final CommonService commonService;
-    private final RestTemplateService restTemplateService;
-
 
     /**
      * The Delivery server url.
@@ -33,8 +31,7 @@ public class QualityGateService {
     private String commonApiUrl;
 
     @Autowired
-    public QualityGateService(CommonService commonService, RestTemplateService restTemplateService) {this.commonService = commonService;
-    this.restTemplateService = restTemplateService;}
+    public QualityGateService(CommonService commonService) {this.commonService = commonService;}
 
 
     /**

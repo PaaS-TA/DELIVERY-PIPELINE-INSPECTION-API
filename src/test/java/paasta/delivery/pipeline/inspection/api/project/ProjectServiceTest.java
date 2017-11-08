@@ -262,18 +262,18 @@ public class ProjectServiceTest {
         when(commonService.sendForm(anyString(),anyString(),any(HttpMethod.class),any(Project.class),any())).thenReturn(resultModel);
         when(commonService.sendForm(Matchers.matches("http://localhost:8081"),anyString(),any(HttpMethod.class),any(Project.class),any())).thenReturn(resultModel);
 
-        when(qualityProfileService.getQualityProfile(profileModel.getId())).thenReturn(profileModel);
+        when(commonService.sendForm(Matchers.matches("http://localhost:8081"),anyString(),any(HttpMethod.class),any(QualityProfile.class),any())).thenReturn(profileModel);
+        when(commonService.sendForm(Matchers.matches("http://localhost:8081"),anyString(),any(HttpMethod.class),any(QualityGate.class),any())).thenReturn(gateModel);
+/*        when(qualityProfileService.getQualityProfile(profileModel.getId())).thenReturn(profileModel);
         when(qualityGateService.getiQualityGate(gateModel.getId())).thenReturn(gateModel);
 
         when(projectService.qualityGateProjectLiked(testModel)).thenReturn(resultModel);
-        when(projectService.qualityProfileProjectLinked(testModel)).thenReturn(resultModel);
+        when(projectService.qualityProfileProjectLinked(testModel)).thenReturn(resultModel);*/
         projectService.createProjects(testModel);
-//        assertNotNull(result);
-
 
     }
 
-
+/*
     @Test
     public void createProjectsCase2_Vaild_Return() throws Exception{
         testModel.setLinked(true);
@@ -325,7 +325,7 @@ public class ProjectServiceTest {
         when(projectService.qualityGateProjectLiked(testModel)).thenReturn(resultModel);
         projectService.createProjects(testModel);
 
-    }
+    }*/
 
 
     @Test

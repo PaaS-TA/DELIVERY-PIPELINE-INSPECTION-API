@@ -91,6 +91,10 @@ public class ProjectServiceTest {
 
 
 
+    // COMMON API
+    @Value("${commonApi.url}")
+    private String commonApiUrl;
+
 
     @Value("${inspection.server.url}")
     private String inspectionServerUrl;
@@ -253,22 +257,27 @@ public class ProjectServiceTest {
     @Test
     public void createProjectsCase1_Vaild_Return() throws Exception{
         testModel.setLinked(true);
-        profileModel.setProfileDefaultYn("N");
-        gateModel.setGateDefaultYn("N");
 
         ResponseEntity responseEntity = new ResponseEntity<>(HttpStatus.OK);
         when(restTemplate.exchange(Matchers.anyString(), any(HttpMethod.class), Matchers.<HttpEntity<?>>any(), Matchers.<Class<Project>>any())).thenReturn(responseEntity);
         when(commonService.sendForm(anyString(),anyString(),any(HttpMethod.class),any(Project.class),any())).thenReturn(resultModel);
         when(commonService.sendForm(Matchers.matches("http://localhost:8081"),anyString(),any(HttpMethod.class),any(Project.class),any())).thenReturn(resultModel);
 
-        when(commonService.sendForm(Matchers.matches("http://localhost:8081"),anyString(),any(HttpMethod.class),any(QualityProfile.class),any())).thenReturn(profileModel);
-        when(commonService.sendForm(Matchers.matches("http://localhost:8081"),anyString(),any(HttpMethod.class),any(QualityGate.class),any())).thenReturn(gateModel);
-/*        when(qualityProfileService.getQualityProfile(profileModel.getId())).thenReturn(profileModel);
-        when(qualityGateService.getiQualityGate(gateModel.getId())).thenReturn(gateModel);
+//        when(commonService.sendForm(Matchers.matches("http://localhost:8081"),anyString(),any(HttpMethod.class),any(QualityProfile.class),any())).thenReturn(profileModel);
+//        when(commonService.sendForm(Matchers.matches("http://localhost:8081"),anyString(),any(HttpMethod.class),any(QualityGate.class),any())).thenReturn(gateModel);
+
+        long testId = 1;
+
+        when(qualityProfileService.getQualityProfile(testId)).thenReturn(profileModel);
+        when(qualityGateService.getiQualityGate(testId)).thenReturn(gateModel);
+
+        profileModel.setProfileDefaultYn("N");
+        gateModel.setGateDefaultYn("N");
 
         when(projectService.qualityGateProjectLiked(testModel)).thenReturn(resultModel);
-        when(projectService.qualityProfileProjectLinked(testModel)).thenReturn(resultModel);*/
-        projectService.createProjects(testModel);
+        when(projectService.qualityProfileProjectLinked(testModel)).thenReturn(resultModel);
+
+//        projectService.createProjects(testModel);
 
     }
 

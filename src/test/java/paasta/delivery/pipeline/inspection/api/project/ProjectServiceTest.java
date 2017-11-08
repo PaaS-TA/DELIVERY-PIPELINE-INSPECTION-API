@@ -252,7 +252,6 @@ public class ProjectServiceTest {
 
     @Test
     public void createProjectsCase1_Vaild_Return() throws Exception{
-
         testModel.setLinked(true);
         profileModel.setProfileDefaultYn("N");
         gateModel.setGateDefaultYn("N");

@@ -86,14 +86,14 @@ public class ProjectService {
 
 
 
-        if(profileParam != null && profileParam.getProfileDefaultYn().equals("N")){
+        if(profileParam.getProfileDefaultYn().equals("N")){
             project.setProfileKey(profileParam.getKey());
             project.setProjectKey(project.getKey());
             project.setLinked(true);
             qualityProfileProjectLinked(project);
         }
 
-        if(gateParam != null && gateParam.getGateDefaultYn().equals("N")){
+        if(gateParam.getGateDefaultYn().equals("N")){
             project.setLinked(true);
 
             qualityGateProjectLiked(project);
@@ -175,6 +175,8 @@ public class ProjectService {
 
     //qualityProfile project 연결
     public Project qualityProfileProjectLinked(Project project){
+        Project result = new Project();
+
         if(project.getLinked().equals(true)){
             commonService.sendForm(inspectionServerUrl, "/api/qualityprofiles/add_project", HttpMethod.POST, project, Project.class);
 
@@ -182,9 +184,9 @@ public class ProjectService {
             commonService.sendForm(inspectionServerUrl, "/api/qualityprofiles/remove_project", HttpMethod.POST, project, Project.class);
         }
 
-        project = commonService.sendForm(commonApiUrl, "/project/qualityProfileProjectLiked", HttpMethod.PUT, project, Project.class);
+        result = commonService.sendForm(commonApiUrl, "/project/qualityProfileProjectLiked", HttpMethod.PUT, project, Project.class);
 
-        return project;
+        return result;
     }
 
 

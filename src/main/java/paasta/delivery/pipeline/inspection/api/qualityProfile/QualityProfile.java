@@ -1,6 +1,6 @@
 package paasta.delivery.pipeline.inspection.api.qualityProfile;
 
-import java.util.Date;
+
 import java.util.List;
 
 /**

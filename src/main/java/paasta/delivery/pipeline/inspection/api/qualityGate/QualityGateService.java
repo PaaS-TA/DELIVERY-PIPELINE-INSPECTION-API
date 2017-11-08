@@ -187,15 +187,16 @@ public class QualityGateService {
      * @return
      */
     QualityGate updateQualityGate(QualityGate qualityGate) {
+        QualityGate result = new QualityGate();
         Map<String, String> resultModel = new HashMap<>();
         resultModel.put("id", Long.toString(qualityGate.getId()));
         resultModel.put("name", qualityGate.getName());
         resultModel.put("ServiceInstancesId",qualityGate.getServiceInstancesId());
         resultModel.put("gateDefaultYn", qualityGate.getGateDefaultYn());
 
-        qualityGate = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/rename", HttpMethod.POST, resultModel,QualityGate.class);
-        qualityGate = commonService.sendForm(commonApiUrl, "/qualityGate/qualityGateUpdate", HttpMethod.PUT, resultModel,QualityGate.class);
-        return qualityGate;
+        result = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/rename", HttpMethod.POST, resultModel,QualityGate.class);
+        result = commonService.sendForm(commonApiUrl, "/qualityGate/qualityGateUpdate", HttpMethod.PUT, resultModel,QualityGate.class);
+        return result;
     }
 
 

@@ -1,7 +1,5 @@
 package paasta.delivery.pipeline.inspection.api.project;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 
 

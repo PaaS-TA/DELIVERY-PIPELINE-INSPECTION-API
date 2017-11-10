@@ -135,7 +135,7 @@ public class QualityIssuesService {
         QualityIssues param = new QualityIssues();
         List list = new ArrayList();
 
-//        list = commonService.sendForm(inspectionServerUrl, "/api/resources?metrics=lines,violations,coverage_line_hits_data,coverage&resource="+qualityIssues.getFileKey(), HttpMethod.GET, null, List.class);
+        list = commonService.sendForm(inspectionServerUrl, "/api/resources?metrics=lines,violations,coverage_line_hits_data,coverage&resource="+qualityIssues.getFileKey(), HttpMethod.GET, null, List.class);
 
         list.add(commonService.sendForm(inspectionServerUrl, "/api/sources/show?key="+qualityIssues.getFileKey(), HttpMethod.GET,null, QualityIssues.class));
 

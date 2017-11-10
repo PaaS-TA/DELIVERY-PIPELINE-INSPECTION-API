@@ -177,7 +177,6 @@ public class ProjectService {
         return result;
     }
 
-
     //qualityProfile project 연결
     public Project qualityProfileProjectLinked(Project project){
         Project result = new Project();

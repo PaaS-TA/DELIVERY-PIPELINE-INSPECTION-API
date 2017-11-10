@@ -72,7 +72,6 @@ public class ProjectService {
         result = commonService.sendForm(inspectionServerUrl, "/api/projects/create" , HttpMethod.POST, project, Project.class);
         //sona에서 가져온 id 셋팅
         project.setId(result.getId());
-
         result = commonService.sendForm(commonApiUrl, "/project/projectsCreate", HttpMethod.POST, project, Project.class);
 
         QualityProfile profileParam = new QualityProfile();
@@ -119,13 +118,6 @@ public class ProjectService {
     public Project updateProjects(Project project){
         Project result = new Project();
 
-        //테스트용
-/*        project.setProfileKey("java-quality-copy-55679");
-        project.setProjectKey("84445a412f5a419fbe14615c8aa5077d");
-        project.setGateDefaultYn("N");
-        project.setProfileDefaultYn("N");*/
-
-
 
         result =  commonService.sendForm(commonApiUrl, "/project/projectsUpdate", HttpMethod.PUT, project, Project.class);
 
@@ -140,14 +132,29 @@ public class ProjectService {
         profileParam = qualityProfileService.getQualityProfile(profileId);
         gateParam = qualityGateService.getiQualityGate(gateId);
 
+        //////추가///////////////////////////
+        if(profileParam.getProfileDefaultYn().equals("N")){
+            project.setLinked(true);
+            project.setProjectKey(projectKey.getSonarKey());
+            project.setProfileKey(profileParam.getKey());
+            result = qualityProfileProjectLinked(project);
+        }
 
-        project.setLinked(true);
-        project.setProjectKey(projectKey.getSonarKey());
-        project.setProfileKey(profileParam.getKey());
-        project.setProjectId(Long.toString(project.getId()));
+        if(gateParam.getGateDefaultYn().equals("N")){
+            project.setLinked(true);
+            project.setProjectId(Long.toString(project.getId()));
+            result = qualityGateProjectLiked(project);
+        }
+        ////////////////////////////////////////////
 
-        result = qualityProfileProjectLinked(project);
-        result = qualityGateProjectLiked(project);
+
+//        project.setLinked(true);
+//        project.setProjectKey(projectKey.getSonarKey());
+//        project.setProfileKey(profileParam.getKey());
+//        project.setProjectId(Long.toString(project.getId()));
+//
+//        result = qualityProfileProjectLinked(project);
+//        result = qualityGateProjectLiked(project);
 
 
         return result;

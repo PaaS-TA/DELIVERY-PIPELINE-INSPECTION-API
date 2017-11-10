@@ -39,3 +39,16 @@ dependencies {
 
 	testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
 }
+
+apply plugin: 'jacoco'
+
+jacoco {
+	toolVersion = "0.7.9+"
+}
+
+test {
+    ignoreFailures=true
+    jacoco {
+        destinationFile = file("$buildDir/jacoco/jacoco-overall.exec")
+    }
+}

@@ -8,36 +8,34 @@ import java.util.List;
  */
 public class Project {
 
-    private long id;
-
+    // DATABASE COLUMNS :: BEGIN
+    private long id; // pid
+    private String serviceInstancesId;
+    private String projectName;
+    private long sonarId; // id -> sonarId
     private String sonarName;
-
-    private String name;
-
-    private String key;
-    //자동생성 uuid
-    private String sonarKey;
+    private String sonarKey;  //자동생성 uuid
+    private long qualityProfileId;
+    private long qualityGateId;
+    private long pipelineId;
+    private long jobId;
+    private String created;
+    private String lastModified;
+    private String createdString;
+    private String lastModifiedString;
+    // DATABASE COLUMNS :: END
 
     private String qualifier;
-    private String qualityProfileId;
-    private String qualityGateId;
     private String resultStatus;
     private String resultMessage;
-
-    private int pipelineId;
-    private long jobId;
-
     private String branch;
 
-    private String serviceInstancesId;
-
     //프로젝트와 게이트, 프로파일 연결 상태
-    private Boolean linked;
+    private boolean linked;
 
     //sona에서 사용하는 id(gate)
     private String gateId;
     private String projectId;
-
 
     //sonar에서 사용하는 id(profile)
     private String profileKey;
@@ -46,11 +44,12 @@ public class Project {
     //품질관리 대시보드
     private Object measures;
     private String uuid;
-    private String projectName;
+
     //품질관리 커버리지
     private String resource;
     private List msr;
     private String metrics;
+
     //tests소스
     private Object baseComponent;
     private String baseComponentKey;
@@ -71,6 +70,30 @@ public class Project {
         this.id = id;
     }
 
+    public long getSonarId() {
+        return sonarId;
+    }
+
+    public void setSonarId(long sonarId) {
+        this.sonarId = sonarId;
+    }
+
+    public String getServiceInstancesId() {
+        return serviceInstancesId;
+    }
+
+    public void setServiceInstancesId(String serviceInstancesId) {
+        this.serviceInstancesId = serviceInstancesId;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
     public String getSonarName() {
         return sonarName;
     }
@@ -79,12 +102,76 @@ public class Project {
         this.sonarName = sonarName;
     }
 
-    public String getKey() {
-        return key;
+    public String getSonarKey() {
+        return sonarKey;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setSonarKey(String sonarKey) {
+        this.sonarKey = sonarKey;
+    }
+
+    public long getQualityProfileId() {
+        return qualityProfileId;
+    }
+
+    public void setQualityProfileId(long qualityProfileId) {
+        this.qualityProfileId = qualityProfileId;
+    }
+
+    public long getQualityGateId() {
+        return qualityGateId;
+    }
+
+    public void setQualityGateId(long qualityGateId) {
+        this.qualityGateId = qualityGateId;
+    }
+
+    public long getPipelineId() {
+        return pipelineId;
+    }
+
+    public void setPipelineId(long pipelineId) {
+        this.pipelineId = pipelineId;
+    }
+
+    public long getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(long jobId) {
+        this.jobId = jobId;
+    }
+
+    public String getCreated() {
+        return created;
+    }
+
+    public void setCreated(String created) {
+        this.created = created;
+    }
+
+    public String getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(String lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    public String getCreatedString() {
+        return createdString;
+    }
+
+    public void setCreatedString(String createdString) {
+        this.createdString = createdString;
+    }
+
+    public String getLastModifiedString() {
+        return lastModifiedString;
+    }
+
+    public void setLastModifiedString(String lastModifiedString) {
+        this.lastModifiedString = lastModifiedString;
     }
 
     public String getQualifier() {
@@ -111,43 +198,19 @@ public class Project {
         this.resultMessage = resultMessage;
     }
 
-    public String getServiceInstancesId() {
-        return serviceInstancesId;
+    public String getBranch() {
+        return branch;
     }
 
-    public void setServiceInstancesId(String serviceInstancesId) {
-        this.serviceInstancesId = serviceInstancesId;
+    public void setBranch(String branch) {
+        this.branch = branch;
     }
 
-    public String getSonarKey() {
-        return sonarKey;
-    }
-
-    public String getQualityProfileId() {
-        return qualityProfileId;
-    }
-
-    public void setQualityProfileId(String qualityProfileId) {
-        this.qualityProfileId = qualityProfileId;
-    }
-
-    public String getQualityGateId() {
-        return qualityGateId;
-    }
-
-    public void setQualityGateId(String qualityGateId) {
-        this.qualityGateId = qualityGateId;
-    }
-
-    public void setSonarKey(String sonarKey) {
-        this.sonarKey = sonarKey;
-    }
-
-    public Boolean getLinked() {
+    public boolean isLinked() {
         return linked;
     }
 
-    public void setLinked(Boolean linked) {
+    public void setLinked(boolean linked) {
         this.linked = linked;
     }
 
@@ -167,6 +230,21 @@ public class Project {
         this.projectId = projectId;
     }
 
+    public String getProfileKey() {
+        return profileKey;
+    }
+
+    public void setProfileKey(String profileKey) {
+        this.profileKey = profileKey;
+    }
+
+    public String getProjectKey() {
+        return projectKey;
+    }
+
+    public void setProjectKey(String projectKey) {
+        this.projectKey = projectKey;
+    }
 
     public Object getMeasures() {
         return measures;
@@ -182,14 +260,6 @@ public class Project {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
-    }
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
     }
 
     public String getResource() {
@@ -264,54 +334,6 @@ public class Project {
         this.issues = issues;
     }
 
-    public String getBranch() {
-        return branch;
-    }
-
-    public void setBranch(String branch) {
-        this.branch = branch;
-    }
-
-    public String getProfileKey() {
-        return profileKey;
-    }
-
-    public void setProfileKey(String profileKey) {
-        this.profileKey = profileKey;
-    }
-
-    public String getProjectKey() {
-        return projectKey;
-    }
-
-    public void setProjectKey(String projectKey) {
-        this.projectKey = projectKey;
-    }
-
-    public int getPipelineId() {
-        return pipelineId;
-    }
-
-    public void setPipelineId(int pipelineId) {
-        this.pipelineId = pipelineId;
-    }
-
-    public long getJobId() {
-        return jobId;
-    }
-
-    public void setJobId(long jobId) {
-        this.jobId = jobId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getGateDefaultYn() {
         return gateDefaultYn;
     }
@@ -327,45 +349,5 @@ public class Project {
     public void setProfileDefaultYn(String profileDefaultYn) {
         this.profileDefaultYn = profileDefaultYn;
     }
-
-    @Override
-    public String toString() {
-        return "Project{" +
-                "id=" + id +
-                ", sonarName='" + sonarName + '\'' +
-                ", name='" + name + '\'' +
-                ", key='" + key + '\'' +
-                ", sonarKey='" + sonarKey + '\'' +
-                ", qualifier='" + qualifier + '\'' +
-                ", qualityProfileId='" + qualityProfileId + '\'' +
-                ", qualityGateId='" + qualityGateId + '\'' +
-                ", resultStatus='" + resultStatus + '\'' +
-                ", resultMessage='" + resultMessage + '\'' +
-                ", pipelineId=" + pipelineId +
-                ", jobId=" + jobId +
-                ", branch='" + branch + '\'' +
-                ", serviceInstancesId='" + serviceInstancesId + '\'' +
-                ", linked=" + linked +
-                ", gateId='" + gateId + '\'' +
-                ", projectId='" + projectId + '\'' +
-                ", profileKey='" + profileKey + '\'' +
-                ", projectKey='" + projectKey + '\'' +
-                ", measures=" + measures +
-                ", uuid='" + uuid + '\'' +
-                ", projectName='" + projectName + '\'' +
-                ", resource='" + resource + '\'' +
-                ", msr=" + msr +
-                ", metrics='" + metrics + '\'' +
-                ", baseComponent=" + baseComponent +
-                ", baseComponentKey='" + baseComponentKey + '\'' +
-                ", components=" + components +
-                ", sources=" + sources +
-                ", scm=" + scm +
-                ", issues=" + issues +
-                ", gateDefaultYn='" + gateDefaultYn + '\'' +
-                ", profileDefaultYn='" + profileDefaultYn + '\'' +
-                '}';
-    }
-
 
 }

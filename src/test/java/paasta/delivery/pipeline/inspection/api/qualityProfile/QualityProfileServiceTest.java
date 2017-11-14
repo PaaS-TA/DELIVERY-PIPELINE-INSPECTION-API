@@ -2,9 +2,6 @@ package paasta.delivery.pipeline.inspection.api.qualityProfile;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -16,7 +13,6 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -27,18 +23,15 @@ import paasta.delivery.pipeline.inspection.api.common.CommonService;
 import paasta.delivery.pipeline.inspection.api.common.Constants;
 import paasta.delivery.pipeline.inspection.api.qualityGate.QualityGate;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.when;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by kim on 2017-10-26.
@@ -102,29 +95,29 @@ public class QualityProfileServiceTest {
         testModel = new QualityProfile();
         resultModel = new QualityProfile();
 
-        testModel.setId(ID);
+//        testModel.setId(ID);
         testModel.setSonarKey(SONAR_KEY);
         testModel.setLanguageName(LANGUAGE_NAME);
         testModel.setLanguage(LANGUAGE);
-        testModel.setName(NAME);
+//        testModel.setName(NAME);
         testModel.setProfileDefaultYn(PROFILE_DEFAULT_YN);
         testModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
-        testModel.setKey(KEY);
+//        testModel.setKey(KEY);
         testModel.setToName(TO_NAME);
         testModel.setFromKey(FROM_KEY);
         testModel.setProfileKey(PROFILE_KEY);
         testModel.setActiveRuleCount(ACTIVE_RULE_COUNT);
         testModel.setActiveDeprecatedRuleCount(ACTIVE_DEPRECATED_RULE_COUNT);
 
-        resultModel.setId(ID);
+//        resultModel.setId(ID);
         resultModel.setSonarKey(SONAR_KEY);
         resultModel.setLanguageName(LANGUAGE_NAME);
         resultModel.setLanguage(LANGUAGE);
-        resultModel.setName(NAME);
+//        resultModel.setName(NAME);
         resultModel.setProfileDefaultYn(PROFILE_DEFAULT_YN);
 
         resultModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
-        resultModel.setKey(KEY);
+//        resultModel.setKey(KEY);
         resultModel.setProfileKey(PROFILE_KEY);
         resultModel.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
         resultModel.setActiveDeprecatedRuleCount(ACTIVE_DEPRECATED_RULE_COUNT);
@@ -180,7 +173,7 @@ public class QualityProfileServiceTest {
 
         QualityProfile result  = qualityProfileService.qualityProfileCopy(testModel);
         assertThat(result).isNotNull();
-        assertEquals(resultModel.getId(), result.getId());
+//        assertEquals(resultModel.getId(), result.getId());
 
     }
 
@@ -231,16 +224,16 @@ public class QualityProfileServiceTest {
         QualityProfile testModel = new QualityProfile();
 
 
-        testModel.setId(104);
+//        testModel.setId(104);
         testModel.setProfileKey("java-copy-egov-profile-61540");
         testModel.setServiceInstancesId("09f060c6-ef13-464b-b0c5-d23f863c4960");
         testModel.setProfileDefaultYn("N");
 
-        String s​tate = "SUSESS";
+//        String state = "SUSESS";
 
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API , "/api/qualityprofiles/delete",HttpMethod.POST, testModel, null)).thenReturn(null);
-        when(commonService.sendForm(Constants.TARGET_COMMON_API , "/qualityProfile/qualityProfileDelete",HttpMethod.DELETE, testModel, String.class)).thenReturn(s​tate);
-        when(commonService.sendForm(Constants.TARGET_COMMON_API,"/project/qualityProfileDelete",HttpMethod.PUT,testModel,String.class)).thenReturn(s​tate);
+//        when(commonService.sendForm(Constants.TARGET_COMMON_API , "/qualityProfile/qualityProfileDelete",HttpMethod.DELETE, testModel, String.class)).thenReturn(state);
+//        when(commonService.sendForm(Constants.TARGET_COMMON_API,"/project/qualityProfileDelete",HttpMethod.PUT,testModel,String.class)).thenReturn(state);
 
         QualityProfile resultModel = qualityProfileService.deleteQualityProfile(testModel);
 
@@ -263,9 +256,9 @@ public class QualityProfileServiceTest {
         QualityProfile testModel = new QualityProfile();
         QualityProfile resultModel = new QualityProfile();
 
-        testModel.setId(104);
-        testModel.setName("update-profile");
-        testModel.setKey("java-copy-egov-profile-61540");
+//        testModel.setId(104);
+//        testModel.setName("update-profile");
+//        testModel.setKey("java-copy-egov-profile-61540");
         testModel.setProfileDefaultYn("N");
 
         when(commonService.sendForm(Constants.TARGET_INSPECTION_API , "/api/qualityprofiles/rename",HttpMethod.POST, testModel, null)).thenReturn(null);
@@ -305,9 +298,9 @@ public class QualityProfileServiceTest {
         List resultList = new ArrayList();
 
         testModel.setLanguage("java");
-        testModel.setName("profile-create");
+//        testModel.setName("profile-create");
 
-        when(commonService.sendForm(Constants.TARGET_INSPECTION_API,"/api/profiles?language="+testModel.getLanguage()+"&name="+testModel.getName(),HttpMethod.GET,null,List.class)).thenReturn(resultList);
+//        when(commonService.sendForm(Constants.TARGET_INSPECTION_API,"/api/profiles?language="+testModel.getLanguage()+"&name="+testModel.getName(),HttpMethod.GET,null,List.class)).thenReturn(resultList);
 
         qualityProfileService.getCodingRulesList(testModel);
     }

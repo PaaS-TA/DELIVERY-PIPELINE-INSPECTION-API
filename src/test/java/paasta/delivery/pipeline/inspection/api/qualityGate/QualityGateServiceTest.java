@@ -118,17 +118,17 @@ public class QualityGateServiceTest {
 
 
 
-        testModel.setId(ID);
+//        testModel.setId(ID);
         testModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
         testModel.setGateDefaultYn(GATE_DEFAULT_YN);
-        testModel.setName(NAME);
+//        testModel.setName(NAME);
         testModel.setOp(OP);
         testModel.setWarning(WARNING);
         testModel.setError(ERROR);
         testModel.setUuid(UUID);
         testModel.setGateId(GATE_ID);
         testModel.setMetric(METRIC);
-        testModel.setDefaultYn(GATE_DEFAULT_YN);
+//        testModel.setDefaultYn(GATE_DEFAULT_YN);
         testModel.setLinked(LINKED);
         testModel.setCreated(CREATED);
         testModel.setResultMessage(RESULT_MESSAGE);
@@ -137,11 +137,11 @@ public class QualityGateServiceTest {
         testModel.setCreatedString(CREATED_STRING);
         testModel.setDefaultKey(DEFAULT_KEY);
 
-        resultModel.setId(ID);
-        resultModel.setName(NAME);
+//        resultModel.setId(ID);
+//        resultModel.setName(NAME);
         resultModel.setGateDefaultYn(GATE_DEFAULT_YN);
         resultModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
-        resultModel.setDefaultYn(GATE_DEFAULT_YN);
+//        resultModel.setDefaultYn(GATE_DEFAULT_YN);
         resultModel.setMetrics(METRICS);
         resultModel.setDomains(DOMAINS);
         resultModel.setConditions(CONDITIONS);
@@ -153,7 +153,7 @@ public class QualityGateServiceTest {
         resultModel.setUuid(UUID);
         resultModel.setGateId(GATE_ID);
         resultModel.setMetric(METRIC);
-        resultModel.setDefaultYn(GATE_DEFAULT_YN);
+//        resultModel.setDefaultYn(GATE_DEFAULT_YN);
         resultModel.setLinked(LINKED);
         resultModel.setLastModified(LAST_MODIFIED);
         resultModel.setCreated(CREATED);
@@ -164,7 +164,7 @@ public class QualityGateServiceTest {
 
 
         testResultMap.put("id", STRING_ID);
-        testResultMap.put("name",testModel.getName());
+//        testResultMap.put("name",testModel.getName());
         testResultMap.put("gateDefaultYn",testModel.getGateDefaultYn());
         testResultMap.put("serviceInstancesId",testModel.getServiceInstancesId());
         testResultMap.put("defaultYn",GATE_DEFAULT_YN);
@@ -300,8 +300,8 @@ public class QualityGateServiceTest {
 
         QualityGate result = qualityGateService.copyQualityGate(testModel);
         assertThat(result).isNotNull();
-        assertEquals(resultModel.getId(), result.getId());
-        assertEquals(resultModel.getName(),result.getName());
+//        assertEquals(resultModel.getId(), result.getId());
+//        assertEquals(resultModel.getName(),result.getName());
         assertEquals(resultModel.getGateDefaultYn(),result.getGateDefaultYn());
         assertEquals(resultModel.getServiceInstancesId(),result.getServiceInstancesId());
     }
@@ -321,8 +321,8 @@ public class QualityGateServiceTest {
 
         QualityGate result = qualityGateService.createQualityGate(testModel);
         assertThat(result).isNotNull();
-        assertEquals(resultModel.getId(), result.getId());
-        assertEquals(resultModel.getName(),result.getName());
+//        assertEquals(resultModel.getId(), result.getId());
+//        assertEquals(resultModel.getName(),result.getName());
         assertEquals(resultModel.getGateDefaultYn(),result.getGateDefaultYn());
         assertEquals(resultModel.getServiceInstancesId(),result.getServiceInstancesId());
 

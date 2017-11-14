@@ -57,8 +57,7 @@ public class ProjectService {
         Project result = new Project();
 
         //프로젝트 키 셋팅
-        project.setKey(UUID.randomUUID().toString().replace("-", ""));
-        project.setSonarKey(project.getKey());
+        project.setSonarKey(UUID.randomUUID().toString().replace("-", ""));
         SimpleDateFormat formatter = new SimpleDateFormat ( "yyyyMMddkkmmss" ,Locale.KOREAN);
 
         Date currentTime = new Date();
@@ -66,18 +65,18 @@ public class ProjectService {
 
         project.setSonarName(UUID.randomUUID().toString().replace("-", "")+"_"+dTime);
 
-        project.setProjectName(project.getName());
-        project.setName(project.getSonarName());
+        project.setProjectName(project.getProjectName());
+        project.setProjectName(project.getSonarName());
         result = commonService.sendForm(inspectionServerUrl, "/api/projects/create" , HttpMethod.POST, project, Project.class);
         //sona에서 가져온 id 셋팅
-        project.setId(result.getId());
+        project.setSonarId(result.getSonarId());
         result = commonService.sendForm(commonApiUrl, "/project/projectsCreate", HttpMethod.POST, project, Project.class);
 
         QualityProfile profileParam = new QualityProfile();
         QualityGate gateParam = new QualityGate();
 
-        long profileId = Long.parseLong(project.getQualityProfileId());
-        long gateId = Long.parseLong(project.getQualityGateId());
+        long profileId = project.getQualityProfileId();
+        long gateId = project.getQualityGateId();
 
         profileParam = qualityProfileService.getQualityProfile(profileId);
         gateParam = qualityGateService.getiQualityGate(gateId);
@@ -85,8 +84,7 @@ public class ProjectService {
 
 
         if(profileParam.getProfileDefaultYn().equals("N")){
-            project.setProfileKey(profileParam.getKey());
-            project.setProjectKey(project.getKey());
+            project.setProfileKey(profileParam.getQualityProfileKey());
             project.setLinked(true);
             qualityProfileProjectLinked(project);
         }
@@ -124,8 +122,8 @@ public class ProjectService {
         Project projectKey = new Project();
 
         projectKey = getProjectKey(project);
-        long profileId = Long.parseLong(project.getQualityProfileId());
-        long gateId = Long.parseLong(project.getQualityGateId());
+        long profileId = project.getQualityProfileId();
+        long gateId = project.getQualityGateId();
 
         profileParam = qualityProfileService.getQualityProfile(profileId);
         gateParam = qualityGateService.getiQualityGate(gateId);
@@ -134,13 +132,13 @@ public class ProjectService {
         if(profileParam.getProfileDefaultYn().equals("N")){
             project.setLinked(true);
             project.setProjectKey(projectKey.getSonarKey());
-            project.setProfileKey(profileParam.getKey());
+            project.setProfileKey(profileParam.getQualityProfileKey());
             result = qualityProfileProjectLinked(project);
         }
 
         if(gateParam.getGateDefaultYn().equals("N")){
             project.setLinked(true);
-            project.setProjectId(Long.toString(project.getId()));
+            project.setProjectId(Long.toString(project.getSonarId()));
             result = qualityGateProjectLiked(project);
         }
         ////////////////////////////////////////////
@@ -163,12 +161,12 @@ public class ProjectService {
 
 
         Project result = new Project();
-        project.setProjectId(Long.toString(project.getId()));
-        project.setGateId(project.getQualityGateId());
+        project.setProjectId(Long.toString(project.getSonarId()));
+        project.setGateId(String.valueOf(project.getQualityGateId()));
 
-        if(project.getLinked().equals(true)){
+        if(project.isLinked()){
             result = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/select", HttpMethod.POST, project, Project.class);
-        }else if(project.getLinked().equals(false)){
+        }else {
             result = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/deselect", HttpMethod.POST, project, Project.class);
         }
 
@@ -181,10 +179,10 @@ public class ProjectService {
     public Project qualityProfileProjectLinked(Project project){
         Project result = new Project();
 
-        if(project.getLinked().equals(true)){
+        if(project.isLinked()){
             commonService.sendForm(inspectionServerUrl, "/api/qualityprofiles/add_project", HttpMethod.POST, project, Project.class);
 
-        }else if(project.getLinked().equals(false)){
+        }else {
             commonService.sendForm(inspectionServerUrl, "/api/qualityprofiles/remove_project", HttpMethod.POST, project, Project.class);
         }
 
@@ -230,12 +228,12 @@ public class ProjectService {
 
         Project result = new Project();
 
-        result.setMsr(commonService.sendForm(inspectionServerUrl, "/api/resources?metrics=coverage_line_hits_data,covered_conditions_by_line&resource="+project.getKey(), HttpMethod.GET, null, List.class));
+        result.setMsr(commonService.sendForm(inspectionServerUrl, "/api/resources?metrics=coverage_line_hits_data,covered_conditions_by_line&resource="+project.getSonarKey(), HttpMethod.GET, null, List.class));
 
-        result = commonService.sendForm(inspectionServerUrl, "/api/sources/show?key="+project.getKey(), HttpMethod.GET, null, Project.class);
+        result = commonService.sendForm(inspectionServerUrl, "/api/sources/show?key="+project.getSonarKey(), HttpMethod.GET, null, Project.class);
         project.setSources(result.getSources());
 
-        result = commonService.sendForm(inspectionServerUrl, "/api/sources/scm?key="+project.getKey(), HttpMethod.GET, null, Project.class);
+        result = commonService.sendForm(inspectionServerUrl, "/api/sources/scm?key="+project.getSonarKey(), HttpMethod.GET, null, Project.class);
         project.setScm(result.getScm());
 
         result = commonService.sendForm(inspectionServerUrl, "/api/issues/search?additionalFields=_all&resolved=false&fileUuids="+project.getUuid(), HttpMethod.GET, null, Project.class);

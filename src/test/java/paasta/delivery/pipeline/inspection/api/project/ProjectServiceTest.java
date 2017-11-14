@@ -1,7 +1,5 @@
 package paasta.delivery.pipeline.inspection.api.project;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -11,11 +9,12 @@ import org.junit.runners.MethodSorters;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 import paasta.delivery.pipeline.inspection.api.common.CommonService;
@@ -25,12 +24,11 @@ import paasta.delivery.pipeline.inspection.api.qualityGate.QualityGateService;
 import paasta.delivery.pipeline.inspection.api.qualityProfile.QualityProfile;
 import paasta.delivery.pipeline.inspection.api.qualityProfile.QualityProfileService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
@@ -136,15 +134,15 @@ public class ProjectServiceTest {
 
         testModel = new Project();
 
-        testModel.setId(ID);
+//        testModel.setId(ID);
         testModel.setSonarName(SONAR_NAME);
         testModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
-        testModel.setName(NAME);
-        testModel.setKey(KEY);
+//        testModel.setName(NAME);
+//        testModel.setKey(KEY);
         testModel.setSonarKey(SONAR_KEY);
         testModel.setQualifier(QUALIFIER);
-        testModel.setQualityProfileId(QUALITY_PROFILE_ID);
-        testModel.setQualityGateId(QUALITY_GATE_ID);
+//        testModel.setQualityProfileId(QUALITY_PROFILE_ID);
+//        testModel.setQualityGateId(QUALITY_GATE_ID);
         testModel.setProfileKey(PROFILE_KEY);
         testModel.setProjectKey(PROJECT_KEY);
         testModel.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
@@ -167,7 +165,7 @@ public class ProjectServiceTest {
         testMap.put("sources","test-sources");
         testList.add(testMap);
 
-        resultModel.setId(testModel.getId());
+//        resultModel.setId(testModel.getId());
         resultModel.setMetrics(METRICS);
         resultModel.setResource(RESOURCE);
         resultModel.setBaseComponent(testList);
@@ -181,8 +179,8 @@ public class ProjectServiceTest {
         resultModel.setSonarName(SONAR_NAME);
         resultModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
         resultModel.setSonarKey(SONAR_KEY);
-        resultModel.setQualityProfileId(QUALITY_PROFILE_ID);
-        resultModel.setQualityGateId(QUALITY_GATE_ID);
+//        resultModel.setQualityProfileId(QUALITY_PROFILE_ID);
+//        resultModel.setQualityGateId(QUALITY_GATE_ID);
         resultModel.setJobId(JOB_ID);
 
         resultModel.setScm(SCM);
@@ -193,16 +191,16 @@ public class ProjectServiceTest {
 
 
         gateModel = new QualityGate();
-        gateModel.setId(GATEID);
-        gateModel.setName(QUALITY_GATE_NAME);
+//        gateModel.setId(GATEID);
+//        gateModel.setName(QUALITY_GATE_NAME);
         gateModel.setGateDefaultYn(GATE_DEFAULT_YN);
         gateModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
-        gateModel.setDefaultYn(GATE_DEFAULT_YN);
+//        gateModel.setDefaultYn(GATE_DEFAULT_YN);
 
 
         profileModel = new QualityProfile();
-        profileModel.setId(PROFILEID);
-        profileModel.setName(QUALITY_PROFILE_NAME);
+//        profileModel.setId(PROFILEID);
+//        profileModel.setName(QUALITY_PROFILE_NAME);
         profileModel.setSonarKey(SONAR_KEY);
         profileModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
         profileModel.setProfileDefaultYn(PROFILE_DEFAULT_YN);
@@ -352,14 +350,14 @@ public class ProjectServiceTest {
 
         testModel.setLinked(true);
 
-        long profileId = Long.parseLong(testModel.getQualityProfileId());
-        long gateId = Long.parseLong(testModel.getQualityGateId());
+//        long profileId = Long.parseLong(testModel.getQualityProfileId());
+//        long gateId = Long.parseLong(testModel.getQualityGateId());
 
         when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/projectsUpdate", HttpMethod.PUT, testModel, Project.class)).thenReturn(resultModel);
         when(projectService.getProjectKey(testModel)).thenReturn(resultModel);
 
-        when(qualityProfileService.getQualityProfile(profileId)).thenReturn(profileModel);
-        when(qualityGateService.getiQualityGate(gateId)).thenReturn(gateModel);
+//        when(qualityProfileService.getQualityProfile(profileId)).thenReturn(profileModel);
+//        when(qualityGateService.getiQualityGate(gateId)).thenReturn(gateModel);
 
         when(projectService.qualityProfileProjectLinked(testModel)).thenReturn(resultModel);
         when(projectService.qualityGateProjectLiked(testModel)).thenReturn(resultModel);
@@ -446,7 +444,7 @@ public class ProjectServiceTest {
     public void testsSourceShow_Valid_Return() throws Exception {
 
         List resultList = new ArrayList();
-        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/resources?metrics=coverage_line_hits_data,covered_conditions_by_line&resource="+testModel.getKey(), HttpMethod.GET, null, List.class)).thenReturn(resultList);
+//        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/resources?metrics=coverage_line_hits_data,covered_conditions_by_line&resource="+testModel.getKey(), HttpMethod.GET, null, List.class)).thenReturn(resultList);
         resultModel.setMsr(resultList);
         ResponseEntity responseEntity = new ResponseEntity<>(HttpStatus.OK);
         when(restTemplate.exchange(anyString(), any(HttpMethod.class), Matchers.<HttpEntity<?>>any(), Matchers.<Class>any())).thenReturn(responseEntity);

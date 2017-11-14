@@ -97,7 +97,7 @@ public class QualityGateService {
     public QualityGate updateQualityGateCond(QualityGate qualityGate){
         //id가 long 타입이라서 바꿔줘야함
         Map<String, String> resultModel = new HashMap<>();
-        resultModel.put("id", Long.toString(qualityGate.getId()));
+        resultModel.put("id", Long.toString(qualityGate.getQualityGateId()));
         resultModel.put("gateId", qualityGate.getGateId());
         resultModel.put("metric", qualityGate.getMetric());
         resultModel.put("error", qualityGate.getError());
@@ -133,8 +133,8 @@ public class QualityGateService {
         QualityGate result = new QualityGate();
 
         Map<String, String> resultModel = new HashMap<>();
-        resultModel.put("id", Long.toString(qualityGate.getId()));
-        resultModel.put("name", qualityGate.getName());
+        resultModel.put("id", Long.toString(qualityGate.getQualityGateId()));
+        resultModel.put("name", qualityGate.getQualityGateName());
         resultModel.put("serviceInstancesId", qualityGate.getServiceInstancesId());
         resultModel.put("gateDefaultYn",qualityGate.getGateDefaultYn());
 
@@ -189,8 +189,8 @@ public class QualityGateService {
     QualityGate updateQualityGate(QualityGate qualityGate) {
         QualityGate result = new QualityGate();
         Map<String, String> resultModel = new HashMap<>();
-        resultModel.put("id", Long.toString(qualityGate.getId()));
-        resultModel.put("name", qualityGate.getName());
+        resultModel.put("id", Long.toString(qualityGate.getQualityGateId()));
+        resultModel.put("name", qualityGate.getQualityGateName());
         resultModel.put("ServiceInstancesId",qualityGate.getServiceInstancesId());
         resultModel.put("gateDefaultYn", qualityGate.getGateDefaultYn());
 
@@ -214,7 +214,7 @@ public class QualityGateService {
 
     QualityGate deleteQualityGate(QualityGate qualityGate) {
         Map<String, String> resultModel = new HashMap<>();
-        resultModel.put("id", Long.toString(qualityGate.getId()));
+        resultModel.put("id", Long.toString(qualityGate.getQualityGateId()));
         resultModel.put("serviceInstancesId",qualityGate.getServiceInstancesId());
         QualityGate result = new QualityGate();
 

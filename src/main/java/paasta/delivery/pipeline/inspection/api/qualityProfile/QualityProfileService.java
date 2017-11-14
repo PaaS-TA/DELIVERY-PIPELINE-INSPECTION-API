@@ -98,8 +98,8 @@ public class QualityProfileService {
         QualityProfile resultModel = new QualityProfile();
         JsonNode result = commonService.sendForm(inspectionServerUrl, "/api/qualityprofiles/create", HttpMethod.POST, qualityProfile, JsonNode.class);
 
-        qualityProfile.setName(result.get("profile").get("name").asText());
-        qualityProfile.setKey(result.get("profile").get("key").asText());
+        qualityProfile.setQualityProfileName(result.get("profile").get("name").asText());
+        qualityProfile.setQualityProfileKey(result.get("profile").get("key").asText());
         qualityProfile.setLanguage(result.get("profile").get("language").asText());
         qualityProfile.setLanguageName(result.get("profile").get("languageName").asText());
         resultModel = commonService.sendForm(commonApiUrl, "/qualityProfile/qualityProfilCreate",HttpMethod.POST, qualityProfile, QualityProfile.class);
@@ -128,7 +128,7 @@ public class QualityProfileService {
      * @return list
      */
     public List getCodingRulesList(QualityProfile qualityProfile){
-        return commonService.sendForm(inspectionServerUrl,"/api/profiles?language="+qualityProfile.getLanguage()+"&name="+qualityProfile.getName(),HttpMethod.GET,null,List.class);
+        return commonService.sendForm(inspectionServerUrl,"/api/profiles?language="+qualityProfile.getLanguage()+"&name="+qualityProfile.getQualityProfileName(),HttpMethod.GET,null,List.class);
     }
 
 

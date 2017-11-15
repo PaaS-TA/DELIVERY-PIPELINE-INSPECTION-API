@@ -2,7 +2,6 @@ package paasta.delivery.pipeline.inspection.api.project;
 
 import java.util.List;
 
-
 /**
  * Created by Dojun on 2017-06-19.
  */
@@ -11,14 +10,13 @@ public class Project {
     // DATABASE COLUMNS :: BEGIN
     private long id; // pid
     private String serviceInstancesId;
-    private String projectName;
-    private long sonarId; // id -> sonarId
-    private String sonarName;
-    private String sonarKey;  //자동생성 uuid
-    private long qualityProfileId;
-    private long qualityGateId;
     private long pipelineId;
     private long jobId;
+    private long projectId; // id -> projectId
+    private String projectName;
+    private String projectKey;  //자동생성 uuid
+    private long qualityProfileId;
+    private long qualityGateId;
     private String created;
     private String lastModified;
     private String createdString;
@@ -35,11 +33,9 @@ public class Project {
 
     //sona에서 사용하는 id(gate)
     private String gateId;
-    private String projectId;
 
     //sonar에서 사용하는 id(profile)
     private String profileKey;
-    private String projectKey;
 
     //품질관리 대시보드
     private Object measures;
@@ -70,60 +66,12 @@ public class Project {
         this.id = id;
     }
 
-    public long getSonarId() {
-        return sonarId;
-    }
-
-    public void setSonarId(long sonarId) {
-        this.sonarId = sonarId;
-    }
-
     public String getServiceInstancesId() {
         return serviceInstancesId;
     }
 
     public void setServiceInstancesId(String serviceInstancesId) {
         this.serviceInstancesId = serviceInstancesId;
-    }
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
-    public String getSonarName() {
-        return sonarName;
-    }
-
-    public void setSonarName(String sonarName) {
-        this.sonarName = sonarName;
-    }
-
-    public String getSonarKey() {
-        return sonarKey;
-    }
-
-    public void setSonarKey(String sonarKey) {
-        this.sonarKey = sonarKey;
-    }
-
-    public long getQualityProfileId() {
-        return qualityProfileId;
-    }
-
-    public void setQualityProfileId(long qualityProfileId) {
-        this.qualityProfileId = qualityProfileId;
-    }
-
-    public long getQualityGateId() {
-        return qualityGateId;
-    }
-
-    public void setQualityGateId(long qualityGateId) {
-        this.qualityGateId = qualityGateId;
     }
 
     public long getPipelineId() {
@@ -140,6 +88,46 @@ public class Project {
 
     public void setJobId(long jobId) {
         this.jobId = jobId;
+    }
+
+    public long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(long projectId) {
+        this.projectId = projectId;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public String getProjectKey() {
+        return projectKey;
+    }
+
+    public void setProjectKey(String projectKey) {
+        this.projectKey = projectKey;
+    }
+
+    public long getQualityProfileId() {
+        return qualityProfileId;
+    }
+
+    public void setQualityProfileId(long qualityProfileId) {
+        this.qualityProfileId = qualityProfileId;
+    }
+
+    public long getQualityGateId() {
+        return qualityGateId;
+    }
+
+    public void setQualityGateId(long qualityGateId) {
+        this.qualityGateId = qualityGateId;
     }
 
     public String getCreated() {
@@ -222,28 +210,12 @@ public class Project {
         this.gateId = gateId;
     }
 
-    public String getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
-    }
-
     public String getProfileKey() {
         return profileKey;
     }
 
     public void setProfileKey(String profileKey) {
         this.profileKey = profileKey;
-    }
-
-    public String getProjectKey() {
-        return projectKey;
-    }
-
-    public void setProjectKey(String projectKey) {
-        this.projectKey = projectKey;
     }
 
     public Object getMeasures() {

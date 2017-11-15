@@ -135,24 +135,24 @@ public class ProjectServiceTest {
         testModel = new Project();
 
 //        testModel.setId(ID);
-        testModel.setSonarName(SONAR_NAME);
+//        testModel.setSonarName(SONAR_NAME);
         testModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
 //        testModel.setName(NAME);
 //        testModel.setKey(KEY);
-        testModel.setSonarKey(SONAR_KEY);
+//        testModel.setSonarKey(SONAR_KEY);
         testModel.setQualifier(QUALIFIER);
 //        testModel.setQualityProfileId(QUALITY_PROFILE_ID);
 //        testModel.setQualityGateId(QUALITY_GATE_ID);
         testModel.setProfileKey(PROFILE_KEY);
         testModel.setProjectKey(PROJECT_KEY);
         testModel.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
-        testModel.setProjectId(PROJECT_ID);
+//        testModel.setProjectId(PROJECT_ID);
         testModel.setJobId(JOB_ID);
         testModel.setBranch(BRANCH);
         testModel.setGateDefaultYn(GATE_DEFAULT_YN);
         testModel.setProfileDefaultYn(PROFILE_DEFAULT_YN);
         testModel.setGateId(GATE_ID);
-        testModel.setProjectId(PROJECT_ID);
+//        testModel.setProjectId(PROJECT_ID);
 
 
 
@@ -176,9 +176,9 @@ public class ProjectServiceTest {
         resultModel.setIssues(testList);
 
         resultModel.setProjectName(PROJECT_NAME);
-        resultModel.setSonarName(SONAR_NAME);
+//        resultModel.setSonarName(SONAR_NAME);
         resultModel.setServiceInstancesId(SERVICE_INSTANCES_ID);
-        resultModel.setSonarKey(SONAR_KEY);
+//        resultModel.setSonarKey(SONAR_KEY);
 //        resultModel.setQualityProfileId(QUALITY_PROFILE_ID);
 //        resultModel.setQualityGateId(QUALITY_GATE_ID);
         resultModel.setJobId(JOB_ID);

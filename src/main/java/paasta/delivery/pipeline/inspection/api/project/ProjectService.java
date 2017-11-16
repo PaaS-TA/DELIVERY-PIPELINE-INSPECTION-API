@@ -57,19 +57,18 @@ public class ProjectService {
         Project result = new Project();
 
         //프로젝트 키 셋팅
-        project.setSonarKey(UUID.randomUUID().toString().replace("-", ""));
+        project.setProfileKey(UUID.randomUUID().toString().replace("-", ""));
         SimpleDateFormat formatter = new SimpleDateFormat ( "yyyyMMddkkmmss" ,Locale.KOREAN);
 
         Date currentTime = new Date();
         String dTime = formatter.format ( currentTime );
 
-        project.setSonarName(UUID.randomUUID().toString().replace("-", "")+"_"+dTime);
+        project.setProjectName(UUID.randomUUID().toString().replace("-", "")+"_"+dTime);
 
         project.setProjectName(project.getProjectName());
-        project.setProjectName(project.getSonarName());
         result = commonService.sendForm(inspectionServerUrl, "/api/projects/create" , HttpMethod.POST, project, Project.class);
         //sona에서 가져온 id 셋팅
-        project.setSonarId(result.getSonarId());
+        project.setProjectId(result.getProjectId());
         result = commonService.sendForm(commonApiUrl, "/project/projectsCreate", HttpMethod.POST, project, Project.class);
 
         QualityProfile profileParam = new QualityProfile();
@@ -131,14 +130,14 @@ public class ProjectService {
         //////추가///////////////////////////
         if(profileParam.getProfileDefaultYn().equals("N")){
             project.setLinked(true);
-            project.setProjectKey(projectKey.getSonarKey());
+            project.setProjectKey(projectKey.getProjectKey());
             project.setProfileKey(profileParam.getQualityProfileKey());
             result = qualityProfileProjectLinked(project);
         }
 
         if(gateParam.getGateDefaultYn().equals("N")){
             project.setLinked(true);
-            project.setProjectId(Long.toString(project.getSonarId()));
+            project.setProjectId(project.getProjectId());
             result = qualityGateProjectLiked(project);
         }
         ////////////////////////////////////////////
@@ -161,7 +160,7 @@ public class ProjectService {
 
 
         Project result = new Project();
-        project.setProjectId(Long.toString(project.getSonarId()));
+        project.setProjectId(project.getProjectId());
         project.setGateId(String.valueOf(project.getQualityGateId()));
 
         if(project.isLinked()){
@@ -228,12 +227,12 @@ public class ProjectService {
 
         Project result = new Project();
 
-        result.setMsr(commonService.sendForm(inspectionServerUrl, "/api/resources?metrics=coverage_line_hits_data,covered_conditions_by_line&resource="+project.getSonarKey(), HttpMethod.GET, null, List.class));
+        result.setMsr(commonService.sendForm(inspectionServerUrl, "/api/resources?metrics=coverage_line_hits_data,covered_conditions_by_line&resource="+project.getProjectKey(), HttpMethod.GET, null, List.class));
 
-        result = commonService.sendForm(inspectionServerUrl, "/api/sources/show?key="+project.getSonarKey(), HttpMethod.GET, null, Project.class);
+        result = commonService.sendForm(inspectionServerUrl, "/api/sources/show?key="+project.getProjectKey(), HttpMethod.GET, null, Project.class);
         project.setSources(result.getSources());
 
-        result = commonService.sendForm(inspectionServerUrl, "/api/sources/scm?key="+project.getSonarKey(), HttpMethod.GET, null, Project.class);
+        result = commonService.sendForm(inspectionServerUrl, "/api/sources/scm?key="+project.getProjectKey(), HttpMethod.GET, null, Project.class);
         project.setScm(result.getScm());
 
         result = commonService.sendForm(inspectionServerUrl, "/api/issues/search?additionalFields=_all&resolved=false&fileUuids="+project.getUuid(), HttpMethod.GET, null, Project.class);

@@ -84,6 +84,9 @@ public class CommonService {
 
         ResponseEntity<T> resEntity = restTemplate.exchange(baseUrl + reqUrl, httpMethod, reqEntity, responseType);
         LOGGER.info("Response Status Code: {}", resEntity.getStatusCode());
+        if(!resEntity.getStatusCode().equals(HttpStatus.OK)){
+            LOGGER.info("Response Error : {} " + resEntity.getBody());
+        }
 
         return resEntity.getBody();
     }

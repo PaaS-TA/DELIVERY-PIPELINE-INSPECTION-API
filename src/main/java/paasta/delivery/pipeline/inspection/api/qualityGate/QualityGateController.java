@@ -71,13 +71,9 @@ public class QualityGateController {
      */
     @RequestMapping(value = "/qualityGateList", method = RequestMethod.GET)
     public List getQualityGateList(@RequestParam String serviceInstancesId){
-        return qualityGateService.getQualityGateList(serviceInstancesId);
+        List result =  qualityGateService.getQualityGateList(serviceInstancesId);
+        return result;
     }
-
-
-
-
-
     /**
      *  QualityGate 조건 옵션조회
      *
@@ -114,7 +110,7 @@ public class QualityGateController {
      *
      * @return
      */
-    @RequestMapping(value="/qualityGateCondUpdate", method = RequestMethod.POST)
+    @RequestMapping(value="/qualityGateCondUpdate", method = RequestMethod.PUT)
     public QualityGate updateQualityGateCond(@RequestBody QualityGate qualityGate){
         return qualityGateService.updateQualityGateCond(qualityGate);
     }
@@ -124,10 +120,10 @@ public class QualityGateController {
      *
      * @return
      */
-    @RequestMapping(value="/qualityGateCondDelete", method = RequestMethod.POST)
+    @RequestMapping(value="/qualityGateCondDelete", method = RequestMethod.DELETE)
     @ResponseBody
-    public QualityGate deleteQualityGateCond(@RequestBody  String id){
-        return qualityGateService.deleteQualityGateCond(id);
+    public QualityGate deleteQualityGateCond(@RequestBody QualityGate qualityGate){
+        return qualityGateService.deleteQualityGateCond(qualityGate);
     }
 
     /**
@@ -157,7 +153,7 @@ public class QualityGateController {
      *
      * @return updated qualityGate
      */
-    @RequestMapping(value = "/qualityGateUpdate", method = RequestMethod.POST)
+    @RequestMapping(value = "/qualityGateUpdate", method = RequestMethod.PUT)
     public QualityGate updateQualityGate(@RequestBody QualityGate qualityGate) {
         return qualityGateService.updateQualityGate(qualityGate);
     }
@@ -171,7 +167,7 @@ public class QualityGateController {
 //    public String deleteQualityGate(@PathVariable Long id) throws IOException {
 //        return qualityGateService.deleteQualityGate(id);
 //    }
-    @RequestMapping(value = "/qualityGateDelete",method = RequestMethod.POST)
+    @RequestMapping(value = "/qualityGateDelete",method = RequestMethod.DELETE)
     public QualityGate deleteQualityGate(@RequestBody QualityGate qualityGate) throws IOException {
         return qualityGateService.deleteQualityGate(qualityGate);
     }

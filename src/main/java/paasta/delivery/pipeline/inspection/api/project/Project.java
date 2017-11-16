@@ -15,7 +15,7 @@ public class Project {
     private long projectId; // id -> projectId
     private String projectName;
     private String projectKey;  //자동생성 uuid
-    private long qualityProfileId;
+    private String qualityProfileKey;
     private long qualityGateId;
     private String created;
     private String lastModified;
@@ -114,12 +114,12 @@ public class Project {
         this.projectKey = projectKey;
     }
 
-    public long getQualityProfileId() {
-        return qualityProfileId;
+    public String getQualityProfileKey() {
+        return qualityProfileKey;
     }
 
-    public void setQualityProfileId(long qualityProfileId) {
-        this.qualityProfileId = qualityProfileId;
+    public void setQualityProfileKey(String qualityProfileKey) {
+        this.qualityProfileKey = qualityProfileKey;
     }
 
     public long getQualityGateId() {

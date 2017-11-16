@@ -3,9 +3,7 @@ package paasta.delivery.pipeline.inspection.api.project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * paastaDeliveryPipelineApi
@@ -55,7 +53,9 @@ public class ProjectController {
     @RequestMapping(value = "/projectsCreate", method = RequestMethod.POST)
     @ResponseBody
     public Project createProjects(@RequestBody Project project){
-        return projectService.createProjects(project);
+        // TODO
+//        return projectService.createProjects(project);
+        return projectService.setCreateProject(project);
     }
 
     /**
@@ -66,7 +66,9 @@ public class ProjectController {
      */
     @RequestMapping(value = "/projectsDelete", method = RequestMethod.POST)
     public Project deleteProjects(@RequestBody Project project){
-        return projectService.deleteProjects(project);
+        // TODO
+//        return projectService.deleteProjects(project);
+        return projectService.setDeleteProject(project);
     }
 
     /**
@@ -77,7 +79,9 @@ public class ProjectController {
      */
     @RequestMapping(value = "/projectsUpdate", method = RequestMethod.POST)
     public Project updateProjects(@RequestBody Project project){
-        return projectService.updateProjects(project);
+        // TODO
+//        return projectService.updateProjects(project);
+        return projectService.setUpdateProject(project);
     }
 
     /**

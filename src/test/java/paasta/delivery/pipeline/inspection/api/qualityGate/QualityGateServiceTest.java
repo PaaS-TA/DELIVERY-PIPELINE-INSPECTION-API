@@ -278,9 +278,9 @@ public class QualityGateServiceTest {
 
 
         String id = "34";
-        when(qualityGateService.deleteQualityGateCond(id)).thenReturn(resultModel);
+        when(qualityGateService.deleteQualityGateCond(testModel)).thenReturn(resultModel);
 
-        qualityGateService.deleteQualityGateCond(id);
+        qualityGateService.deleteQualityGateCond(testModel);
 
     }
 

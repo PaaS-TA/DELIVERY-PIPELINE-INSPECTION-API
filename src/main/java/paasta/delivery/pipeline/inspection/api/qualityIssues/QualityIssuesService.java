@@ -85,41 +85,42 @@ public class QualityIssuesService {
     }
 
     public List<QualityIssues> getIssuesConditionList(QualityIssues qualityIssues){
+        String projectId = "";
         QualityIssues param = new QualityIssues();
-        Project projectParam = new Project();
         List<QualityIssues> list = new ArrayList();
-        List<Map<String, String>> projectList = new ArrayList<>();
+
 
         int num = 0;
 
-        String sonarKey = "";
+
+        Project projectParam = new Project();
         projectParam.setServiceInstancesId(qualityIssues.getServiceInstancesId());
 
 
         //project check시
         if(qualityIssues.getComponentKeys() != null && !qualityIssues.getComponentKeys().equals("")) {
-            sonarKey = qualityIssues.getComponentKeys();
+            projectId = qualityIssues.getComponentKeys();
         }else{
-            projectList = commonService.sendForm(commonApiUrl, "/project/projectsList", HttpMethod.GET, projectParam, List.class);
+            List<Map> projects = commonService.sendForm(commonApiUrl, "/project/projectsList", HttpMethod.POST, projectParam, List.class);
             //DB에서 프로젝트 키값 바인딩
-            if (projectList.size() > 0) {
-                for (int i = 0; i < projectList.size(); i++) {
-                    sonarKey += projectList.get(i).get("sonarKey") + ",";
+            if (projects.size() > 0) {
+                for (Map project:projects) {
+                    projectId += project.get("projectId") + ",";
                 }
             }
 
         }
 
-        param = commonService.sendForm(inspectionServerUrl, "/api/issues/search?componentKeys="+sonarKey, HttpMethod.GET,null, QualityIssues.class);
+        param = commonService.sendForm(inspectionServerUrl, "/api/issues/search?componentKeys="+projectId, HttpMethod.GET,null, QualityIssues.class);
 
-        //총 total값
+
         if(!param.getTotal().equals("0") && param.getTotal() != null){
             num = (Integer.parseInt(param.getTotal()) / 500) +1;
         }
 
 
         for(int i=1;i<=num;i++){
-            list.add(commonService.sendForm(inspectionServerUrl, "/api/issues/search?additionalFields=_all&ps=500&pageIndex="+i+"&componentKeys="+sonarKey, HttpMethod.GET,null, QualityIssues.class));
+            list.add(commonService.sendForm(inspectionServerUrl, "/api/issues/search?additionalFields=_all&ps=500&pageIndex="+i+"&componentKeys="+projectId, HttpMethod.GET,null, QualityIssues.class));
         }
 
         return list;

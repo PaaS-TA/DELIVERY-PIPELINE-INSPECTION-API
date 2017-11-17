@@ -1,6 +1,7 @@
 package paasta.delivery.pipeline.inspection.api.project;
 
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
@@ -16,11 +17,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 /**
  * Created by Dojun on 2017-06-15.
  */
 @Service
 public class ProjectService {
+
+    private final Logger LOGGER = getLogger(getClass());
 
     private static final String PROJECT_KEY_STRING = "projectKey";
     private static final String PROFILE_KEY_STRING = "profileKey";
@@ -159,18 +164,29 @@ public class ProjectService {
     public Project qualityGateProjectLiked(Project project) {
 
 
-        Project result = new Project();
+        Project result;
         project.setProjectId(project.getProjectId());
         project.setGateId(String.valueOf(project.getQualityGateId()));
+        LOGGER.debug("SelectProject_isLinked(True = select,False = deselect) : " + project.isLinked());
+        LOGGER.debug("SelectProject_Id : " + project.getId());
+        LOGGER.debug("SelectProject_GateId : " + project.getQualityGateId());
+        LOGGER.debug("SelectProject_ProjectId : " + project.getProjectId());
+        LOGGER.debug("SelectProject_ProjectKey : " + project.getProjectKey());
 
+
+        Map<String, String> parameter = new HashMap();
+        parameter.put("gateId", project.getGateId());
+        parameter.put("projectId", "" + project.getProjectId());
+        parameter.put("projectKey", project.getProjectKey());
+        /*
+        * 소나에 적용하고, 파이프라인 DB 업데이트
+        */
         if (project.isLinked()) {
-            result = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/select", HttpMethod.POST, project, Project.class);
+            result = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/select", HttpMethod.POST, parameter, Project.class);
         } else {
-            result = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/deselect", HttpMethod.POST, project, Project.class);
+            result = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/deselect", HttpMethod.POST, parameter, Project.class);
         }
-
         result = commonService.sendForm(commonApiUrl, "/project/qualityGateProjectLiked", HttpMethod.PUT, project, Project.class);
-
         return result;
     }
 

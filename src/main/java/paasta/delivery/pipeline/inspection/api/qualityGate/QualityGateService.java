@@ -80,13 +80,16 @@ public class QualityGateService {
      * @return
      */
     QualityGate getQualityGateCondition(long id) {
+        QualityGate qualityGate = new QualityGate();
         try {
-            QualityGate qualityGate = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/show?id=" + id, HttpMethod.GET, null, QualityGate.class);
+            qualityGate = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/show?id=" + id, HttpMethod.GET, null, QualityGate.class);
+            qualityGate.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
             return setQualityGateConditionName(qualityGate);
         } catch (HttpClientErrorException e) {
             //데이터가 없을 경우 NotFound로 떨어짐
             if (e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-                return new QualityGate();
+                qualityGate.setResultStatus(Constants.RESULT_STATUS_FAIL);
+                return qualityGate;
             } else {
                 e.printStackTrace();
             }
@@ -111,16 +114,24 @@ public class QualityGateService {
      * @return
      */
     public QualityGate updateQualityGateCond(QualityGate qualityGate) {
-        //id가 long 타입이라서 바꿔줘야함
-        Map<String, String> resultModel = new HashMap<>();
-        resultModel.put("id", Long.toString(qualityGate.getQualityGateId()));
-        resultModel.put("gateId", qualityGate.getGateId());
-        resultModel.put("metric", qualityGate.getMetric());
-        resultModel.put("error", qualityGate.getError());
-        resultModel.put("warning", qualityGate.getWarning());
-        resultModel.put("op", qualityGate.getOp());
 
-        return commonService.sendForm(inspectionServerUrl, "/api/qualitygates/update_condition", HttpMethod.POST, resultModel, QualityGate.class);
+        try {
+            //id가 long 타입이라서 바꿔줘야함
+            Map<String, String> parameter = new HashMap<>();
+            parameter.put("id", Long.toString(qualityGate.getQualityGateId()));
+            parameter.put("gateId", qualityGate.getGateId());
+            parameter.put("metric", qualityGate.getMetric());
+            parameter.put("error", qualityGate.getError());
+            parameter.put("warning", qualityGate.getWarning());
+            parameter.put("op", qualityGate.getOp());
+            qualityGate = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/update_condition", HttpMethod.POST, parameter, QualityGate.class);
+            qualityGate.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            qualityGate.setResultStatus(Constants.RESULT_STATUS_FAIL);
+        }
+        return qualityGate;
     }
 
 
@@ -133,13 +144,13 @@ public class QualityGateService {
     QualityGate deleteQualityGateCond(QualityGate qualityGate) {
 
         try {
-            LOGGER.info("DeleteQualityCondId : " + qualityGate.getId());
-            LOGGER.info("DeleteQualityCondGateId : " + qualityGate.getQualityGateId());
-            LOGGER.info("DeleteQualityCondGateName : " + qualityGate.getServiceInstancesId() + "^" + qualityGate.getQualityGateName());
-            Map<String, String> resultModel = new HashMap<>();
-            resultModel.put("id", Long.toString(qualityGate.getId()));
+            LOGGER.debug("DeleteQualityCondId : " + qualityGate.getId());
+            LOGGER.debug("DeleteQualityCondGateId : " + qualityGate.getQualityGateId());
+            LOGGER.debug("DeleteQualityCondGateName : " + qualityGate.getServiceInstancesId() + "^" + qualityGate.getQualityGateName());
+            Map<String, String> parameter = new HashMap<>();
+            parameter.put("id", Long.toString(qualityGate.getId()));
 
-            commonService.sendForm(inspectionServerUrl, "/api/qualitygates/delete_condition", HttpMethod.POST, resultModel, null);
+            commonService.sendForm(inspectionServerUrl, "/api/qualitygates/delete_condition", HttpMethod.POST, parameter, null);
             qualityGate.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -156,13 +167,13 @@ public class QualityGateService {
      */
     QualityGate copyQualityGate(QualityGate qualityGate) {
         try {
-            LOGGER.info("CopyQualityGateId : " + qualityGate.getQualityGateId());
-            LOGGER.info("CopyQualityGateName : " + qualityGate.getServiceInstancesId() + "^" + qualityGate.getQualityGateName());
-            Map<String, String> resultModel = new HashMap<>();
-            resultModel.put("id", Long.toString(qualityGate.getQualityGateId()));
-            resultModel.put("name", qualityGate.getServiceInstancesId() + "^" + qualityGate.getQualityGateName());
+            LOGGER.debug("CopyQualityGateId : " + qualityGate.getQualityGateId());
+            LOGGER.debug("CopyQualityGateName : " + qualityGate.getServiceInstancesId() + "^" + qualityGate.getQualityGateName());
+            Map<String, String> parameter = new HashMap<>();
+            parameter.put("id", Long.toString(qualityGate.getQualityGateId()));
+            parameter.put("name", qualityGate.getServiceInstancesId() + "^" + qualityGate.getQualityGateName());
 
-            commonService.sendForm(inspectionServerUrl, "/api/qualitygates/copy", HttpMethod.POST, resultModel, null);
+            commonService.sendForm(inspectionServerUrl, "/api/qualitygates/copy", HttpMethod.POST, parameter, null);
             qualityGate.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -181,11 +192,11 @@ public class QualityGateService {
      */
     public QualityGate createQualityGate(QualityGate qualityGate) {
         try {
-            Map param = new HashMap();
-            LOGGER.info("CreateQualityGateId : " + qualityGate.getQualityGateId());
-            LOGGER.info("CreateQualityGateName : " + qualityGate.getServiceInstancesId() + "^" + qualityGate.getQualityGateName());
-            param.put("name", qualityGate.getServiceInstancesId() + "^" + qualityGate.getQualityGateName());
-            commonService.sendForm(inspectionServerUrl, "/api/qualitygates/create", HttpMethod.POST, param, null);
+            Map parameter = new HashMap();
+            LOGGER.debug("CreateQualityGateId : " + qualityGate.getQualityGateId());
+            LOGGER.debug("CreateQualityGateName : " + qualityGate.getServiceInstancesId() + "^" + qualityGate.getQualityGateName());
+            parameter.put("name", qualityGate.getServiceInstancesId() + "^" + qualityGate.getQualityGateName());
+            commonService.sendForm(inspectionServerUrl, "/api/qualitygates/create", HttpMethod.POST, parameter, null);
             qualityGate.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -204,13 +215,13 @@ public class QualityGateService {
      */
     QualityGate updateQualityGate(QualityGate qualityGate) {
         try {
-            LOGGER.info("UpdateQualityGateId : " + qualityGate.getQualityGateId());
-            LOGGER.info("UpdateQualityGateName : " + qualityGate.getServiceInstancesId() + "^" + qualityGate.getQualityGateName());
+            LOGGER.debug("UpdateQualityGateId : " + qualityGate.getQualityGateId());
+            LOGGER.debug("UpdateQualityGateName : " + qualityGate.getServiceInstancesId() + "^" + qualityGate.getQualityGateName());
 
-            Map<String, String> resultModel = new HashMap<>();
-            resultModel.put("id", Long.toString(qualityGate.getQualityGateId()));
-            resultModel.put("name", qualityGate.getServiceInstancesId() + "^" + qualityGate.getQualityGateName());
-            commonService.sendForm(inspectionServerUrl, "/api/qualitygates/rename", HttpMethod.POST, resultModel, null);
+            Map<String, String> parameter = new HashMap<>();
+            parameter.put("id", Long.toString(qualityGate.getQualityGateId()));
+            parameter.put("name", qualityGate.getServiceInstancesId() + "^" + qualityGate.getQualityGateName());
+            commonService.sendForm(inspectionServerUrl, "/api/qualitygates/rename", HttpMethod.POST, parameter, null);
             qualityGate.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -230,10 +241,10 @@ public class QualityGateService {
     QualityGate deleteQualityGate(QualityGate qualityGate) {
 
         try {
-            LOGGER.info("DeleteQualityGateId : " + qualityGate.getQualityGateId());
-            Map<String, String> resultModel = new HashMap<>();
-            resultModel.put("id", Long.toString(qualityGate.getQualityGateId()));
-            commonService.sendForm(inspectionServerUrl, "/api/qualitygates/destroy", HttpMethod.POST, resultModel, null);
+            LOGGER.debug("DeleteQualityGateId : " + qualityGate.getQualityGateId());
+            Map<String, String> parameter = new HashMap<>();
+            parameter.put("id", Long.toString(qualityGate.getQualityGateId()));
+            commonService.sendForm(inspectionServerUrl, "/api/qualitygates/destroy", HttpMethod.POST, parameter, null);
             qualityGate.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -268,7 +279,7 @@ public class QualityGateService {
     public QualityGate getQualityGateDomains() {
         QualityGate qualityGate = new QualityGate();
         try {
-            LOGGER.info("GateDomains");
+            LOGGER.debug("GateDomains");
             qualityGate = commonService.sendForm(inspectionServerUrl, "/api/metrics/domains", HttpMethod.GET, null, QualityGate.class);
             qualityGate.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
         } catch (Exception e) {
@@ -289,8 +300,8 @@ public class QualityGateService {
 
         QualityGate qualityGate = new QualityGate();
         try {
-            LOGGER.info("GetiQualityGateID : " + id);
-            LOGGER.info("GetQualityGateName : " + qualityGate.getServiceInstancesId() + "^" + qualityGate.getQualityGateName());
+            LOGGER.debug("GetiQualityGateID : " + id);
+            LOGGER.debug("GetQualityGateName : " + qualityGate.getServiceInstancesId() + "^" + qualityGate.getQualityGateName());
             qualityGate = commonService.sendForm(commonApiUrl, "/qualityGate/getQualityGate?id=" + id, HttpMethod.GET, null, QualityGate.class);
             qualityGate.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
         } catch (Exception e) {

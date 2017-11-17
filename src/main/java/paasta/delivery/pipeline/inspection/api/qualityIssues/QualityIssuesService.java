@@ -48,9 +48,9 @@ public class QualityIssuesService {
             projectList = commonService.sendForm(commonApiUrl, "/project/projectsList", HttpMethod.POST,projectParam, List.class);
 
             if (projectList.size() > 0) {
-                for (int i = 0; i < projectList.size(); i++) {
-                    sonarKey += projectList.get(i).get("sonarKey") + ",";
-                }
+//                for (int i = 0; i < projectList.size(); i++) {
+//                    sonarKey += projectList.get(i).get("sonarKey") + ",";
+//                }
 
                 qualityIssues.setComponentKeys(sonarKey);
 
@@ -81,11 +81,6 @@ public class QualityIssuesService {
         }
 
 
-   /*     url = "/api/issues/search?s=CREATION_DATE&ps="+qualityIssues.getPs()+"&severities="+qualityIssues.getSeverities()+"&statuses="+qualityIssues.getStatuses()+
-                    "&componentKeys="+qualityIssues.getComponentKeys()+"&resolutions="+qualityIssues.getResolutions()+qualityIssues.getResolved()*/
-
-
-
         return commonService.sendForm(inspectionServerUrl, url, HttpMethod.GET,null, QualityIssues.class);
     }
 
@@ -105,7 +100,7 @@ public class QualityIssuesService {
         if(qualityIssues.getComponentKeys() != null && !qualityIssues.getComponentKeys().equals("")) {
             sonarKey = qualityIssues.getComponentKeys();
         }else{
-            projectList = commonService.sendForm(commonApiUrl, "/project/projectsList", HttpMethod.POST, projectParam, List.class);
+            projectList = commonService.sendForm(commonApiUrl, "/project/projectsList", HttpMethod.GET, projectParam, List.class);
             //DB에서 프로젝트 키값 바인딩
             if (projectList.size() > 0) {
                 for (int i = 0; i < projectList.size(); i++) {

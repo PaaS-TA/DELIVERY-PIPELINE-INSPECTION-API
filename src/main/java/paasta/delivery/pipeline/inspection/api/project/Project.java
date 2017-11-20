@@ -59,6 +59,9 @@ public class Project {
     private String profileDefaultYn;
     private String projectViewName;
 
+    private String defaultQualityProfileKey;
+    private long defaultQualityGateId;
+
     public long getId() {
         return id;
     }
@@ -330,4 +333,21 @@ public class Project {
     public void setProjectViewName(String projectViewName) {
         this.projectViewName = projectViewName;
     }
+
+    public String getDefaultQualityProfileKey() {
+        return defaultQualityProfileKey;
+    }
+
+    public void setDefaultQualityProfileKey(String defaultQualityProfileKey) {
+        this.defaultQualityProfileKey = defaultQualityProfileKey;
+    }
+
+    public long getDefaultQualityGateId() {
+        return defaultQualityGateId;
+    }
+
+    public void setDefaultQualityGateId(long defaultQualityGateId) {
+        this.defaultQualityGateId = defaultQualityGateId;
+    }
+
 }

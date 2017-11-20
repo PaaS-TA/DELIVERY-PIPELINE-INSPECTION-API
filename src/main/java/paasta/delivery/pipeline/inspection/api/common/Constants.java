@@ -28,6 +28,12 @@ public class Constants {
     public static final String KEY_PROFILE = "profile";
     public static final String KEY_LANGUAGES = "languages";
 
+    public static final String API_PROJECTS_CREATE = "/api/projects/create";
+    public static final String API_QUALITY_PROFILES_ADD_PROJECT = "/api/qualityprofiles/add_project";
+    public static final String API_QUALITY_PROFILES_REMOVE_PROJECT = "/api/qualityprofiles/remove_project";
+    public static final String API_QUALITY_GATES_SELECT = "/api/qualitygates/select";
+    public static final String API_QUALITY_GATES_DESELECT = "/api/qualitygates/deselect";
+
     Constants() {}
 
 }

@@ -22,13 +22,11 @@ import static org.slf4j.LoggerFactory.getLogger;
 @Service
 public class ProjectService {
 
-    private final Logger LOGGER = getLogger(getClass());
-
     private static final String PROJECT_KEY_STRING = "projectKey";
     private static final String PROFILE_KEY_STRING = "profileKey";
     private static final String PROJECT_ID_STRING = "projectId";
     private static final String GATE_ID_STRING = "gateId";
-
+    private final Logger LOGGER = getLogger(getClass());
     private final CommonService commonService;
 
     @Value("${inspection.server.url}")
@@ -300,13 +298,15 @@ public class ProjectService {
         String projectKey;
         String projectName;
         Map<String, String> reqProjectMap = new HashMap<>();
+        String dateTimeZoneString = "Asia/Seoul";
+        String dateTimeFormatterPatternString = "yyyyMMdd-HHmmss";
 
 
         // SET PROJECT KEY
-        projectKey = "KEY-" + UUID.randomUUID().toString() + "-" + ZonedDateTime.now(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss"));
+        projectKey = "KEY-" + UUID.randomUUID().toString() + "-" + ZonedDateTime.now(ZoneId.of(dateTimeZoneString)).format(DateTimeFormatter.ofPattern(dateTimeFormatterPatternString));
 
         // SET PROJECT NAME
-        projectName = "SQ-" + UUID.randomUUID().toString() + "-" + ZonedDateTime.now(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss"));
+        projectName = "SQ-" + UUID.randomUUID().toString() + "-" + ZonedDateTime.now(ZoneId.of(dateTimeZoneString)).format(DateTimeFormatter.ofPattern(dateTimeFormatterPatternString));
 
         project.setProjectKey(projectKey);
         project.setProjectName(projectName);
@@ -316,7 +316,7 @@ public class ProjectService {
 
 
         // CREATE PROJECT TO INSPECTION SERVER
-        Project apiResult = commonService.sendForm(inspectionServerUrl, "/api/projects/create", HttpMethod.POST, reqProjectMap, Project.class);
+        Project apiResult = commonService.sendForm(inspectionServerUrl, Constants.API_PROJECTS_CREATE, HttpMethod.POST, reqProjectMap, Project.class);
 
         // SET PROJECT ID FROM RESULT
         projectId = apiResult.getId();
@@ -324,10 +324,10 @@ public class ProjectService {
 
 
         // SET QUALITY PROFILE FOR PROJECT TO INSPECTION SERVER
-        procSetLinkProject(projectKey, project.getQualityProfileKey(), LinkType.QUALITY_PROFILE, LinkOperationType.LINK);
+        procSetLinkProjectToApi(projectKey, project.getQualityProfileKey(), LinkType.QUALITY_PROFILE, LinkOperationType.LINK);
 
         // SET QUALITY GATE FOR PROJECT TO INSPECTION SERVER
-        procSetLinkProject(String.valueOf(projectId), String.valueOf(project.getQualityGateId()), LinkType.QUALITY_GATE, LinkOperationType.LINK);
+        procSetLinkProjectToApi(String.valueOf(projectId), String.valueOf(project.getQualityGateId()), LinkType.QUALITY_GATE, LinkOperationType.LINK);
 
 
         // INSERT PROJECT TO DATABASE
@@ -349,39 +349,180 @@ public class ProjectService {
         resultModel.setResultStatus(Constants.RESULT_STATUS_FAIL);
 
         String projectKey;
+        String projectId;
         String originalQualityProfileKey;
         long originalQualityGateId;
-        String reqInspectionProfileKey = project.getQualityProfileKey();
-        long reqInspectionGateId = project.getQualityGateId();
+        String reqQualityProfileKey;
+        long reqQualityGateId;
 
 
         // GET PROJECT DETAIL FROM DATABASE
         Project projectDetail = commonService.sendForm(commonApiUrl, "/project/" + project.getId(), HttpMethod.GET, null, Project.class);
 
         projectKey = projectDetail.getProjectKey();
+        projectId = String.valueOf(projectDetail.getProjectId());
         originalQualityProfileKey = projectDetail.getQualityProfileKey();
         originalQualityGateId = projectDetail.getQualityGateId();
 
+        reqQualityProfileKey = project.getQualityProfileKey();
+        reqQualityGateId = project.getQualityGateId();
+
 
         // CHECK ORIGINAL QUALITY PROFILE
-        if (!originalQualityProfileKey.equals(reqInspectionProfileKey)) {
+        if (!originalQualityProfileKey.equals(reqQualityProfileKey)) {
             // SET REMOVING QUALITY PROFILE FOR PROJECT TO INSPECTION SERVER
-            procSetLinkProject(projectKey, originalQualityProfileKey, LinkType.QUALITY_PROFILE, LinkOperationType.UNLINK);
+            procSetLinkProjectToApi(projectKey, originalQualityProfileKey, LinkType.QUALITY_PROFILE, LinkOperationType.UNLINK);
 
             // SET ADDING QUALITY PROFILE FOR PROJECT TO INSPECTION SERVER
-            procSetLinkProject(projectKey, reqInspectionProfileKey, LinkType.QUALITY_PROFILE, LinkOperationType.LINK);
+            procSetLinkProjectToApi(projectKey, reqQualityProfileKey, LinkType.QUALITY_PROFILE, LinkOperationType.LINK);
         }
 
 
         // CHECK ORIGINAL QUALITY GATE
-        if (originalQualityGateId != reqInspectionGateId) {
+        if (originalQualityGateId != reqQualityGateId) {
             // SET DESELECTING QUALITY GATE FOR PROJECT TO INSPECTION SERVER
-            procSetLinkProject(String.valueOf(projectDetail.getProjectId()), String.valueOf(originalQualityGateId), LinkType.QUALITY_GATE, LinkOperationType.UNLINK);
+            procSetLinkProjectToApi(projectId, String.valueOf(originalQualityGateId), LinkType.QUALITY_GATE, LinkOperationType.UNLINK);
 
             // SET SELECTING QUALITY GATE FOR PROJECT TO INSPECTION SERVER
-            procSetLinkProject(String.valueOf(projectDetail.getProjectId()), String.valueOf(reqInspectionGateId), LinkType.QUALITY_GATE, LinkOperationType.LINK);
+            procSetLinkProjectToApi(projectId, String.valueOf(reqQualityGateId), LinkType.QUALITY_GATE, LinkOperationType.LINK);
         }
 
+        // SET PARAM :: UPDATE PROJECT TO DATABASE
+        projectDetail.setJobId(project.getJobId());
+        projectDetail.setQualityProfileKey(reqQualityProfileKey);
+        projectDetail.setQualityGateId(reqQualityGateId);
+
+
+        // UPDATE PROJECT TO DATABASE
+        return procSetUpdateProjectToDB(projectDetail);
+    }
+
+
+    /**
+     * Sets update project.
+     *
+     * @param project       the project
+     * @param linkOperation the link operation
+     * @return the update project
+     */
+    public Project setUpdateProject(Project project, Enum linkOperation) {
+        Project resultModel = new Project();
+        resultModel.setResultStatus(Constants.RESULT_STATUS_FAIL);
+
+        String projectKey;
+        String projectId;
+        String originalQualityProfileKey;
+        long originalQualityGateId;
+
+        String reqQualityProfileKey;
+        long reqQualityGateId;
+        String reqDefaultQualityProfileKey;
+        long reqDefaultQualityGateId;
+
+        String reqUnLinkQualityProfileKey;
+        String reqLinkQualityProfileKey;
+        long reqUnLinkQualityGateId;
+        long reqLinkQualityGateId;
+
+
+        // GET PROJECT DETAIL FROM DATABASE
+        Project projectDetail = commonService.sendForm(commonApiUrl, "/project/" + project.getId(), HttpMethod.GET, null, Project.class);
+
+        projectKey = projectDetail.getProjectKey();
+        projectId = String.valueOf(projectDetail.getProjectId());
+        originalQualityProfileKey = projectDetail.getQualityProfileKey();
+        originalQualityGateId = projectDetail.getQualityGateId();
+
+        reqQualityProfileKey = Optional.of(project).map(Project::getQualityProfileKey).orElse("");
+        reqQualityGateId = Optional.of(project).map(Project::getQualityGateId).orElse(0L);
+        reqDefaultQualityProfileKey = Optional.of(project).map(Project::getDefaultQualityProfileKey).orElse("");
+        reqDefaultQualityGateId = Optional.of(project).map(Project::getDefaultQualityGateId).orElse(0L);
+
+        reqLinkQualityProfileKey = originalQualityProfileKey;
+        reqLinkQualityGateId = originalQualityGateId;
+
+
+        // CHECK QUALITY PROFILE
+        if (!"".equals(reqQualityProfileKey)) {
+            // LINK
+            reqUnLinkQualityProfileKey = originalQualityProfileKey;
+            reqLinkQualityProfileKey = reqQualityProfileKey;
+
+            // UNLINK
+            if (LinkOperationType.UNLINK.equals(linkOperation) && !"".equals(reqDefaultQualityProfileKey)) {
+                reqUnLinkQualityProfileKey = reqQualityProfileKey;
+                reqLinkQualityProfileKey = reqDefaultQualityProfileKey;
+            }
+
+            // SET REMOVING QUALITY PROFILE FOR PROJECT TO INSPECTION SERVER
+            procSetLinkProjectToApi(projectKey, reqUnLinkQualityProfileKey, LinkType.QUALITY_PROFILE, LinkOperationType.UNLINK);
+
+            // SET ADDING QUALITY PROFILE FOR PROJECT TO INSPECTION SERVER
+            procSetLinkProjectToApi(projectKey, reqLinkQualityProfileKey, LinkType.QUALITY_PROFILE, LinkOperationType.LINK);
+        }
+
+
+        // CHECK QUALITY GATE
+        if (0L < (reqQualityGateId)) {
+            // LINK
+            reqUnLinkQualityGateId = originalQualityGateId;
+            reqLinkQualityGateId = reqQualityGateId;
+
+            // UNLINK
+            if (LinkOperationType.UNLINK.equals(linkOperation) && 0L < (reqDefaultQualityGateId)) {
+                reqUnLinkQualityGateId = reqQualityGateId;
+                reqLinkQualityGateId = reqDefaultQualityGateId;
+            }
+
+            // SET DESELECTING QUALITY GATE FOR PROJECT TO INSPECTION SERVER
+            procSetLinkProjectToApi(projectId, String.valueOf(reqUnLinkQualityGateId), LinkType.QUALITY_GATE, LinkOperationType.UNLINK);
+
+            // SET SELECTING QUALITY GATE FOR PROJECT TO INSPECTION SERVER
+            procSetLinkProjectToApi(projectId, String.valueOf(reqLinkQualityGateId), LinkType.QUALITY_GATE, LinkOperationType.LINK);
+        }
+
+
+        // SET PARAM :: UPDATE PROJECT TO DATABASE
+        projectDetail.setQualityProfileKey(reqLinkQualityProfileKey);
+        projectDetail.setQualityGateId(reqLinkQualityGateId);
+
+
+        // UPDATE PROJECT TO DATABASE
+        return procSetUpdateProjectToDB(projectDetail);
+    }
+
+
+    private void procSetLinkProjectToApi(String projectKeyOrProjectId, String qualityProfileKeyOrQualityGateId, Enum linkType, Enum linkOperation) {
+        Map<String, String> reqMap = new HashMap<>();
+        String reqUrl = "";
+
+        // CHECK QUALITY PROFILE
+        if (LinkType.QUALITY_PROFILE.equals(linkType)) {
+            reqUrl = (LinkOperationType.LINK.equals(linkOperation)) ? Constants.API_QUALITY_PROFILES_ADD_PROJECT : Constants.API_QUALITY_PROFILES_REMOVE_PROJECT;
+            reqMap.put(PROJECT_KEY_STRING, projectKeyOrProjectId);
+            reqMap.put(PROFILE_KEY_STRING, qualityProfileKeyOrQualityGateId);
+        }
+
+
+        // CHECK QUALITY GATE
+        if (LinkType.QUALITY_GATE.equals(linkType)) {
+            reqUrl = (LinkOperationType.LINK.equals(linkOperation)) ? Constants.API_QUALITY_GATES_SELECT : Constants.API_QUALITY_GATES_DESELECT;
+            reqMap.put(PROJECT_ID_STRING, projectKeyOrProjectId);
+            reqMap.put(GATE_ID_STRING, qualityProfileKeyOrQualityGateId);
+        }
+
+
+        // CHECK INVALID
+        if (!"".equals(reqUrl)) {
+            // REQUEST TO INSPECTION SERVER
+            commonService.sendForm(inspectionServerUrl, reqUrl, HttpMethod.POST, reqMap, Project.class);
+        }
+    }
+
+
+    private Project procSetUpdateProjectToDB(Project project) {
+        Project resultModel = new Project();
+        resultModel.setResultStatus(Constants.RESULT_STATUS_FAIL);
 
         // UPDATE PROJECT TO DATABASE
         resultModel = commonService.sendForm(commonApiUrl, "/project/projectsUpdate", HttpMethod.PUT, project, Project.class);
@@ -413,45 +554,6 @@ public class ProjectService {
     }
 
 
-    private void procSetLinkProject(String projectKeyOrProjectId, String qualityProfileKeyOrQualityGateId, Enum linkType, Enum linkOperation) {
-        Map<String, String> reqMap = new HashMap<>();
-        String reqUrl;
-
-        if (LinkType.QUALITY_PROFILE.equals(linkType)) {
-            reqUrl = (LinkOperationType.LINK.equals(linkOperation)) ? "/api/qualityprofiles/add_project" : "/api/qualityprofiles/remove_project";
-
-            reqMap.put(PROJECT_KEY_STRING, projectKeyOrProjectId);
-            reqMap.put(PROFILE_KEY_STRING, qualityProfileKeyOrQualityGateId);
-
-        } else {
-            reqUrl = (LinkOperationType.LINK.equals(linkOperation)) ? "/api/qualitygates/select" : "/api/qualitygates/deselect";
-
-            reqMap.put(PROJECT_ID_STRING, projectKeyOrProjectId);
-            reqMap.put(GATE_ID_STRING, qualityProfileKeyOrQualityGateId);
-        }
-
-        commonService.sendForm(inspectionServerUrl, reqUrl, HttpMethod.POST, reqMap, Project.class);
-    }
-
-
-    /**
-     * The enum Link type.
-     */
-    enum LinkType {
-        QUALITY_PROFILE,
-        QUALITY_GATE;
-    }
-
-
-    /**
-     * The enum Link operation type.
-     */
-    enum LinkOperationType {
-        LINK,
-        UNLINK;
-    }
-
-
     private List mergeData(List<Map> dbData, List<Map> inceptionData) {
         List returnData = new ArrayList();
         int cnt = 0;
@@ -467,6 +569,24 @@ public class ProjectService {
             }
         }
         return returnData;
+    }
+
+
+    /**
+     * The enum Link type.
+     */
+    enum LinkType {
+        QUALITY_PROFILE,
+        QUALITY_GATE;
+    }
+
+
+    /**
+     * The enum Link operation type.
+     */
+    public enum LinkOperationType {
+        LINK,
+        UNLINK;
     }
 
 }

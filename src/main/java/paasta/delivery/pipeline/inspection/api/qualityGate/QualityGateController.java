@@ -2,10 +2,10 @@ package paasta.delivery.pipeline.inspection.api.qualityGate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import paasta.delivery.pipeline.inspection.api.project.Project;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * paastaDeliveryPipelineApi
@@ -21,7 +21,9 @@ public class QualityGateController {
     private final QualityGateService qualityGateService;
 
     @Autowired
-    QualityGateController(QualityGateService qualityGateService) {this.qualityGateService = qualityGateService;}
+    QualityGateController(QualityGateService qualityGateService) {
+        this.qualityGateService = qualityGateService;
+    }
 
     /**
      * Get qualityGates.
@@ -45,10 +47,6 @@ public class QualityGateController {
 //    }
 
 
-
-
-
-
     /**
      * Rename qualityGate.
      *
@@ -60,28 +58,28 @@ public class QualityGateController {
 //    }
 
 
-
-
     ////////////////////////////////////////////////////////////////////
+
     /**
-     *  QualityGate 리스트 조회
+     * QualityGate 리스트 조회
      *
      * @param
      * @return QualityGate
      */
     @RequestMapping(value = "/qualityGateList", method = RequestMethod.GET)
-    public List getQualityGateList(@RequestParam String serviceInstancesId){
-        List result =  qualityGateService.getQualityGateList(serviceInstancesId);
+    public List getQualityGateList(@RequestParam String serviceInstancesId) {
+        List result = qualityGateService.getQualityGateList(serviceInstancesId);
         return result;
     }
+
     /**
-     *  QualityGate 조건 옵션조회
+     * QualityGate 조건 옵션조회
      *
      * @param
      * @return QualityGate
      */
-    @RequestMapping(value = "/metricsList" , method = RequestMethod.GET)
-    public List getMetricsList(){
+    @RequestMapping(value = "/metricsList", method = RequestMethod.GET)
+    public List getMetricsList() {
         return qualityGateService.getMetricsList();
     }
 
@@ -91,7 +89,7 @@ public class QualityGateController {
      * @return
      */
     @RequestMapping(value = "/condition", method = RequestMethod.GET)
-    public QualityGate getQualityGateCondition(@RequestParam long id){
+    public QualityGate getQualityGateCondition(@RequestParam long id) {
         return qualityGateService.getQualityGateCondition(id);
     }
 
@@ -100,18 +98,19 @@ public class QualityGateController {
      *
      * @return
      */
-    @RequestMapping(value="/qualityGateCondSave", method = RequestMethod.POST)
-    public QualityGate createQualityGateCond(@RequestBody QualityGate qualityGate){
+    @RequestMapping(value = "/qualityGateCondSave", method = RequestMethod.POST)
+    public QualityGate createQualityGateCond(@RequestBody QualityGate qualityGate) {
         return qualityGateService.createQualityGateCond(qualityGate);
 
     }
+
     /**
      * QualityGate 조건 수정
      *
      * @return
      */
-    @RequestMapping(value="/qualityGateCondUpdate", method = RequestMethod.PUT)
-    public QualityGate updateQualityGateCond(@RequestBody QualityGate qualityGate){
+    @RequestMapping(value = "/qualityGateCondUpdate", method = RequestMethod.PUT)
+    public QualityGate updateQualityGateCond(@RequestBody QualityGate qualityGate) {
         return qualityGateService.updateQualityGateCond(qualityGate);
     }
 
@@ -120,9 +119,9 @@ public class QualityGateController {
      *
      * @return
      */
-    @RequestMapping(value="/qualityGateCondDelete", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/qualityGateCondDelete", method = RequestMethod.DELETE)
     @ResponseBody
-    public QualityGate deleteQualityGateCond(@RequestBody QualityGate qualityGate){
+    public QualityGate deleteQualityGateCond(@RequestBody QualityGate qualityGate) {
         return qualityGateService.deleteQualityGateCond(qualityGate);
     }
 
@@ -131,9 +130,9 @@ public class QualityGateController {
      *
      * @return
      */
-    @RequestMapping(value="/qualityGateCopy", method = RequestMethod.POST)
+    @RequestMapping(value = "/qualityGateCopy", method = RequestMethod.POST)
     @ResponseBody
-    public QualityGate copyQualityGate(@RequestBody QualityGate qualityGate){
+    public QualityGate copyQualityGate(@RequestBody QualityGate qualityGate) {
         return qualityGateService.copyQualityGate(qualityGate);
     }
 
@@ -143,7 +142,7 @@ public class QualityGateController {
      *
      * @return created qualityGate
      */
-    @RequestMapping(value = "/qualityGateCreate" , method = RequestMethod.POST)
+    @RequestMapping(value = "/qualityGateCreate", method = RequestMethod.POST)
     public QualityGate createQualityGate(@RequestBody QualityGate qualityGate) throws IOException {
         return qualityGateService.createQualityGate(qualityGate);
     }
@@ -167,7 +166,7 @@ public class QualityGateController {
 //    public String deleteQualityGate(@PathVariable Long id) throws IOException {
 //        return qualityGateService.deleteQualityGate(id);
 //    }
-    @RequestMapping(value = "/qualityGateDelete",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/qualityGateDelete", method = RequestMethod.DELETE)
     public QualityGate deleteQualityGate(@RequestBody QualityGate qualityGate) throws IOException {
         return qualityGateService.deleteQualityGate(qualityGate);
     }
@@ -181,5 +180,22 @@ public class QualityGateController {
 //    public QualityGate qualityGateDefaultSetting(@RequestBody QualityGate qualityGate){
 //        return qualityGateService.qualityGateDefaultSetting(qualityGate);
 //    }
+
+
+    /**
+     * getProjectList
+     *
+     * @param
+     * @return List
+     */
+    @RequestMapping(value = "/projectList", method = RequestMethod.GET)
+    public List getProjectsList(@RequestParam Long projectId, @RequestParam String projectName, @RequestParam String serviceInstancesId, @RequestParam String projectKey) {
+        Project project = new Project();
+        project.setProjectId(projectId);
+        project.setProjectName(projectName);
+        project.setServiceInstancesId(serviceInstancesId);
+        project.setProjectKey(projectKey);
+        return qualityGateService.getProjects(project);
+    }
 
 }

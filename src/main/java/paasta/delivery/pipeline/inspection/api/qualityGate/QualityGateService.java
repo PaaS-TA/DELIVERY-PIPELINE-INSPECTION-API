@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import paasta.delivery.pipeline.inspection.api.common.CommonService;
 import paasta.delivery.pipeline.inspection.api.common.Constants;
+import paasta.delivery.pipeline.inspection.api.project.Project;
+import paasta.delivery.pipeline.inspection.api.project.ProjectService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +29,7 @@ public class QualityGateService {
 
     private final CommonService commonService;
 
+    private final ProjectService projectService;
     /**
      * The Delivery server url.
      */
@@ -38,8 +41,9 @@ public class QualityGateService {
     private String commonApiUrl;
 
     @Autowired
-    public QualityGateService(CommonService commonService) {
+    public QualityGateService(CommonService commonService, ProjectService projectService) {
         this.commonService = commonService;
+        this.projectService = projectService;
     }
 
 
@@ -127,7 +131,7 @@ public class QualityGateService {
             qualityGate = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/update_condition", HttpMethod.POST, parameter, QualityGate.class);
             qualityGate.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             qualityGate.setResultStatus(Constants.RESULT_STATUS_FAIL);
         }
@@ -367,4 +371,13 @@ public class QualityGateService {
 
         return returnList;
     }
+
+
+    public List getProjects(Project project) {
+        //퀄리티게이트용 정보를 추가하는 작업을 진행해야함
+        List data = projectService.getProjects(project);
+        return data;
+
+    }
+
 }

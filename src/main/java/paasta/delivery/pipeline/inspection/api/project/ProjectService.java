@@ -12,10 +12,7 @@ import paasta.delivery.pipeline.inspection.api.common.Constants;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -138,14 +135,40 @@ public class ProjectService {
     }
 
     //project List
-    public List getProjectsList(Project project) {
-        return commonService.sendForm(commonApiUrl, "/project/projectsList", HttpMethod.POST, project, List.class);
+    public List getProjects(Project project) {
+        LOGGER.info("!!################################################ ");
+        try {
+        /*
+        * 1. DB상에서 프로젝트 리스트 추출
+        * 2. Sonar에 등록된 프로젝트 목록 추출
+        * 3. 둘이 병합하여, 있는 넘만 내보낼까??
+        */
+            String param = "";
+            String key = "";
+            if (project != null) {
+                param += "?";
+                param += "serviceInstancesId=" + project.getServiceInstancesId();
+                param += "&projectId=" + project.getProjectId();
+                param += "&projectKey=" + project.getProjectKey();
+                param += "&projectName=" + project.getProjectName();
+                if (project.getProjectKey() != null && !project.getProjectKey().toUpperCase().equalsIgnoreCase("NULL")) {
+                    key = project.getProjectKey();
+                }
+            }
+
+            //1. DB상에서 프로젝트 리스트 추출
+            List<Map> projects = commonService.sendForm(commonApiUrl, "/project/projectsList" + param, HttpMethod.GET, null, List.class);
+            //2. Sonar에 등록된 프로젝트 목록 추출
+            List<Map> inceptionProjects = commonService.sendForm(inspectionServerUrl, "/api/projects?key=" + key, HttpMethod.GET, null, List.class);
+
+            return mergeData(projects, inceptionProjects);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    //getProject
-    public List getProject(Project project) {
-        return commonService.sendForm(commonApiUrl, "/project/getProject", HttpMethod.POST, project, List.class);
-    }
 
     //project delete
     public Project deleteProjects(Project project) {
@@ -426,6 +449,24 @@ public class ProjectService {
     enum LinkOperationType {
         LINK,
         UNLINK;
+    }
+
+
+    private List mergeData(List<Map> dbData, List<Map> inceptionData) {
+        List returnData = new ArrayList();
+        int cnt = 0;
+        for (Map db : dbData) {
+            cnt = 0;
+            for (Map inspetion : inceptionData) {
+                if (db.get("projectKey").toString().equalsIgnoreCase(inspetion.get("k").toString())) {
+                    cnt++;
+                }
+            }
+            if (cnt > 0) {
+                returnData.add(db);
+            }
+        }
+        return returnData;
     }
 
 }

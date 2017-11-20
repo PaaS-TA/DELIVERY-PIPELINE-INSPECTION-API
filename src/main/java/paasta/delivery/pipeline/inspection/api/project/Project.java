@@ -57,6 +57,7 @@ public class Project {
     //프로젝트 추가, 수정시 게이트와 프로파일 default 상태
     private String gateDefaultYn;
     private String profileDefaultYn;
+    private String projectViewName;
 
     public long getId() {
         return id;
@@ -322,4 +323,11 @@ public class Project {
         this.profileDefaultYn = profileDefaultYn;
     }
 
+    public String getProjectViewName() {
+        return projectViewName;
+    }
+
+    public void setProjectViewName(String projectViewName) {
+        this.projectViewName = projectViewName;
+    }
 }

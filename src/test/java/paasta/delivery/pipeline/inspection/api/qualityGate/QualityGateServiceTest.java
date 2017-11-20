@@ -259,15 +259,15 @@ public class QualityGateServiceTest {
      *
      * @throws Exception the exception
      */
-    @Test
-    public void updateQualityGateCond_Valid_Return() throws Exception{
-
+//    @Test
+//    public void updateQualityGateCond_Valid_Return() throws Exception{
+//
         // TODO :: NEED TO MODIFY
 //        when(commonService.sendForm(Constants.TARGET_INSPECTION_API,"/api/qualitygates/update_condition" , HttpMethod.POST,testResultMap ,QualityGate.class)).thenReturn(resultModel);
 //
 //        qualityGateService.updateQualityGateCond(testModel);
-
-    }
+//
+//    }
 
     /**
      *  QualityGate 조건 삭제

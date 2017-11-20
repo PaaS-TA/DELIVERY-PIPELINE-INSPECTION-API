@@ -15,6 +15,7 @@ public class QualityProfile {
     private String languageName;
     private String isDefault;
     private String isInherited;
+
     // --- Create :: e
 
     // --- Rule :: s
@@ -40,6 +41,7 @@ public class QualityProfile {
     private String resultStatus;
     private String resultMessage;
 
+    private List profiles;
     // --- etc :: e
 
     // --- getter/setter :: s
@@ -170,6 +172,13 @@ public class QualityProfile {
         this.serviceInstanceId = serviceInstanceId;
     }
 
+    public List getProfiles() {
+        return profiles;
+    }
+
+    public void setProfiles(List profiles) {
+        this.profiles = profiles;
+    }
 //    /**
 //     * Gets languages.
 //     *
@@ -372,6 +381,7 @@ public class QualityProfile {
                 ", serviceInstanceId='" + serviceInstanceId + '\'' +
                 ", resultStatus='" + resultStatus + '\'' +
                 ", resultMessage='" + resultMessage + '\'' +
+                ", profiles=" + profiles +
                 '}';
     }
 }

@@ -23,12 +23,15 @@ public class QualityProfileController {
     /**
      * Get quality profile list .
      *
-     * @param serviceInstancesId the service instances id
+     * RequestParam(value = "serviceInstanceId", required = true)
+     * RequestParam(value = "language", required = false)
+     *
+     * @param qualityProfile the quality profile
      * @return the list
      */
     @GetMapping(value = "/qualityProfileList")
-    public List getQualityProfileList(String serviceInstancesId){
-        return qualityProfileService.getQualityProfileList(serviceInstancesId);
+    public List getQualityProfileList(@ModelAttribute QualityProfile qualityProfile){
+        return qualityProfileService.getQualityProfileList(qualityProfile);
     }
 
     /**
@@ -56,6 +59,8 @@ public class QualityProfileController {
 
     /**
      * Gets projects.
+     * RequestParam(value = "key", required = true)
+     * RequestParam(value = "selected", required = false)
      *
      * @param qualityProfile the quality profile
      * @return the projects
@@ -66,8 +71,21 @@ public class QualityProfileController {
         return qualityProfileService.getProjects(qualityProfile);
     }
 
+    /**
+     * Copy quality profile quality profile.
+     *
+     * @param qualityProfile the quality profile
+     * @return the quality profile
+     */
+    @PostMapping(value = "/qualityProfileCopy")
+    public QualityProfile CopyQualityProfile(@RequestBody QualityProfile qualityProfile) {
+
+        return qualityProfileService.copyQualityProfile(qualityProfile);
+    }
+
 
     //TODO --------------------------------
+
     /**
      * Get specific qualityGate.
      *
@@ -83,7 +101,9 @@ public class QualityProfileController {
     /**
      * Delete qualityProfile.
      *
-     * @return status
+     * @param id the id
+     * @return status string
+     * @throws IOException the io exception
      */
     @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
     public String deleteQualityProfile(@PathVariable Long id) throws IOException {
@@ -94,18 +114,18 @@ public class QualityProfileController {
 
 
     ////////////////////////////////////////////////////////////////////
-
-
-    /**
-     * qualityProfile 복제.
-     *
-     * @param qualityProfile the quality profile
-     * @return quality profile
-     */
-    @RequestMapping(value = "/qualityProfileCopy", method = RequestMethod.POST)
-    public QualityProfile qualityProfileCopy(@RequestBody QualityProfile qualityProfile){
-        return qualityProfileService.qualityProfileCopy(qualityProfile);
-    }
+//
+//
+//    /**
+//     * qualityProfile 복제.
+//     *
+//     * @param qualityProfile the quality profile
+//     * @return quality profile
+//     */
+//    @RequestMapping(value = "/qualityProfileCopy", method = RequestMethod.POST)
+//    public QualityProfile qualityProfileCopy(@RequestBody QualityProfile qualityProfile){
+//        return qualityProfileService.qualityProfileCopy(qualityProfile);
+//    }
 
     /**
      * qualityProfile 삭제

@@ -18,9 +18,10 @@ public class Constants {
     // [API] qualityprofiles
     public static final String API_QUALITYPROFILES_SEARCH = "/api/qualityprofiles/search";
     public static final String API_QUALITYPROFILES_PROJECTS = "/api/qualityprofiles/projects";
-
-    public static final String API_LANGUAGES_LIST = "/api/languages/list";
     public static final String API_QUALITYPROFILES_CREATE = "/api/qualityprofiles/create";
+    public static final String API_QUALITYPROFILES_COPY = "/api/qualityprofiles/copy";
+    public static final String API_LANGUAGES_LIST = "/api/languages/list";
+
     public static final String API_RULES_SEARCH = "/api/rules/search";
 
     public static final String KEY_PROFILES = "profiles";

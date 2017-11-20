@@ -42,27 +42,27 @@ public class QualityProfileService {
     /**
      * Get quality profile list list.
      *
-     * @param serviceInstancesId the service instances id
+     * @param qualityProfile the quality profile
      * @return the list
      */
-    public List getQualityProfileList(String serviceInstancesId){
+    public List getQualityProfileList(QualityProfile qualityProfile){
 
         // [API] : /api/qualityprofiles/search
-        LOGGER.info("===[INSPECTION-API :: getQualityProfileList]=== reqUrl : {}", Constants.API_QUALITYPROFILES_SEARCH);
-        LinkedHashMap profile = (LinkedHashMap) commonService.sendForm(inspectionServerUrl , Constants.API_QUALITYPROFILES_SEARCH,HttpMethod.GET, null, Map.class);
+        String reqUrl = commonService.makeQueryParam(inspectionServerUrl+Constants.API_QUALITYPROFILES_SEARCH, qualityProfile);
 
-        List profiles = (List) profile.get(Constants.KEY_PROFILES);
+        QualityProfile profile = commonService.sendForm(reqUrl, HttpMethod.GET, null, QualityProfile.class);
 
         // real
-        List qualityProfileList = (List) profiles.stream().filter(e ->
+        List qualityProfileList = (List) profile.getProfiles().stream().filter(e ->
         {
-            if (((String)((LinkedHashMap)e).get("name")).startsWith(serviceInstancesId+"^")) {
+            if (((String)((LinkedHashMap)e).get("name")).startsWith(qualityProfile.getServiceInstanceId()+"^")) {
                 return true;
             }
+            //TODO ::  DEFAULT^ 로만 수정필요
             if (((Boolean)((LinkedHashMap)e).get("isDefault")) || ((String)((LinkedHashMap)e).get("name")).startsWith("DEFAULT"+"^")) {
                 return true;
             }
-            //temp :: test용
+            //TODO :: temp :: test용
             if (((String)((LinkedHashMap)e).get("name")).startsWith("lena-") || ((String)((LinkedHashMap)e).get("name")).startsWith("rex-") ) {
                 return true;
             }
@@ -136,27 +136,42 @@ public class QualityProfileService {
         return resultBody;
     }
 
+    /**
+     * Copy quality profile quality profile.
+     *
+     * @param qualityProfile the quality profile
+     * @return the quality profile
+     */
+    public QualityProfile copyQualityProfile(QualityProfile qualityProfile) {
+
+        // /api/qualityprofiles/copy
+        QualityProfile resultBody = commonService.sendForm(inspectionServerUrl , Constants.API_QUALITYPROFILES_COPY, HttpMethod.POST, qualityProfile, QualityProfile.class);
+
+        return resultBody;
+
+    }
+
 
 
     //TODO -----------------------------------------------------------------
-    /**
-     * qualityProfile 복제
-     *
-     * @param qualityProfile the quality profile
-     * @return quality profile
-     */
-    public QualityProfile qualityProfileCopy(QualityProfile qualityProfile){
-        QualityProfile result = new QualityProfile();
-
-        result = commonService.sendForm(inspectionServerUrl , "/api/qualityprofiles/copy",HttpMethod.POST, qualityProfile, QualityProfile.class);
-
-        result.setServiceInstanceId(qualityProfile.getServiceInstanceId());
-//        result.setProfileDefaultYn(qualityProfile.getProfileDefaultYn());
-
-        //sona에서 가져오 키값 셋팅해서 db로 저장
-        result = commonService.sendForm(commonApiUrl , "/qualityProfile/qualityProfileCopy",HttpMethod.POST, qualityProfile, QualityProfile.class);
-        return  result;
-    }
+//    /**
+//     * qualityProfile 복제
+//     *
+//     * @param qualityProfile the quality profile
+//     * @return quality profile
+//     */
+//    public QualityProfile qualityProfileCopy(QualityProfile qualityProfile){
+//        QualityProfile result = new QualityProfile();
+//
+//        result = commonService.sendForm(inspectionServerUrl , "/api/qualityprofiles/copy",HttpMethod.POST, qualityProfile, QualityProfile.class);
+//
+//        result.setServiceInstanceId(qualityProfile.getServiceInstanceId());
+////        result.setProfileDefaultYn(qualityProfile.getProfileDefaultYn());
+//
+//        //sona에서 가져오 키값 셋팅해서 db로 저장
+//        result = commonService.sendForm(commonApiUrl , "/qualityProfile/qualityProfileCopy",HttpMethod.POST, qualityProfile, QualityProfile.class);
+//        return  result;
+//    }
 
     /**
      * qualityProfile 삭제
@@ -185,9 +200,6 @@ public class QualityProfileService {
         result = commonService.sendForm(commonApiUrl , "/qualityProfile/qualityProfileUpdate",HttpMethod.PUT, qualityProfile, QualityProfile.class);
         return result;
     }
-
-
-
 
 
     /**

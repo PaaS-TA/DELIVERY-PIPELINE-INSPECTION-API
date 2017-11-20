@@ -4,217 +4,374 @@ package paasta.delivery.pipeline.inspection.api.qualityProfile;
 import java.util.List;
 
 /**
- * Created by Dojun on 2017-06-28.
+ * The type Quality profile.
  */
 public class QualityProfile {
 
-    // DATABASE COLUMNS :: BEGIN
-    private long id; // pid
-    private String serviceInstancesId;
-    private long qualityProfileId; // id -> qualityProfileId
-    private String qualityProfileName; // name -> qualityProfileName
-    private String qualityProfileKey; // key -> qualityProfileKey
+    // --- Create :: s
+    private String name;
     private String language;
+    private String key;
     private String languageName;
-    private String profileDefaultYn;
-    private int activeRuleCount;
-    private int activeDeprecatedRuleCount;
-    private String created;
-    private String lastModified;
-    private String createdString;
-    private String lastModifiedString;
-    // DATABASE COLUMNS :: END
+    private String isDefault;
+    private String isInherited;
+    // --- Create :: e
 
+    // --- Rule :: s
+//    private String languages;
+    private String profile_key;
+    private String rule_key;
+
+    // --- Rule :: e
+
+    // --- copy :: s
+    private String fromKey;
+    private String toName;
+    // --- copy :: e
+
+    // --- Project :: s
+    private String selected;
+    private List results;
+    // --- Project :: e
+
+    // --- etc :: s
+    private String backup;
+    private String serviceInstanceId;
     private String resultStatus;
     private String resultMessage;
 
-    private List<Long> projectIdList;
+    // --- etc :: e
 
-    //프로파일 복제
-    private String fromKey;
-    private String toName;
-    private String sonarKey;
+    // --- getter/setter :: s
 
-    //프로파일 삭제
-    private String profileKey;
-
-    //언어 리스트
-    private List languages;
-
-    public long getId() {
-        return id;
+    /**
+     * Gets name.
+     *
+     * @return the name
+     */
+    public String getName() {
+        return name;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    /**
+     * Sets name.
+     *
+     * @param name the name
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getServiceInstancesId() {
-        return serviceInstancesId;
-    }
-
-    public void setServiceInstancesId(String serviceInstancesId) {
-        this.serviceInstancesId = serviceInstancesId;
-    }
-
-    public long getQualityProfileId() {
-        return qualityProfileId;
-    }
-
-    public void setQualityProfileId(long qualityProfileId) {
-        this.qualityProfileId = qualityProfileId;
-    }
-
-    public String getQualityProfileName() {
-        return qualityProfileName;
-    }
-
-    public void setQualityProfileName(String qualityProfileName) {
-        this.qualityProfileName = qualityProfileName;
-    }
-
-    public String getQualityProfileKey() {
-        return qualityProfileKey;
-    }
-
-    public void setQualityProfileKey(String qualityProfileKey) {
-        this.qualityProfileKey = qualityProfileKey;
-    }
-
+    /**
+     * Gets language.
+     *
+     * @return the language
+     */
     public String getLanguage() {
         return language;
     }
 
+    /**
+     * Sets language.
+     *
+     * @param language the language
+     */
     public void setLanguage(String language) {
         this.language = language;
     }
 
+    /**
+     * Gets key.
+     *
+     * @return the key
+     */
+    public String getKey() {
+        return key;
+    }
+
+    /**
+     * Sets key.
+     *
+     * @param key the key
+     */
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    /**
+     * Gets language name.
+     *
+     * @return the language name
+     */
     public String getLanguageName() {
         return languageName;
     }
 
+    /**
+     * Sets language name.
+     *
+     * @param languageName the language name
+     */
     public void setLanguageName(String languageName) {
         this.languageName = languageName;
     }
 
-    public String getProfileDefaultYn() {
-        return profileDefaultYn;
+    /**
+     * Gets is default.
+     *
+     * @return the is default
+     */
+    public String getIsDefault() {
+        return isDefault;
     }
 
-    public void setProfileDefaultYn(String profileDefaultYn) {
-        this.profileDefaultYn = profileDefaultYn;
+    /**
+     * Sets is default.
+     *
+     * @param isDefault the is default
+     */
+    public void setIsDefault(String isDefault) {
+        this.isDefault = isDefault;
     }
 
-    public int getActiveRuleCount() {
-        return activeRuleCount;
+    /**
+     * Gets is inherited.
+     *
+     * @return the is inherited
+     */
+    public String getIsInherited() {
+        return isInherited;
     }
 
-    public void setActiveRuleCount(int activeRuleCount) {
-        this.activeRuleCount = activeRuleCount;
+    /**
+     * Sets is inherited.
+     *
+     * @param isInherited the is inherited
+     */
+    public void setIsInherited(String isInherited) {
+        this.isInherited = isInherited;
     }
 
-    public int getActiveDeprecatedRuleCount() {
-        return activeDeprecatedRuleCount;
+    /**
+     * Gets service instance id.
+     *
+     * @return the service instance id
+     */
+    public String getServiceInstanceId() {
+        return serviceInstanceId;
     }
 
-    public void setActiveDeprecatedRuleCount(int activeDeprecatedRuleCount) {
-        this.activeDeprecatedRuleCount = activeDeprecatedRuleCount;
+    /**
+     * Sets service instance id.
+     *
+     * @param serviceInstanceId the service instance id
+     */
+    public void setServiceInstanceId(String serviceInstanceId) {
+        this.serviceInstanceId = serviceInstanceId;
     }
 
-    public String getCreated() {
-        return created;
+//    /**
+//     * Gets languages.
+//     *
+//     * @return the languages
+//     */
+//    public String getLanguages() {
+//        return languages;
+//    }
+//
+//    /**
+//     * Sets languages.
+//     *
+//     * @param languages the languages
+//     */
+//    public void setLanguages(String languages) {
+//        this.languages = languages;
+//    }
+
+    /**
+     * Gets selected.
+     *
+     * @return the selected
+     */
+    public String getSelected() {
+        return selected;
     }
 
-    public void setCreated(String created) {
-        this.created = created;
+    /**
+     * Sets selected.
+     *
+     * @param selected the selected
+     */
+    public void setSelected(String selected) {
+        this.selected = selected;
     }
 
-    public String getLastModified() {
-        return lastModified;
+    /**
+     * Gets results.
+     *
+     * @return the results
+     */
+    public List getResults() {
+        return results;
     }
 
-    public void setLastModified(String lastModified) {
-        this.lastModified = lastModified;
+    /**
+     * Sets results.
+     *
+     * @param results the results
+     */
+    public void setResults(List results) {
+        this.results = results;
     }
 
-    public String getCreatedString() {
-        return createdString;
+    /**
+     * Gets profile key.
+     *
+     * @return the profile key
+     */
+    public String getProfile_key() {
+        return profile_key;
     }
 
-    public void setCreatedString(String createdString) {
-        this.createdString = createdString;
+    /**
+     * Sets profile key.
+     *
+     * @param profile_key the profile key
+     */
+    public void setProfile_key(String profile_key) {
+        this.profile_key = profile_key;
     }
 
-    public String getLastModifiedString() {
-        return lastModifiedString;
+    /**
+     * Gets rule key.
+     *
+     * @return the rule key
+     */
+    public String getRule_key() {
+        return rule_key;
     }
 
-    public void setLastModifiedString(String lastModifiedString) {
-        this.lastModifiedString = lastModifiedString;
+    /**
+     * Sets rule key.
+     *
+     * @param rule_key the rule key
+     */
+    public void setRule_key(String rule_key) {
+        this.rule_key = rule_key;
     }
 
-    public String getResultStatus() {
-        return resultStatus;
-    }
-
-    public void setResultStatus(String resultStatus) {
-        this.resultStatus = resultStatus;
-    }
-
-    public String getResultMessage() {
-        return resultMessage;
-    }
-
-    public void setResultMessage(String resultMessage) {
-        this.resultMessage = resultMessage;
-    }
-
-    public List<Long> getProjectIdList() {
-        return projectIdList;
-    }
-
-    public void setProjectIdList(List<Long> projectIdList) {
-        this.projectIdList = projectIdList;
-    }
-
+    /**
+     * Gets from key.
+     *
+     * @return the from key
+     */
     public String getFromKey() {
         return fromKey;
     }
 
+    /**
+     * Sets from key.
+     *
+     * @param fromKey the from key
+     */
     public void setFromKey(String fromKey) {
         this.fromKey = fromKey;
     }
 
+    /**
+     * Gets to name.
+     *
+     * @return the to name
+     */
     public String getToName() {
         return toName;
     }
 
+    /**
+     * Sets to name.
+     *
+     * @param toName the to name
+     */
     public void setToName(String toName) {
         this.toName = toName;
     }
 
-    public String getSonarKey() {
-        return sonarKey;
+    /**
+     * Gets backup.
+     *
+     * @return the backup
+     */
+    public String getBackup() {
+        return backup;
     }
 
-    public void setSonarKey(String sonarKey) {
-        this.sonarKey = sonarKey;
+    /**
+     * Sets backup.
+     *
+     * @param backup the backup
+     */
+    public void setBackup(String backup) {
+        this.backup = backup;
     }
 
-    public String getProfileKey() {
-        return profileKey;
+    /**
+     * Gets result status.
+     *
+     * @return the result status
+     */
+    public String getResultStatus() {
+        return resultStatus;
     }
 
-    public void setProfileKey(String profileKey) {
-        this.profileKey = profileKey;
+    /**
+     * Sets result status.
+     *
+     * @param resultStatus the result status
+     */
+    public void setResultStatus(String resultStatus) {
+        this.resultStatus = resultStatus;
     }
 
-    public List getLanguages() {
-        return languages;
+    /**
+     * Gets result message.
+     *
+     * @return the result message
+     */
+    public String getResultMessage() {
+        return resultMessage;
     }
 
-    public void setLanguages(List languages) {
-        this.languages = languages;
+    /**
+     * Sets result message.
+     *
+     * @param resultMessage the result message
+     */
+    public void setResultMessage(String resultMessage) {
+        this.resultMessage = resultMessage;
     }
 
+    // --- getter/setter :: e
+
+
+    @Override
+    public String toString() {
+        return "QualityProfile{" +
+                "name='" + name + '\'' +
+                ", language='" + language + '\'' +
+                ", key='" + key + '\'' +
+                ", languageName='" + languageName + '\'' +
+                ", isDefault='" + isDefault + '\'' +
+                ", isInherited='" + isInherited + '\'' +
+                ", profile_key='" + profile_key + '\'' +
+                ", rule_key='" + rule_key + '\'' +
+                ", fromKey='" + fromKey + '\'' +
+                ", toName='" + toName + '\'' +
+                ", selected='" + selected + '\'' +
+                ", results=" + results +
+                ", backup='" + backup + '\'' +
+                ", serviceInstanceId='" + serviceInstanceId + '\'' +
+                ", resultStatus='" + resultStatus + '\'' +
+                ", resultMessage='" + resultMessage + '\'' +
+                '}';
+    }
 }

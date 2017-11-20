@@ -1,6 +1,8 @@
 package paasta.delivery.pipeline.inspection.api.qualityProfile;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
@@ -8,15 +10,23 @@ import org.springframework.stereotype.Service;
 import paasta.delivery.pipeline.inspection.api.common.CommonService;
 import paasta.delivery.pipeline.inspection.api.common.Constants;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import static java.util.stream.Collectors.toList;
+
 
 /**
- * Created by Dojun on 2017-06-19.
+ * The type Quality profile service.
  */
 @Service
 public class QualityProfileService {
 
-    private final CommonService commonService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(QualityProfileService.class);
+
+    @Autowired
+    private CommonService commonService;
 
     /**
      * The Delivery server url.
@@ -28,29 +38,120 @@ public class QualityProfileService {
     @Value("${commonApi.url}")
     private String commonApiUrl;
 
-    @Autowired
-    QualityProfileService(CommonService commonService) {this.commonService = commonService;}
-
 
     /**
-     * 품질 프로파일 목록 조회
-     * @return Map
+     * Get quality profile list list.
+     *
+     * @param serviceInstancesId the service instances id
+     * @return the list
      */
     public List getQualityProfileList(String serviceInstancesId){
-        return commonService.sendForm(commonApiUrl , "/qualityProfile/qualityProfileList?serviceInstancesId="+serviceInstancesId,HttpMethod.GET, null, List.class);
+
+        // [API] : /api/qualityprofiles/search
+        LOGGER.info("===[INSPECTION-API :: getQualityProfileList]=== reqUrl : {}", Constants.API_QUALITYPROFILES_SEARCH);
+        LinkedHashMap profile = (LinkedHashMap) commonService.sendForm(inspectionServerUrl , Constants.API_QUALITYPROFILES_SEARCH,HttpMethod.GET, null, Map.class);
+
+        List profiles = (List) profile.get(Constants.KEY_PROFILES);
+
+        // real
+        List qualityProfileList = (List) profiles.stream().filter(e ->
+        {
+            if (((String)((LinkedHashMap)e).get("name")).startsWith(serviceInstancesId+"^")) {
+                return true;
+            }
+            if (((Boolean)((LinkedHashMap)e).get("isDefault")) || ((String)((LinkedHashMap)e).get("name")).startsWith("DEFAULT"+"^")) {
+                return true;
+            }
+            //temp :: test용
+            if (((String)((LinkedHashMap)e).get("name")).startsWith("lena-") || ((String)((LinkedHashMap)e).get("name")).startsWith("rex-") ) {
+                return true;
+            }
+            return false;
+        }).collect(toList());
+
+
+        LOGGER.info("===[INSPECTION-API :: getQualityProfileList]=== qualityProfileList : {}", qualityProfileList.toString());
+
+
+        return qualityProfileList;
     }
 
     /**
+     * Getquality profile languages list.
+     *
+     * @return the list
+     */
+    public List getqualityProfileLanguages(){
+
+        // [API] : /api/languages/list?ps=1&q=java
+
+        String reqUrl = Constants.API_LANGUAGES_LIST;
+
+        LOGGER.info("===[INSPECTION-API :: getqualityProfileLanguages]=== reqUrl : {}", reqUrl);
+        LinkedHashMap map = (LinkedHashMap) commonService.sendForm(inspectionServerUrl , reqUrl, HttpMethod.GET, null, Map.class);
+
+        List languages = (List) map.get(Constants.KEY_LANGUAGES);
+
+        LOGGER.info("===[INSPECTION-API :: getqualityProfileLanguages]=== languages : {}", languages.toString());
+        return languages;
+
+    }
+
+    /**
+     * Create quality profile quality profile.
+     *
+     * @param qualityProfile the quality profile
+     * @return the quality profile
+     */
+    public QualityProfile createQualityProfile(QualityProfile qualityProfile){
+
+        QualityProfile result = new QualityProfile();
+
+        LinkedHashMap resultBody = (LinkedHashMap) commonService.sendForm(inspectionServerUrl , Constants.API_QUALITYPROFILES_CREATE,HttpMethod.POST, qualityProfile, Map.class);
+
+        ObjectMapper om = new ObjectMapper();
+        result = om.convertValue(resultBody.get(Constants.KEY_PROFILE), QualityProfile.class);
+       return result;
+
+    }
+
+    /**
+     * Gets projects.
+     *
+     * @param qualityProfile the quality profile
+     * @return the projects
+     */
+    public QualityProfile getProjects(QualityProfile qualityProfile) {
+
+        // /api/qualityprofiles/projects?key=java-egov-qualityprofile-20090&selected=all
+//        String reqUrl = Constants.API_QUALITYPROFILES_PROJECTS + "?key="+key;
+
+        String reqUrl = commonService.makeQueryParam(inspectionServerUrl+Constants.API_QUALITYPROFILES_PROJECTS, qualityProfile);
+
+
+        LOGGER.info("===[INSPECTION-API :: getProjectList]=== reqUrl : {}", reqUrl);
+
+        QualityProfile resultBody = commonService.sendForm(reqUrl, HttpMethod.GET, null, QualityProfile.class);
+
+        return resultBody;
+    }
+
+
+
+    //TODO -----------------------------------------------------------------
+    /**
      * qualityProfile 복제
-     * @return
+     *
+     * @param qualityProfile the quality profile
+     * @return quality profile
      */
     public QualityProfile qualityProfileCopy(QualityProfile qualityProfile){
         QualityProfile result = new QualityProfile();
 
         result = commonService.sendForm(inspectionServerUrl , "/api/qualityprofiles/copy",HttpMethod.POST, qualityProfile, QualityProfile.class);
 
-        result.setServiceInstancesId(qualityProfile.getServiceInstancesId());
-        result.setProfileDefaultYn(qualityProfile.getProfileDefaultYn());
+        result.setServiceInstanceId(qualityProfile.getServiceInstanceId());
+//        result.setProfileDefaultYn(qualityProfile.getProfileDefaultYn());
 
         //sona에서 가져오 키값 셋팅해서 db로 저장
         result = commonService.sendForm(commonApiUrl , "/qualityProfile/qualityProfileCopy",HttpMethod.POST, qualityProfile, QualityProfile.class);
@@ -59,7 +160,9 @@ public class QualityProfileService {
 
     /**
      * qualityProfile 삭제
-     * @return
+     *
+     * @param qualityProfile the quality profile
+     * @return quality profile
      */
     public QualityProfile deleteQualityProfile(QualityProfile qualityProfile){
         QualityProfile result = new QualityProfile();
@@ -69,9 +172,12 @@ public class QualityProfileService {
         result.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
         return result;
     }
+
     /**
      * qualityProfile 수정
-     * @return
+     *
+     * @param qualityProfile the quality profile
+     * @return quality profile
      */
     public QualityProfile updateQualityProfile(QualityProfile qualityProfile){
         QualityProfile result = new QualityProfile();
@@ -80,66 +186,19 @@ public class QualityProfileService {
         return result;
     }
 
-    /**
-     * qualityProfile 언어 리스트
-     * @return
-     */
-    public QualityProfile qualityProfileLangList(){
-        return commonService.sendForm(inspectionServerUrl , "/api/languages/list",HttpMethod.GET, null, QualityProfile.class);
-    }
+
+
+
 
     /**
-     * 품질 프로파일 생성
-     * @param qualityProfile
-     * @return qualityProfile
-     */
-    QualityProfile createQualityProfile(QualityProfile qualityProfile) {
-
-        QualityProfile resultModel = new QualityProfile();
-        JsonNode result = commonService.sendForm(inspectionServerUrl, "/api/qualityprofiles/create", HttpMethod.POST, qualityProfile, JsonNode.class);
-
-        qualityProfile.setQualityProfileName(result.get("profile").get("name").asText());
-        qualityProfile.setQualityProfileKey(result.get("profile").get("key").asText());
-        qualityProfile.setLanguage(result.get("profile").get("language").asText());
-        qualityProfile.setLanguageName(result.get("profile").get("languageName").asText());
-        resultModel = commonService.sendForm(commonApiUrl, "/qualityProfile/qualityProfilCreate",HttpMethod.POST, qualityProfile, QualityProfile.class);
-
-        return resultModel;
-    }
-
-    /**
-     *  QualityProfile default setting
+     * QualityProfile 한건 검색
      *
-     * @param
-     * @return
-     */
-/*    public QualityProfile defaultQualityProfile(QualityProfile qualityProfile){
-
-        commonService.sendForm(inspectionServerUrl , "/api/qualityprofiles/set_default",HttpMethod.POST, qualityProfile, QualityProfile.class);
-        commonService.sendForm(commonApiUrl,"/qualityProfile/qualityProfilDefaultSetting",HttpMethod.PUT,qualityProfile,String.class);
-        qualityProfile.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
-        return qualityProfile;
-    }*/
-
-    /**
-     *  QualityProfile codingRules
-     *
-     * @param qualityProfile
-     * @return list
-     */
-    public List getCodingRulesList(QualityProfile qualityProfile){
-        return commonService.sendForm(inspectionServerUrl,"/api/profiles?language="+qualityProfile.getLanguage()+"&name="+qualityProfile.getQualityProfileName(),HttpMethod.GET,null,List.class);
-    }
-
-
-    /**
-     *  QualityProfile 한건 검색
-     *
-     * @param  id
-     * @return QualityProfile
+     * @param id the id
+     * @return QualityProfile quality profile
      */
     public QualityProfile getQualityProfile(long id){
+
+        //TODO QualityProfile 한건 검색
         return commonService.sendForm(commonApiUrl,"/qualityProfile/getQualityProfile?id="+id,HttpMethod.GET,null,QualityProfile.class);
     }
-
 }

@@ -61,7 +61,9 @@ public class CommonService {
      * @param restTemplate the rest template
      */
     @Autowired
-    public CommonService(RestTemplate restTemplate) {this.restTemplate = restTemplate;}
+    public CommonService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
 
     /**
@@ -83,11 +85,11 @@ public class CommonService {
         reqHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         HttpEntity<Object> reqEntity = new HttpEntity<>(bodyObject, reqHeaders);
 
-        LOGGER.info("<T> T send :: Request : {} {baseUrl} : {}, Content-Type: {}", httpMethod, reqUrl, reqHeaders.getContentType());
+        LOGGER.info("<T> T send :: Request : {} {baseUrl} : {}, Content-Type: {}", httpMethod, baseUrl + reqUrl, reqHeaders.getContentType());
 
         ResponseEntity<T> resEntity = restTemplate.exchange(baseUrl + reqUrl, httpMethod, reqEntity, responseType);
         LOGGER.info("Response Status Code: {}", resEntity.getStatusCode());
-        if(!resEntity.getStatusCode().equals(HttpStatus.OK)){
+        if (!resEntity.getStatusCode().equals(HttpStatus.OK)) {
             LOGGER.info("Response Error : {} " + resEntity.getBody());
         }
 
@@ -117,7 +119,7 @@ public class CommonService {
 
         ResponseEntity<T> resEntity = restTemplate.exchange(reqUrl, httpMethod, reqEntity, responseType);
         LOGGER.info("Response Status Code: {}", resEntity.getStatusCode());
-        if(!resEntity.getStatusCode().equals(HttpStatus.OK)){
+        if (!resEntity.getStatusCode().equals(HttpStatus.OK)) {
             LOGGER.info("Response Error : {} " + resEntity.getBody());
         }
 
@@ -130,10 +132,10 @@ public class CommonService {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(reqUrl);
         Map<String, Object> codingRulesMap = om.convertValue(obj, Map.class);
 
-        for(String key : codingRulesMap.keySet()) {
+        for (String key : codingRulesMap.keySet()) {
 
             if (codingRulesMap.get(key) != null) {
-                builder.queryParam( key, codingRulesMap.get(key) );
+                builder.queryParam(key, codingRulesMap.get(key));
             }
         }
         return builder.build().encode().toUriString();

@@ -1,15 +1,19 @@
 package paasta.delivery.pipeline.inspection.api.qualityIssues;
 
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import paasta.delivery.pipeline.inspection.api.common.CommonService;
-import paasta.delivery.pipeline.inspection.api.common.Constants;
 import paasta.delivery.pipeline.inspection.api.project.Project;
+import paasta.delivery.pipeline.inspection.api.project.ProjectService;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Created by kim on 2017-08-10.
@@ -17,8 +21,11 @@ import java.util.Map;
 @Service
 public class QualityIssuesService {
 
-    private final CommonService commonService;
+    private CommonService commonService;
 
+    private ProjectService projectService;
+
+    private final Logger LOGGER = getLogger(getClass());
     /**
      * The Delivery server url.
      */
@@ -30,63 +37,53 @@ public class QualityIssuesService {
     private String commonApiUrl;
 
 
-    QualityIssuesService(CommonService commonService){
+    QualityIssuesService(CommonService commonService, ProjectService projectService) {
         this.commonService = commonService;
+        this.projectService = projectService;
     }
 
-    public QualityIssues qualityIssuesList(QualityIssues qualityIssues){
-        Project projectParam = new Project();
-        List<Map<String, String>> projectList = new ArrayList<>();
-        projectParam.setServiceInstancesId(qualityIssues.getServiceInstancesId());
-        String sonarKey = "";
+    public QualityIssues qualityIssuesList(QualityIssues qualityIssues) {
         String url = "";
-
         //ps - 페이지 사이즈 , serverities - 이슈 수준 , stateuses - 상태 , resolved = 미해결 ,
-
-
-        if(qualityIssues.getComponentKeys().equals("")){
-            projectList = commonService.sendForm(commonApiUrl, "/project/projectsList", HttpMethod.POST,projectParam, List.class);
-
-            if (projectList.size() > 0) {
-//                for (int i = 0; i < projectList.size(); i++) {
-//                    sonarKey += projectList.get(i).get("sonarKey") + ",";
-//                }
-
-                qualityIssues.setComponentKeys(sonarKey);
-
-                if(qualityIssues.getResolutions().equals("UNRESOLVED")){
-                    url = "/api/issues/search?additionalFields=_all&ps="+qualityIssues.getPs()+"&severities="+qualityIssues.getSeverities()+"&statuses="+qualityIssues.getStatuses()+
-                            "&resolved=false&componentKeys="+qualityIssues.getComponentKeys();
-                }else{
-                    url = "/api/issues/search?additionalFields=_all&ps="+qualityIssues.getPs()+"&severities="+qualityIssues.getSeverities()+"&statuses="+qualityIssues.getStatuses()+
-                            "&componentKeys="+qualityIssues.getComponentKeys()+"&resolutions="+qualityIssues.getResolutions();
+        Project projectParam = new Project();
+        if (qualityIssues.getComponentKeys().equals("")) {
+            projectParam.setServiceInstancesId(qualityIssues.getServiceInstancesId());
+            List<Map> projectList = projectService.getProjects(projectParam);
+            String componentKey = "";
+            for (Map project : projectList) {
+                if (componentKey.length() == 0) {
+                    componentKey += project.get("projectKey").toString();
+                } else {
+                    componentKey += "," + project.get("projectKey").toString();
                 }
 
-
-            }else{
-                qualityIssues.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
-                return qualityIssues;
             }
+            qualityIssues.setComponentKeys(componentKey);
+        }
 
-
-        }else{
-            if(qualityIssues.getResolutions().equals("UNRESOLVED")){
-                url = "/api/issues/search?additionalFields=_all&ps="+qualityIssues.getPs()+"&severities="+qualityIssues.getSeverities()+"&statuses="+qualityIssues.getStatuses()+
-                        "&resolved=false&componentKeys="+qualityIssues.getComponentKeys();
-            }else{
-                url = "/api/issues/search?additionalFields=_all&ps="+qualityIssues.getPs()+"&severities="+qualityIssues.getSeverities()+"&statuses="+qualityIssues.getStatuses()+
-                        "&componentKeys="+qualityIssues.getComponentKeys()+"&resolutions="+qualityIssues.getResolutions();
-            }
-
+        if (qualityIssues.getComponentKeys() == null || qualityIssues.equals("")) {
+            return new QualityIssues();
         }
 
 
-        return commonService.sendForm(inspectionServerUrl, url, HttpMethod.GET,null, QualityIssues.class);
+        if (qualityIssues.getResolutions().equals("UNRESOLVED")) {
+            url = "/api/issues/search?additionalFields=_all&ps=" + qualityIssues.getPs() + "&severities=" + qualityIssues.getSeverities() + "&statuses=" + qualityIssues.getStatuses() +
+                    "&resolved=false&componentKeys=" + qualityIssues.getComponentKeys();
+        } else {
+            url = "/api/issues/search?additionalFields=_all&ps=" + qualityIssues.getPs() + "&severities=" + qualityIssues.getSeverities() + "&statuses=" + qualityIssues.getStatuses() +
+                    "&componentKeys=" + qualityIssues.getComponentKeys() + "&resolutions=" + qualityIssues.getResolutions();
+        }
+        QualityIssues data = commonService.sendForm(inspectionServerUrl, url, HttpMethod.GET, null, QualityIssues.class);
+        return setProjectViewName(projectParam, data);
     }
 
-    public List<QualityIssues> getIssuesConditionList(QualityIssues qualityIssues){
+
+    /*
+    * 사용안함 --- 추후 정리 예정
+     */
+    public List<QualityIssues> getIssuesConditionList(QualityIssues qualityIssues) {
         String projectId = "";
-        QualityIssues param = new QualityIssues();
+
         List<QualityIssues> list = new ArrayList();
 
 
@@ -98,55 +95,74 @@ public class QualityIssuesService {
 
 
         //project check시
-        if(qualityIssues.getComponentKeys() != null && !qualityIssues.getComponentKeys().equals("")) {
+        if (qualityIssues.getComponentKeys() != null && !qualityIssues.getComponentKeys().equals("")) {
             projectId = qualityIssues.getComponentKeys();
-        }else{
-            List<Map> projects = commonService.sendForm(commonApiUrl, "/project/projectsList", HttpMethod.POST, projectParam, List.class);
+        } else {
+            List<Map> projects = projectService.getProjects(projectParam);
             //DB에서 프로젝트 키값 바인딩
             if (projects.size() > 0) {
-                for (Map project:projects) {
-                    projectId += project.get("projectId") + ",";
+                for (Map project : projects) {
+                    if (projectId.length() == 0) {
+                        projectId += project.get("projectId");
+                    } else {
+                        projectId += "," + project.get("projectId");
+                    }
+
                 }
             }
 
         }
 
-        param = commonService.sendForm(inspectionServerUrl, "/api/issues/search?componentKeys="+projectId, HttpMethod.GET,null, QualityIssues.class);
+        QualityIssues param = commonService.sendForm(inspectionServerUrl, "/api/issues/search?componentKeys=" + projectId, HttpMethod.GET, null, QualityIssues.class);
 
 
-        if(!param.getTotal().equals("0") && param.getTotal() != null){
-            num = (Integer.parseInt(param.getTotal()) / 500) +1;
+        if (!param.getTotal().equals("0") && param.getTotal() != null) {
+            num = (Integer.parseInt(param.getTotal()) / 500) + 1;
         }
 
 
-        for(int i=1;i<=num;i++){
-            list.add(commonService.sendForm(inspectionServerUrl, "/api/issues/search?additionalFields=_all&ps=500&pageIndex="+i+"&componentKeys="+projectId, HttpMethod.GET,null, QualityIssues.class));
+        for (int i = 1; i <= num; i++) {
+            list.add(commonService.sendForm(inspectionServerUrl, "/api/issues/search?additionalFields=_all&ps=500&pageIndex=" + i + "&componentKeys=" + projectId, HttpMethod.GET, null, QualityIssues.class));
         }
 
         return list;
     }
 
 
-    public List getQualityIssuesDetail(QualityIssues qualityIssues){
-        QualityIssues param = new QualityIssues();
+    public List getQualityIssuesDetail(QualityIssues qualityIssues) {
         List list = new ArrayList();
-
-        list = commonService.sendForm(inspectionServerUrl, "/api/resources?metrics=lines,violations,coverage_line_hits_data,coverage&resource="+qualityIssues.getFileKey(), HttpMethod.GET, null, List.class);
-
-        list.add(commonService.sendForm(inspectionServerUrl, "/api/sources/show?key="+qualityIssues.getFileKey(), HttpMethod.GET,null, QualityIssues.class));
-
-        list.add(commonService.sendForm(inspectionServerUrl, "/api/sources/scm?key="+qualityIssues.getFileKey(), HttpMethod.GET,null, QualityIssues.class));
-
-        list.add(commonService.sendForm(inspectionServerUrl, "/api/issues/search?additionalFields=_all&resolved=false&componentKeys="+qualityIssues.getFileKey(), HttpMethod.GET,null, QualityIssues.class));
-
-//        commonService.sendForm(commonApiUrl, "/issues/", HttpMethod.GET,null, QualityIssues.class
+        list = commonService.sendForm(inspectionServerUrl, "/api/resources?metrics=lines,violations,coverage_line_hits_data,coverage&resource=" + qualityIssues.getFileKey(), HttpMethod.GET, null, List.class);
+        list.add(commonService.sendForm(inspectionServerUrl, "/api/sources/show?key=" + qualityIssues.getFileKey(), HttpMethod.GET, null, QualityIssues.class));
+        list.add(commonService.sendForm(inspectionServerUrl, "/api/sources/scm?key=" + qualityIssues.getFileKey(), HttpMethod.GET, null, QualityIssues.class));
+        QualityIssues  data  = commonService.sendForm(inspectionServerUrl, "/api/issues/search?additionalFields=_all&resolved=false&componentKeys=" + qualityIssues.getFileKey(), HttpMethod.GET, null, QualityIssues.class);
+        Project param = new Project();
+        param.setServiceInstancesId(qualityIssues.getServiceInstancesId());
+        list.add(setProjectViewName(param,data));
         return list;
     }
 
 
-    public Object setSeverity(QualityIssues qualityIssues){
+    public Object setSeverity(QualityIssues qualityIssues) {
         return commonService.sendForm(inspectionServerUrl, "/api/issues/set_severity", HttpMethod.POST, qualityIssues, Object.class);
     }
 
+
+    private QualityIssues setProjectViewName(Project param, QualityIssues data) {
+        List<Map> projects = projectService.getProjects(param);
+        List<Map> components = data.getComponents();
+        List<Map> pcomponents = new ArrayList<>();
+        for (Map component : components) {
+            for (Map project: projects) {
+                if(component.get("projectId") != null) {
+                    if (component.get("projectId").toString().equalsIgnoreCase(project.get("projectId").toString())) {
+                        component.put("projectViewName", project.get("projectViewName").toString());
+                    }
+                }
+            }
+            pcomponents.add(component);
+        }
+        data.setComponents(pcomponents);
+        return data;
+    }
 
 }

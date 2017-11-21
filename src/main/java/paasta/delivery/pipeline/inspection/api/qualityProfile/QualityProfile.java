@@ -29,6 +29,10 @@ public class QualityProfile {
     private String fromKey;
     private String toName;
     // --- copy :: e
+    // --- Delete :: s
+    private String profileKey;
+    private String profileName;
+    // --- Delete :: e
 
     // --- Project :: s
     private String selected;
@@ -359,7 +363,22 @@ public class QualityProfile {
         this.resultMessage = resultMessage;
     }
 
-    // --- getter/setter :: e
+    public String getProfileKey() {
+        return profileKey;
+    }
+
+    public void setProfileKey(String profileKey) {
+        this.profileKey = profileKey;
+    }
+
+    public String getProfileName() {
+        return profileName;
+    }
+
+    public void setProfileName(String profileName) {
+        this.profileName = profileName;
+    }
+// --- getter/setter :: e
 
 
     @Override
@@ -375,6 +394,8 @@ public class QualityProfile {
                 ", rule_key='" + rule_key + '\'' +
                 ", fromKey='" + fromKey + '\'' +
                 ", toName='" + toName + '\'' +
+                ", profileKey='" + profileKey + '\'' +
+                ", profileName='" + profileName + '\'' +
                 ", selected='" + selected + '\'' +
                 ", results=" + results +
                 ", backup='" + backup + '\'' +

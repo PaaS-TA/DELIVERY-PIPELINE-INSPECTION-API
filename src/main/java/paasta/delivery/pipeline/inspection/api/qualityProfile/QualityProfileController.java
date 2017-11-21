@@ -22,7 +22,7 @@ public class QualityProfileController {
 
     /**
      * Get quality profile list .
-     *
+     * <p>
      * RequestParam(value = "serviceInstanceId", required = true)
      * RequestParam(value = "language", required = false)
      *
@@ -47,6 +47,9 @@ public class QualityProfileController {
 
     /**
      * Create quality profile quality profile.
+     * <p>
+     * RequestParam(value = "name", required = true)
+     * RequestParam(value = "language", required = true)
      *
      * @param qualityProfile the quality profile
      * @return the quality profile
@@ -59,6 +62,7 @@ public class QualityProfileController {
 
     /**
      * Gets projects.
+     * <p>
      * RequestParam(value = "key", required = true)
      * RequestParam(value = "selected", required = false)
      *
@@ -73,83 +77,48 @@ public class QualityProfileController {
 
     /**
      * Copy quality profile quality profile.
+     * <p>
+     * RequestParam(value = "fromKey", required = true)
+     * RequestParam(value = "toName", required = true)
      *
      * @param qualityProfile the quality profile
      * @return the quality profile
      */
     @PostMapping(value = "/qualityProfileCopy")
-    public QualityProfile CopyQualityProfile(@RequestBody QualityProfile qualityProfile) {
+    public QualityProfile copyQualityProfile(@RequestBody QualityProfile qualityProfile) {
 
         return qualityProfileService.copyQualityProfile(qualityProfile);
     }
 
-
-    //TODO --------------------------------
-
     /**
-     * Get specific qualityGate.
-     *
-     * @param id the id
-     * @return the qualityGate
-     */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public QualityProfile getQualityProfile(@PathVariable Long id) {
-        return qualityProfileService.getQualityProfile(id);
-    }
-
-
-    /**
-     * Delete qualityProfile.
-     *
-     * @param id the id
-     * @return status string
-     * @throws IOException the io exception
-     */
-    @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
-    public String deleteQualityProfile(@PathVariable Long id) throws IOException {
-//        return qualityProfileService.deleteQualityProfile(id);
-        return null;
-    }
-
-
-
-    ////////////////////////////////////////////////////////////////////
-//
-//
-//    /**
-//     * qualityProfile 복제.
-//     *
-//     * @param qualityProfile the quality profile
-//     * @return quality profile
-//     */
-//    @RequestMapping(value = "/qualityProfileCopy", method = RequestMethod.POST)
-//    public QualityProfile qualityProfileCopy(@RequestBody QualityProfile qualityProfile){
-//        return qualityProfileService.qualityProfileCopy(qualityProfile);
-//    }
-
-    /**
-     * qualityProfile 삭제
+     * Update quality profile quality profile.
+     * <p>
+     * RequestParam(value = "key", required = true)
+     * RequestParam(value = "name", required = true)
      *
      * @param qualityProfile the quality profile
-     * @return quality profile
+     * @return the quality profile
      */
-    @RequestMapping(value = "/qualityProfileDelete", method = RequestMethod.POST)
-    public QualityProfile deleteQualityProfile(@RequestBody QualityProfile qualityProfile){
-        return qualityProfileService.deleteQualityProfile(qualityProfile);
-    }
+    @PostMapping(value = "/qualityProfileUpdate")
+    public QualityProfile updateQualityProfile(@RequestBody QualityProfile qualityProfile) {
 
-    /**
-     * qualityProfile 수정
-     *
-     * @param qualityProfile the quality profile
-     * @return quality profile
-     */
-    @RequestMapping(value = "/qualityProfileUpdae", method = RequestMethod.POST)
-    public QualityProfile updateQualityProfile(@RequestBody QualityProfile qualityProfile){
         return qualityProfileService.updateQualityProfile(qualityProfile);
     }
 
+    /**
+     * Delete quality profile quality profile.
+     * <p>
+     * RequestParam(value = "profileKey", required = true) OR
+     * ( RequestParam(value = "profileName", required = true)
+     *  + RequestParam(value = "language", required = true) )
+     *
+     * @param qualityProfile the quality profile
+     * @return the quality profile
+     */
+    @PostMapping(value = "/qualityProfileDelete")
+    public QualityProfile deleteQualityProfile(@RequestBody QualityProfile qualityProfile) {
 
-
+        return qualityProfileService.deleteQualityProfile(qualityProfile);
+    }
 
 }

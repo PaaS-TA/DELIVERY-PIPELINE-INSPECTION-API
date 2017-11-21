@@ -124,10 +124,8 @@ public class QualityProfileService {
     public QualityProfile getProjects(QualityProfile qualityProfile) {
 
         // /api/qualityprofiles/projects?key=java-egov-qualityprofile-20090&selected=all
-//        String reqUrl = Constants.API_QUALITYPROFILES_PROJECTS + "?key="+key;
 
         String reqUrl = commonService.makeQueryParam(inspectionServerUrl+Constants.API_QUALITYPROFILES_PROJECTS, qualityProfile);
-
 
         LOGGER.info("===[INSPECTION-API :: getProjectList]=== reqUrl : {}", reqUrl);
 
@@ -151,66 +149,38 @@ public class QualityProfileService {
 
     }
 
-
-
-    //TODO -----------------------------------------------------------------
-//    /**
-//     * qualityProfile 복제
-//     *
-//     * @param qualityProfile the quality profile
-//     * @return quality profile
-//     */
-//    public QualityProfile qualityProfileCopy(QualityProfile qualityProfile){
-//        QualityProfile result = new QualityProfile();
-//
-//        result = commonService.sendForm(inspectionServerUrl , "/api/qualityprofiles/copy",HttpMethod.POST, qualityProfile, QualityProfile.class);
-//
-//        result.setServiceInstanceId(qualityProfile.getServiceInstanceId());
-////        result.setProfileDefaultYn(qualityProfile.getProfileDefaultYn());
-//
-//        //sona에서 가져오 키값 셋팅해서 db로 저장
-//        result = commonService.sendForm(commonApiUrl , "/qualityProfile/qualityProfileCopy",HttpMethod.POST, qualityProfile, QualityProfile.class);
-//        return  result;
-//    }
-
     /**
-     * qualityProfile 삭제
+     * Update quality profile quality profile.
      *
      * @param qualityProfile the quality profile
-     * @return quality profile
+     * @return the quality profile
      */
-    public QualityProfile deleteQualityProfile(QualityProfile qualityProfile){
-        QualityProfile result = new QualityProfile();
-        commonService.sendForm(inspectionServerUrl , "/api/qualityprofiles/delete",HttpMethod.POST, qualityProfile, null);
-        commonService.sendForm(commonApiUrl , "/qualityProfile/qualityProfileDelete",HttpMethod.DELETE, qualityProfile, String.class);
-        commonService.sendForm(commonApiUrl,"/project/qualityProfileDelete",HttpMethod.PUT,qualityProfile,String.class);
+    public QualityProfile updateQualityProfile(QualityProfile qualityProfile) {
+
+        // /api/qualityprofiles/rename
+        commonService.sendForm(inspectionServerUrl , Constants.API_QUALITYPROFILES_RENAME, HttpMethod.POST, qualityProfile, String.class);
+
+        QualityProfile result = qualityProfile;
         result.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
         return result;
+
     }
 
     /**
-     * qualityProfile 수정
+     * Delete quality profile quality profile.
      *
      * @param qualityProfile the quality profile
-     * @return quality profile
+     * @return the quality profile
      */
-    public QualityProfile updateQualityProfile(QualityProfile qualityProfile){
+    public QualityProfile deleteQualityProfile(QualityProfile qualityProfile) {
+
+        // /api/qualityprofiles/delete
+        commonService.sendForm(inspectionServerUrl , Constants.API_QUALITYPROFILES_DELETE, HttpMethod.POST, qualityProfile, String.class);
+
         QualityProfile result = new QualityProfile();
-        commonService.sendForm(inspectionServerUrl , "/api/qualityprofiles/rename",HttpMethod.POST, qualityProfile, null);
-        result = commonService.sendForm(commonApiUrl , "/qualityProfile/qualityProfileUpdate",HttpMethod.PUT, qualityProfile, QualityProfile.class);
+        result.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
+
         return result;
     }
 
-
-    /**
-     * QualityProfile 한건 검색
-     *
-     * @param id the id
-     * @return QualityProfile quality profile
-     */
-    public QualityProfile getQualityProfile(long id){
-
-        //TODO QualityProfile 한건 검색
-        return commonService.sendForm(commonApiUrl,"/qualityProfile/getQualityProfile?id="+id,HttpMethod.GET,null,QualityProfile.class);
-    }
 }

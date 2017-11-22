@@ -8,45 +8,27 @@ import java.util.List;
  */
 public class QualityProfile {
 
-    // --- Create :: s
     private String name;
     private String language;
     private String key;
     private String languageName;
     private String isDefault;
     private String isInherited;
-
-    // --- Create :: e
-
-    // --- Rule :: s
-//    private String languages;
+    private String languages;
     private String profile_key;
     private String rule_key;
-
-    // --- Rule :: e
-
-    // --- copy :: s
+    private String severity;
     private String fromKey;
     private String toName;
-    // --- copy :: e
-    // --- Delete :: s
     private String profileKey;
     private String profileName;
-    // --- Delete :: e
-
-    // --- Project :: s
     private String selected;
     private List results;
-    // --- Project :: e
-
-    // --- etc :: s
     private String backup;
     private String serviceInstanceId;
     private String resultStatus;
     private String resultMessage;
-
     private List profiles;
-    // --- etc :: e
 
     // --- getter/setter :: s
 
@@ -176,30 +158,24 @@ public class QualityProfile {
         this.serviceInstanceId = serviceInstanceId;
     }
 
+    /**
+     * Gets profiles.
+     *
+     * @return the profiles
+     */
     public List getProfiles() {
         return profiles;
     }
 
+    /**
+     * Sets profiles.
+     *
+     * @param profiles the profiles
+     */
     public void setProfiles(List profiles) {
         this.profiles = profiles;
     }
-//    /**
-//     * Gets languages.
-//     *
-//     * @return the languages
-//     */
-//    public String getLanguages() {
-//        return languages;
-//    }
-//
-//    /**
-//     * Sets languages.
-//     *
-//     * @param languages the languages
-//     */
-//    public void setLanguages(String languages) {
-//        this.languages = languages;
-//    }
+
 
     /**
      * Gets selected.
@@ -363,22 +339,79 @@ public class QualityProfile {
         this.resultMessage = resultMessage;
     }
 
+    /**
+     * Gets profile key.
+     *
+     * @return the profile key
+     */
     public String getProfileKey() {
         return profileKey;
     }
 
+    /**
+     * Sets profile key.
+     *
+     * @param profileKey the profile key
+     */
     public void setProfileKey(String profileKey) {
         this.profileKey = profileKey;
     }
 
+    /**
+     * Gets profile name.
+     *
+     * @return the profile name
+     */
     public String getProfileName() {
         return profileName;
     }
 
+    /**
+     * Sets profile name.
+     *
+     * @param profileName the profile name
+     */
     public void setProfileName(String profileName) {
         this.profileName = profileName;
     }
-// --- getter/setter :: e
+
+    /**
+     * Gets languages.
+     *
+     * @return the languages
+     */
+    public String getLanguages() {
+        return languages;
+    }
+
+    /**
+     * Sets languages.
+     *
+     * @param languages the languages
+     */
+    public void setLanguages(String languages) {
+        this.languages = languages;
+    }
+
+    /**
+     * Gets severity.
+     *
+     * @return the severity
+     */
+    public String getSeverity() {
+        return severity;
+    }
+
+    /**
+     * Sets severity.
+     *
+     * @param severity the severity
+     */
+    public void setSeverity(String severity) {
+        this.severity = severity;
+    }
+
+    // --- getter/setter :: e
 
 
     @Override
@@ -390,8 +423,10 @@ public class QualityProfile {
                 ", languageName='" + languageName + '\'' +
                 ", isDefault='" + isDefault + '\'' +
                 ", isInherited='" + isInherited + '\'' +
+                ", languages='" + languages + '\'' +
                 ", profile_key='" + profile_key + '\'' +
                 ", rule_key='" + rule_key + '\'' +
+                ", severity='" + severity + '\'' +
                 ", fromKey='" + fromKey + '\'' +
                 ", toName='" + toName + '\'' +
                 ", profileKey='" + profileKey + '\'' +

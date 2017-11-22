@@ -40,11 +40,11 @@ public class CodingRulesService {
     public CodingRules getCodingRules(CodingRules codingRules) {
 
         // /api/rules/search?activation=true&f=name&facets=active_severities&ps=1&qprofile={profileKey}
-        String reqUrl = commonService.makeQueryParam(inspectionServerUrl + Constants.API_RULES_SEARCH, codingRules);
+        String reqUrl = commonService.makeQueryParam(Constants.API_RULES_SEARCH, codingRules);
 
         LOGGER.info("===[INSPECTION-API :: getCodingRules]=== reqUrl : {}", reqUrl);
 
-        CodingRules data = commonService.sendForm(reqUrl, HttpMethod.GET, null, CodingRules.class);
+        CodingRules data = commonService.sendForm(inspectionServerUrl, reqUrl, HttpMethod.GET, null, CodingRules.class);
 
         data.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
 
@@ -52,19 +52,11 @@ public class CodingRulesService {
 
     }
 
-    //TODO --------------------------
-    /**
-     * Get coding rules condition map.
-     *
-     * @return the map
-     */
-    Map getCodingRulesCondition(){
 
-        Object resultJson = commonService.sendForm(inspectionServerUrl,"/api/languages/list", HttpMethod.POST , null ,Object.class);
-        Map <String, Object> objectHashMap = new HashMap<>();
-        objectHashMap = (Map)resultJson;
-        return objectHashMap;
-    }
+
+
+    //TODO --------------------------
+
 
     /**
      * Get coding rules deteil map.
@@ -80,49 +72,6 @@ public class CodingRulesService {
 
     }
 
-    /**
-     * CodingRules 프로파일 추가
-     * rule_key : "squid:S2204",
-     * profile_key : "java-sonar-way-15680",
-     * severity : "INFO",
-     * reset: "true"
-     *
-     * @param codingRules the coding rules
-     * @return coding rules
-     */
-    public CodingRules createCodingRulesProfile(CodingRules codingRules){
-        CodingRules result = new CodingRules();
-        commonService.sendForm(inspectionServerUrl, "/api/qualityprofiles/activate_rule", HttpMethod.POST, codingRules, null);
-        result.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
-        return result;
-
-    }
-
-    /**
-     * Delete coding rules profile coding rules.
-     *
-     * @param codingRules the coding rules
-     * @return the coding rules
-     */
-    public CodingRules deleteCodingRulesProfile(CodingRules codingRules){
-        CodingRules result = new CodingRules();
-        commonService.sendForm(inspectionServerUrl, "/api/qualityprofiles/deactivate_rule", HttpMethod.POST, codingRules, null);
-        result.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
-        return result;
-    }
-
-    /**
-     * Update coding rules profile coding rules.
-     *
-     * @param codingRules the coding rules
-     * @return the coding rules
-     */
-    public CodingRules updateCodingRulesProfile(CodingRules codingRules){
-        CodingRules result = new CodingRules();
-        commonService.sendForm(inspectionServerUrl, "/api/qualityprofiles/activate_rule", HttpMethod.POST, codingRules, null);
-        result.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
-        return result;
-    }
 
 }
 

@@ -2,12 +2,8 @@ package paasta.delivery.pipeline.inspection.api.qualityProfile;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import paasta.delivery.pipeline.inspection.api.project.Project;
-import paasta.delivery.pipeline.inspection.api.qualityGate.QualityGate;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -110,7 +106,7 @@ public class QualityProfileController {
      * <p>
      * RequestParam(value = "profileKey", required = true) OR
      * ( RequestParam(value = "profileName", required = true)
-     *  + RequestParam(value = "language", required = true) )
+     * + RequestParam(value = "language", required = true) )
      *
      * @param qualityProfile the quality profile
      * @return the quality profile
@@ -121,4 +117,32 @@ public class QualityProfileController {
         return qualityProfileService.deleteQualityProfile(qualityProfile);
     }
 
+    /**
+     * Active rule quality profile.
+     * <p>
+     * RequestParam(value = "profile_key", required = true)
+     * RequestParam(value = "rule_key", required = true)
+     * RequestParam(value = "severity", required = true)
+     *
+     * @param qualityProfile the quality profile
+     * @return the quality profile
+     */
+    @PostMapping(value = "/activateRule")
+    public QualityProfile activateRule(@RequestBody QualityProfile qualityProfile) {
+        return qualityProfileService.activateRule(qualityProfile);
+    }
+
+    /**
+     * Active rule quality profile.
+     * <p>
+     * RequestParam(value = "profile_key", required = true)
+     * RequestParam(value = "rule_key", required = true)
+     *
+     * @param qualityProfile the quality profile
+     * @return the quality profile
+     */
+    @PostMapping(value = "/deactivateRule")
+    public QualityProfile deactivateRule(@RequestBody QualityProfile qualityProfile) {
+        return qualityProfileService.deactivateRule(qualityProfile);
+    }
 }

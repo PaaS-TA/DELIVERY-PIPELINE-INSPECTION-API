@@ -1,6 +1,5 @@
 package paasta.delivery.pipeline.inspection.api.common;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,13 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import paasta.delivery.pipeline.inspection.api.codingRules.CodingRules;
-import paasta.delivery.pipeline.inspection.api.project.Project;
-import paasta.delivery.pipeline.inspection.api.qualityGate.QualityGate;
-import paasta.delivery.pipeline.inspection.api.qualityProfile.QualityProfile;
 
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Map;
 
 /**
  * paastaDeliveryPipelineApi
@@ -70,6 +66,7 @@ public class CommonService {
      * Send form t.
      *
      * @param <T>          the type parameter
+     * @param baseUrl      the base url
      * @param reqUrl       the req url
      * @param httpMethod   the http method
      * @param bodyObject   the body object
@@ -97,39 +94,16 @@ public class CommonService {
     }
 
     /**
-     * Send form t.
+     * Make query param string.
      *
-     * @param <T>          the type parameter
-     * @param reqUrl       the req url
-     * @param httpMethod   the http method
-     * @param bodyObject   the body object
-     * @param responseType the response type
-     * @return the t
+     * @param reqUrl the req url
+     * @param obj    the obj
+     * @return the string
      */
-    public <T> T sendForm(String reqUrl, HttpMethod httpMethod, Object bodyObject, Class<T> responseType) {
-        String authorization = adminUserName + ":" + adminPassword;
-        HttpHeaders reqHeaders = new HttpHeaders();
-        reqHeaders.add(AUTHORIZATION_HEADER_KEY, "Basic " + Base64Utils.encodeToString(authorization.getBytes(StandardCharsets.UTF_8)));
-
-        reqHeaders.setContentType(MediaType.APPLICATION_JSON);
-        reqHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-        HttpEntity<Object> reqEntity = new HttpEntity<>(bodyObject, reqHeaders);
-
-        LOGGER.info("<T> T send :: Request : {} {baseUrl} : {}, Content-Type: {}", httpMethod, reqUrl, reqHeaders.getContentType());
-
-        ResponseEntity<T> resEntity = restTemplate.exchange(reqUrl, httpMethod, reqEntity, responseType);
-        LOGGER.info("Response Status Code: {}", resEntity.getStatusCode());
-        if (!resEntity.getStatusCode().equals(HttpStatus.OK)) {
-            LOGGER.info("Response Error : {} " + resEntity.getBody());
-        }
-
-        return resEntity.getBody();
-    }
-
     public String makeQueryParam(String reqUrl, Object obj) {
         ObjectMapper om = new ObjectMapper();
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(reqUrl);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(reqUrl);
         Map<String, Object> codingRulesMap = om.convertValue(obj, Map.class);
 
         for (String key : codingRulesMap.keySet()) {

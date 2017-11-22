@@ -1,39 +1,33 @@
 package paasta.delivery.pipeline.inspection.api.codingRules;
 
+import java.util.List;
+
 /**
  * The type Coding rules.
  */
 public class CodingRules {
 
-    // --- common :: s
     private String key;
-    // --- common :: e
-
-    // --- search :: QualityProfile Detail Rule Info :: s
     private String qprofile;
-    private int ps;
+    private int ps = 1;
     private int p = 1;
     private String f;
     private Object facets;
-    private boolean activation = true;
+    private String activation;
     private int total;
-    // --- search :: QualityProfile Detail Rule Info :: e
-
-    // --- create :: s
     private String custom_key;
     private String markdown_description;
     private String name;
-    // --- create :: e
-
-    // --- repositories :: s
     private String language;
-    // --- repositories :: e
-
-    // --- etc :: s
     private String actives;
     private String resultStatus;
     private String resultMessage;
-    // --- etc :: e
+    private String languages;
+    private String s;
+    private String asc;
+    private List rules;
+    private String q;
+    private String severities;
 
     /**
      * Gets total.
@@ -119,11 +113,11 @@ public class CodingRules {
     }
 
     /**
-     * Is activation boolean.
+     * Gets activation.
      *
-     * @return the boolean
+     * @return the activation
      */
-    public boolean isActivation() {
+    public String getActivation() {
         return activation;
     }
 
@@ -132,7 +126,7 @@ public class CodingRules {
      *
      * @param activation the activation
      */
-    public void setActivation(boolean activation) {
+    public void setActivation(String activation) {
         this.activation = activation;
     }
 
@@ -307,6 +301,114 @@ public class CodingRules {
         this.actives = actives;
     }
 
+    /**
+     * Gets languages.
+     *
+     * @return the languages
+     */
+    public String getLanguages() {
+        return languages;
+    }
+
+    /**
+     * Sets languages.
+     *
+     * @param languages the languages
+     */
+    public void setLanguages(String languages) {
+        this.languages = languages;
+    }
+
+    /**
+     * Gets s.
+     *
+     * @return the s
+     */
+    public String getS() {
+        return s;
+    }
+
+    /**
+     * Sets s.
+     *
+     * @param s the s
+     */
+    public void setS(String s) {
+        this.s = s;
+    }
+
+    /**
+     * Gets asc.
+     *
+     * @return the asc
+     */
+    public String getAsc() {
+        return asc;
+    }
+
+    /**
+     * Sets asc.
+     *
+     * @param asc the asc
+     */
+    public void setAsc(String asc) {
+        this.asc = asc;
+    }
+
+    /**
+     * Gets rules.
+     *
+     * @return the rules
+     */
+    public List getRules() {
+        return rules;
+    }
+
+    /**
+     * Sets rules.
+     *
+     * @param rules the rules
+     */
+    public void setRules(List rules) {
+        this.rules = rules;
+    }
+
+    /**
+     * Gets q.
+     *
+     * @return the q
+     */
+    public String getQ() {
+        return q;
+    }
+
+    /**
+     * Sets q.
+     *
+     * @param q the q
+     */
+    public void setQ(String q) {
+        this.q = q;
+    }
+
+    /**
+     * Gets severities.
+     *
+     * @return the severities
+     */
+    public String getSeverities() {
+        return severities;
+    }
+
+    /**
+     * Sets severities.
+     *
+     * @param severities the severities
+     */
+    public void setSeverities(String severities) {
+        this.severities = severities;
+    }
+
     @Override
     public String toString() {
         return "CodingRules{" +
@@ -316,7 +418,7 @@ public class CodingRules {
                 ", p=" + p +
                 ", f='" + f + '\'' +
                 ", facets=" + facets +
-                ", activation=" + activation +
+                ", activation='" + activation + '\'' +
                 ", total=" + total +
                 ", custom_key='" + custom_key + '\'' +
                 ", markdown_description='" + markdown_description + '\'' +
@@ -325,6 +427,12 @@ public class CodingRules {
                 ", actives='" + actives + '\'' +
                 ", resultStatus='" + resultStatus + '\'' +
                 ", resultMessage='" + resultMessage + '\'' +
+                ", languages='" + languages + '\'' +
+                ", s='" + s + '\'' +
+                ", asc='" + asc + '\'' +
+                ", rules=" + rules +
+                ", q='" + q + '\'' +
+                ", severities='" + severities + '\'' +
                 '}';
     }
 

@@ -48,9 +48,9 @@ public class QualityProfileService {
     public List getQualityProfileList(QualityProfile qualityProfile){
 
         // [API] : /api/qualityprofiles/search
-        String reqUrl = commonService.makeQueryParam(inspectionServerUrl+Constants.API_QUALITYPROFILES_SEARCH, qualityProfile);
+        String reqUrl = commonService.makeQueryParam(Constants.API_QUALITYPROFILES_SEARCH, qualityProfile);
 
-        QualityProfile profile = commonService.sendForm(reqUrl, HttpMethod.GET, null, QualityProfile.class);
+        QualityProfile profile = commonService.sendForm(inspectionServerUrl, reqUrl, HttpMethod.GET, null, QualityProfile.class);
 
         // real
         List qualityProfileList = (List) profile.getProfiles().stream().filter(e ->
@@ -58,12 +58,7 @@ public class QualityProfileService {
             if (((String)((LinkedHashMap)e).get("name")).startsWith(qualityProfile.getServiceInstanceId()+"^")) {
                 return true;
             }
-            //TODO ::  DEFAULT^ 로만 수정필요
-            if (((Boolean)((LinkedHashMap)e).get("isDefault")) || ((String)((LinkedHashMap)e).get("name")).startsWith("DEFAULT"+"^")) {
-                return true;
-            }
-            //TODO :: temp :: test용
-            if (((String)((LinkedHashMap)e).get("name")).startsWith("lena-") || ((String)((LinkedHashMap)e).get("name")).startsWith("rex-") ) {
+            if (((Boolean)((LinkedHashMap)e).get("isDefault")) && ((String)((LinkedHashMap)e).get("name")).toUpperCase().startsWith("DEFAULT^")) {
                 return true;
             }
             return false;
@@ -125,11 +120,11 @@ public class QualityProfileService {
 
         // /api/qualityprofiles/projects?key=java-egov-qualityprofile-20090&selected=all
 
-        String reqUrl = commonService.makeQueryParam(inspectionServerUrl+Constants.API_QUALITYPROFILES_PROJECTS, qualityProfile);
+        String reqUrl = commonService.makeQueryParam(Constants.API_QUALITYPROFILES_PROJECTS, qualityProfile);
 
         LOGGER.info("===[INSPECTION-API :: getProjectList]=== reqUrl : {}", reqUrl);
 
-        QualityProfile resultBody = commonService.sendForm(reqUrl, HttpMethod.GET, null, QualityProfile.class);
+        QualityProfile resultBody = commonService.sendForm(inspectionServerUrl, reqUrl, HttpMethod.GET, null, QualityProfile.class);
 
         return resultBody;
     }
@@ -181,6 +176,38 @@ public class QualityProfileService {
         result.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
 
         return result;
+    }
+
+    /**
+     * Activate rule quality profile.
+     *
+     * @param qualityProfile the quality profile
+     * @return the quality profile
+     */
+    public QualityProfile activateRule(QualityProfile qualityProfile) {
+
+        // /api/qualityprofiles/activate_rule
+        QualityProfile data = new QualityProfile();
+        commonService.sendForm(inspectionServerUrl, "/api/qualityprofiles/activate_rule", HttpMethod.POST, qualityProfile, String.class);
+        data.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
+
+        return data;
+    }
+
+    /**
+     * Deactivate rule quality profile.
+     *
+     * @param qualityProfile the quality profile
+     * @return the quality profile
+     */
+    public QualityProfile deactivateRule(QualityProfile qualityProfile) {
+
+        // /api/qualityprofiles/deactivate_rule
+        QualityProfile data = new QualityProfile();
+        commonService.sendForm(inspectionServerUrl, "/api/qualityprofiles/deactivate_rule", HttpMethod.POST, qualityProfile, String.class);
+        data.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
+
+        return data;
     }
 
 }

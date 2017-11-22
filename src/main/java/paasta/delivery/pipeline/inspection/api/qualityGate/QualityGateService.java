@@ -55,8 +55,9 @@ public class QualityGateService {
      */
     public List getQualityGateList(String serviceInstancesId) {
         Map result = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/list", HttpMethod.GET, null, Map.class);
-        List rest = myQualityServiceInstance((List<Map>) result.get("qualitygates"), serviceInstancesId);
-        return rest;
+        List data = myQualityServiceInstance((List<Map>) result.get("qualitygates"), serviceInstancesId);
+        updateQualityIdInProjectDB(serviceInstancesId, data);
+        return data;
     }
 
 
@@ -71,8 +72,6 @@ public class QualityGateService {
         List result = new ArrayList();
         result.add(commonService.sendForm(inspectionServerUrl, "/api/metrics/search", HttpMethod.GET, null, Object.class));
         result.add(commonService.sendForm(inspectionServerUrl, "/api/metrics/domains", HttpMethod.GET, null, Object.class));
-
-
         return result;
     }
 
@@ -108,7 +107,29 @@ public class QualityGateService {
      * @return
      */
     QualityGate createQualityGateCond(QualityGate qualityGate) {
-        return commonService.sendForm(inspectionServerUrl, "/api/qualitygates/create_condition", HttpMethod.POST, qualityGate, QualityGate.class);
+        try {
+            LOGGER.debug("CreateQualityGateId : " + qualityGate.getGateId());
+            LOGGER.debug("CreateQualityCondMetric: " + qualityGate.getMetric());
+            LOGGER.debug("CreateQualityCondError : " + qualityGate.getError());
+            LOGGER.debug("CreateQualityCondWarning : " + qualityGate.getWarning());
+            LOGGER.debug("CreateQualityCondOp : " + qualityGate.getOp());
+
+            Map<String, Object> parameter = new HashMap<>();
+            parameter.put("gateId", qualityGate.getGateId());
+            parameter.put("metric", qualityGate.getMetric());
+            parameter.put("error", qualityGate.getError());
+            parameter.put("warning", qualityGate.getWarning());
+            parameter.put("op", qualityGate.getOp());
+            parameter.put("period", "1"); //always 설정
+
+            qualityGate = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/create_condition", HttpMethod.POST, parameter, QualityGate.class);
+            qualityGate.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            qualityGate.setResultStatus(Constants.RESULT_STATUS_FAIL);
+        }
+
+        return qualityGate;
     }
 
     /**
@@ -120,17 +141,22 @@ public class QualityGateService {
     public QualityGate updateQualityGateCond(QualityGate qualityGate) {
 
         try {
+
+            LOGGER.debug("UpdateQualityCondId : " + qualityGate.getId());
+            LOGGER.debug("UpdateQualityCondMetric: " + qualityGate.getMetric());
+            LOGGER.debug("UpdateQualityCondError : " + qualityGate.getError());
+            LOGGER.debug("UpdateQualityCondWarning : " + qualityGate.getWarning());
+            LOGGER.debug("UpdateQualityCondOp : " + qualityGate.getOp());
             //id가 long 타입이라서 바꿔줘야함
-            Map<String, String> parameter = new HashMap<>();
-            parameter.put("id", Long.toString(qualityGate.getQualityGateId()));
-            parameter.put("gateId", qualityGate.getGateId());
+            Map<String, Object> parameter = new HashMap<>();
+            parameter.put("id", Long.toString(qualityGate.getId()));
             parameter.put("metric", qualityGate.getMetric());
             parameter.put("error", qualityGate.getError());
             parameter.put("warning", qualityGate.getWarning());
             parameter.put("op", qualityGate.getOp());
+            parameter.put("period", "1"); //always 설정
             qualityGate = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/update_condition", HttpMethod.POST, parameter, QualityGate.class);
             qualityGate.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
-
         } catch (Exception e) {
             e.printStackTrace();
             qualityGate.setResultStatus(Constants.RESULT_STATUS_FAIL);
@@ -316,6 +342,19 @@ public class QualityGateService {
         return qualityGate;
     }
 
+    /**
+     * 품질게이트 업데이트 프로젝트 리스트
+     *
+     * @param
+     * @return
+     */
+    public List getProjects(Project project) {
+        List data = projectService.getProjects(project);
+        return data;
+
+    }
+
+
     public QualityGate setQualityGateConditionName(QualityGate data) {
         List returnList = new ArrayList();
         List<Map> metrics = data.getConditions();
@@ -358,7 +397,6 @@ public class QualityGateService {
                         map.put("gateDefaultYn", "N");
                         no_defaluts.add(map);
                     }
-
                 }
             }
         }
@@ -373,11 +411,60 @@ public class QualityGateService {
     }
 
 
-    public List getProjects(Project project) {
-        //퀄리티게이트용 정보를 추가하는 작업을 진행해야함
-        List data = projectService.getProjects(project);
-        return data;
+    private void updateQualityIdInProjectDB(String serviceInstancesId, List<Map> list) {
+        /* 전제조건 : 특정 서비스인스턴스에 관해서만....
+        * 1. 퀄리티게이트 리스트를 추출한다.
+        * 2. 프로젝트 리스트 추출한다.
+        * 3. 퀄리티게이트 링크정보를 추출한다.
+        * 4. 프로젝트 ID와 링크정보 프로젝트ID가 같은 프로젝트의 퀄리티 게이트 ID가 다를 경우,
+        * 4-1 같은경우 다음
+        * 4-2 중간에 있을경우 퀄리티게이트 ID 업데이트
+        * 4-3 끝까지 돌아도 없는 경우 링크정보 해제
+         */
+        try {
+            Project param = new Project();
+            param.setServiceInstancesId(serviceInstancesId);
+            List<Map> projects = projectService.getProjects(param);
 
+            //추후에 다른 데이터에 적용해도 좋은 정보임
+            for (Map qualityGate : list) {
+                String gateId = qualityGate.get("id").toString();
+                Map Linked = commonService.sendForm(inspectionServerUrl, "/api/qualitygates/search?gateId=" + gateId, HttpMethod.GET, null, Map.class);
+                qualityGate.put("linked", Linked.get("results"));
+            }
+
+
+
+            for (Map project : projects) {
+                int count = 0;
+                String id = project.get("id").toString();
+                String projectId = project.get("projectId").toString();
+                for (Map qualityGate : list) {
+                    String gateId = qualityGate.get("id").toString();
+                    List<Map> seleted = (List<Map>) qualityGate.get("linked");
+                    for (Map sel : seleted) {
+                        String qProjectId = sel.get("id").toString();
+                        if (qProjectId.equalsIgnoreCase(projectId)) {
+                            Project projectUpdateParam = new Project();
+                            projectUpdateParam.setId(Long.parseLong(id));
+                            projectUpdateParam.setQualityGateId(Long.parseLong(gateId));
+                            projectUpdateParam.setLinked(true);
+                            commonService.sendForm(commonApiUrl, "/project/qualityGateProjectLiked", HttpMethod.PUT, projectUpdateParam, Map.class);
+                            count++;
+                        }
+                    }
+                }
+                if (count == 0) {
+                    Project projectUpdateParam = new Project();
+                    projectUpdateParam.setId(Long.parseLong(id));
+                    projectUpdateParam.setLinked(false);
+                    commonService.sendForm(commonApiUrl, "/project/qualityGateProjectLiked", HttpMethod.PUT, projectUpdateParam, Map.class);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -46,8 +46,8 @@ public class QualityIssuesService {
         String url = "";
         //ps - 페이지 사이즈 , serverities - 이슈 수준 , stateuses - 상태 , resolved = 미해결 ,
         Project projectParam = new Project();
+        projectParam.setServiceInstancesId(qualityIssues.getServiceInstancesId());
         if (qualityIssues.getComponentKeys().equals("")) {
-            projectParam.setServiceInstancesId(qualityIssues.getServiceInstancesId());
             List<Map> projectList = projectService.getProjects(projectParam);
             String componentKey = "";
             for (Map project : projectList) {

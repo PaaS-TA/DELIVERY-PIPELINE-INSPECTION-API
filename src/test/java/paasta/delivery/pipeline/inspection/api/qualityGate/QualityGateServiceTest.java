@@ -194,207 +194,207 @@ public class QualityGateServiceTest {
      *
      * @throws Exception the exception
      */
-    @After
-    public void tearDown() throws Exception {
-    }
-
-    /**
-     *  QualityGate 리스트 조회
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void getQualityGateList_Valid_Return() throws Exception{
+//    @After
+//    public void tearDown() throws Exception {
+//    }
 //
-//        String testServiceInstancesId = "";
-//        testServiceInstancesId = "test-serviceInstanceId";
-//        when(qualityGateService.getQualityGateList(testServiceInstancesId)).thenReturn(testResultList);
-//
-//        List<Map<String, String>> result = qualityGateService.getQualityGateList(testServiceInstancesId);
-
-    }
-
-    /**
-     *  QualityGate 조건 옵션 조회
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void getMetricsList_Valid_Return() throws Exception{
-
-        when(qualityGateService.getMetricsList()).thenReturn(testResultList);
-
-        testResultList = qualityGateService.getMetricsList();
-    }
-
-    /**
-     *  QualityGate 조건 목록 조회
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void getQualityGateCondition_Valid_Return() throws Exception{
-//        long id = 1L;
-//        when(qualityGateService.getQualityGateCondition(id)).thenReturn(resultModel);
-//
-//        resultModel = qualityGateService.getQualityGateCondition(id);
-    }
-
-    /**
-     *  QualityGate 조건 저장
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void createQualityGateCond_Valid_Return() throws Exception{
-
-        when(qualityGateService.createQualityGateCond(testModel)).thenReturn(resultModel);
-
-        QualityGate result = qualityGateService.createQualityGateCond(testModel);
-        assertNotNull(result);
-    }
-
-    /**
-     *  QualityGate 조건 수정
-     *
-     * @throws Exception the exception
-     */
+//    /**
+//     *  QualityGate 리스트 조회
+//     *
+//     * @throws Exception the exception
+//     */
 //    @Test
-//    public void updateQualityGateCond_Valid_Return() throws Exception{
-//
-        // TODO :: NEED TO MODIFY
-//        when(commonService.sendForm(Constants.TARGET_INSPECTION_API,"/api/qualitygates/update_condition" , HttpMethod.POST,testResultMap ,QualityGate.class)).thenReturn(resultModel);
-//
-//        qualityGateService.updateQualityGateCond(testModel);
+//    public void getQualityGateList_Valid_Return() throws Exception{
+////
+////        String testServiceInstancesId = "";
+////        testServiceInstancesId = "test-serviceInstanceId";
+////        when(qualityGateService.getQualityGateList(testServiceInstancesId)).thenReturn(testResultList);
+////
+////        List<Map<String, String>> result = qualityGateService.getQualityGateList(testServiceInstancesId);
 //
 //    }
-
-    /**
-     *  QualityGate 조건 삭제
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void deleteQualityGateCond_Valid_Return() throws Exception{
-
-
-        String id = "34";
-        when(qualityGateService.deleteQualityGateCond(testModel)).thenReturn(resultModel);
-
-        qualityGateService.deleteQualityGateCond(testModel);
-
-    }
-
-    /**
-     *  QualityGate 복제
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void copyQualityGate_Valid_Return() throws Exception{
-
-        ResponseEntity responseEntity = new ResponseEntity<Map>(HttpStatus.OK);
-        when(restTemplate.exchange(Matchers.anyString(), any(HttpMethod.class), Matchers.<HttpEntity<?>>any(), Matchers.<Class<Map>>any())).thenReturn(responseEntity);
-        when(commonService.sendForm(anyString(),anyString(),any(HttpMethod.class),any(QualityGate.class),any())).thenReturn(testModel);
-        when(commonService.sendForm(Matchers.matches("http://localhost:8081"),anyString(),any(HttpMethod.class),any(Object.class),any())).thenReturn(resultModel);
-
-
-        QualityGate result = qualityGateService.copyQualityGate(testModel);
-        assertThat(result).isNotNull();
-//        assertEquals(resultModel.getId(), result.getId());
-//        assertEquals(resultModel.getName(),result.getName());
-        assertEquals(resultModel.getGateDefaultYn(),result.getGateDefaultYn());
-        assertEquals(resultModel.getServiceInstancesId(),result.getServiceInstancesId());
-    }
-
-
-    /**
-     *  QualityGate 생성
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void createQualityGate_Valid_Return() throws Exception {
-        ResponseEntity responseEntity = new ResponseEntity<QualityGate>(HttpStatus.OK);
-        when(restTemplate.exchange(Matchers.anyString(), any(HttpMethod.class), Matchers.<HttpEntity<?>>any(), Matchers.<Class<QualityGate>>any())).thenReturn(responseEntity);
-        when(commonService.sendForm(anyString(),anyString(),any(HttpMethod.class),any(QualityGate.class),any())).thenReturn(testModel);
-        when(commonService.sendForm(Matchers.matches("http://localhost:8081"),anyString(),any(HttpMethod.class),any(Object.class),any())).thenReturn(resultModel);
-
-        QualityGate result = qualityGateService.createQualityGate(testModel);
-        assertThat(result).isNotNull();
-//        assertEquals(resultModel.getId(), result.getId());
-//        assertEquals(resultModel.getName(),result.getName());
-        assertEquals(resultModel.getGateDefaultYn(),result.getGateDefaultYn());
-        assertEquals(resultModel.getServiceInstancesId(),result.getServiceInstancesId());
-
-    }
-
-
-
-    /**
-     *  QualityGate 수정
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void updateQualityGate_Valid_Return() throws Exception{
-
-        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualitygates/rename", HttpMethod.POST, testResultMap,QualityGate.class)).thenReturn(resultModel);
-
-        when(commonService.sendForm(Constants.TARGET_COMMON_API, "/qualityGate/qualityGateUpdate", HttpMethod.PUT, testResultMap,QualityGate.class)).thenReturn(resultModel);
-
-        qualityGateService.updateQualityGate(testModel);
-    }
-
-    /**
-     *  QualityGate 삭제
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void deleteQualityGate_Valid_Return() throws Exception{
-
-
-        String result = "";
-
-        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualitygates/destroy", HttpMethod.POST,testResultMap, null)).thenReturn(null);
-        when(commonService.sendForm(Constants.TARGET_COMMON_API, "/qualityGate/qualityGateDelete", HttpMethod.DELETE, testResultMap , null)).thenReturn(null);
-        when(commonService.sendForm(Constants.TARGET_COMMON_API,"/project/qualityGateDelete",HttpMethod.PUT,testResultMap,String.class)).thenReturn(result);
-
-        QualityGate resultModel = qualityGateService.deleteQualityGate(testModel);
-        assertThat(resultModel).isNotNull();
-        assertEquals(Constants.RESULT_STATUS_SUCCESS, resultModel.getResultStatus());
-
-        qualityGateService.deleteQualityGate(testModel);
-    }
-
-    /**
-     *  QualityGate 조건 domain
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void getQualityGateDomains_Valid_Return() throws Exception{
 //
-//        QualityGate resultModel = new QualityGate();
-//        when(qualityGateService.getQualityGateDomains()).thenReturn(resultModel);
+//    /**
+//     *  QualityGate 조건 옵션 조회
+//     *
+//     * @throws Exception the exception
+//     */
+//    @Test
+//    public void getMetricsList_Valid_Return() throws Exception{
 //
-//        qualityGateService.getQualityGateDomains();
-    }
-
-    /**
-     * 품질 게이트 1건 검색
-     * @param
-     * @return
-     */
-    @Test
-    public void getiQualityGate_Valid_Return() throws Exception{
+//        when(qualityGateService.getMetricsList()).thenReturn(testResultList);
 //
-//        long id = 33;
+//        testResultList = qualityGateService.getMetricsList();
+//    }
 //
-//        when(qualityGateService.getiQualityGate(id)).thenReturn(resultModel);
+//    /**
+//     *  QualityGate 조건 목록 조회
+//     *
+//     * @throws Exception the exception
+//     */
+//    @Test
+//    public void getQualityGateCondition_Valid_Return() throws Exception{
+////        long id = 1L;
+////        when(qualityGateService.getQualityGateCondition(id)).thenReturn(resultModel);
+////
+////        resultModel = qualityGateService.getQualityGateCondition(id);
+//    }
 //
-//        qualityGateService.getiQualityGate(id);
-    }
+//    /**
+//     *  QualityGate 조건 저장
+//     *
+//     * @throws Exception the exception
+//     */
+//    @Test
+//    public void createQualityGateCond_Valid_Return() throws Exception{
+//
+//        when(qualityGateService.createQualityGateCond(testModel)).thenReturn(resultModel);
+//
+//        QualityGate result = qualityGateService.createQualityGateCond(testModel);
+//        assertNotNull(result);
+//    }
+//
+//    /**
+//     *  QualityGate 조건 수정
+//     *
+//     * @throws Exception the exception
+//     */
+////    @Test
+////    public void updateQualityGateCond_Valid_Return() throws Exception{
+////
+//        // TODO :: NEED TO MODIFY
+////        when(commonService.sendForm(Constants.TARGET_INSPECTION_API,"/api/qualitygates/update_condition" , HttpMethod.POST,testResultMap ,QualityGate.class)).thenReturn(resultModel);
+////
+////        qualityGateService.updateQualityGateCond(testModel);
+////
+////    }
+//
+//    /**
+//     *  QualityGate 조건 삭제
+//     *
+//     * @throws Exception the exception
+//     */
+//    @Test
+//    public void deleteQualityGateCond_Valid_Return() throws Exception{
+//
+//
+//        String id = "34";
+//        when(qualityGateService.deleteQualityGateCond(testModel)).thenReturn(resultModel);
+//
+//        qualityGateService.deleteQualityGateCond(testModel);
+//
+//    }
+//
+//    /**
+//     *  QualityGate 복제
+//     *
+//     * @throws Exception the exception
+//     */
+//    @Test
+//    public void copyQualityGate_Valid_Return() throws Exception{
+//
+//        ResponseEntity responseEntity = new ResponseEntity<Map>(HttpStatus.OK);
+//        when(restTemplate.exchange(Matchers.anyString(), any(HttpMethod.class), Matchers.<HttpEntity<?>>any(), Matchers.<Class<Map>>any())).thenReturn(responseEntity);
+//        when(commonService.sendForm(anyString(),anyString(),any(HttpMethod.class),any(QualityGate.class),any())).thenReturn(testModel);
+//        when(commonService.sendForm(Matchers.matches("http://localhost:8081"),anyString(),any(HttpMethod.class),any(Object.class),any())).thenReturn(resultModel);
+//
+//
+//        QualityGate result = qualityGateService.copyQualityGate(testModel);
+//        assertThat(result).isNotNull();
+////        assertEquals(resultModel.getId(), result.getId());
+////        assertEquals(resultModel.getName(),result.getName());
+//        assertEquals(resultModel.getGateDefaultYn(),result.getGateDefaultYn());
+//        assertEquals(resultModel.getServiceInstancesId(),result.getServiceInstancesId());
+//    }
+//
+//
+//    /**
+//     *  QualityGate 생성
+//     *
+//     * @throws Exception the exception
+//     */
+//    @Test
+//    public void createQualityGate_Valid_Return() throws Exception {
+//        ResponseEntity responseEntity = new ResponseEntity<QualityGate>(HttpStatus.OK);
+//        when(restTemplate.exchange(Matchers.anyString(), any(HttpMethod.class), Matchers.<HttpEntity<?>>any(), Matchers.<Class<QualityGate>>any())).thenReturn(responseEntity);
+//        when(commonService.sendForm(anyString(),anyString(),any(HttpMethod.class),any(QualityGate.class),any())).thenReturn(testModel);
+//        when(commonService.sendForm(Matchers.matches("http://localhost:8081"),anyString(),any(HttpMethod.class),any(Object.class),any())).thenReturn(resultModel);
+//
+//        QualityGate result = qualityGateService.createQualityGate(testModel);
+//        assertThat(result).isNotNull();
+////        assertEquals(resultModel.getId(), result.getId());
+////        assertEquals(resultModel.getName(),result.getName());
+//        assertEquals(resultModel.getGateDefaultYn(),result.getGateDefaultYn());
+//        assertEquals(resultModel.getServiceInstancesId(),result.getServiceInstancesId());
+//
+//    }
+//
+//
+//
+//    /**
+//     *  QualityGate 수정
+//     *
+//     * @throws Exception the exception
+//     */
+//    @Test
+//    public void updateQualityGate_Valid_Return() throws Exception{
+//
+//        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualitygates/rename", HttpMethod.POST, testResultMap,QualityGate.class)).thenReturn(resultModel);
+//
+//        when(commonService.sendForm(Constants.TARGET_COMMON_API, "/qualityGate/qualityGateUpdate", HttpMethod.PUT, testResultMap,QualityGate.class)).thenReturn(resultModel);
+//
+//        qualityGateService.updateQualityGate(testModel);
+//    }
+//
+//    /**
+//     *  QualityGate 삭제
+//     *
+//     * @throws Exception the exception
+//     */
+//    @Test
+//    public void deleteQualityGate_Valid_Return() throws Exception{
+//
+//
+//        String result = "";
+//
+//        when(commonService.sendForm(Constants.TARGET_INSPECTION_API, "/api/qualitygates/destroy", HttpMethod.POST,testResultMap, null)).thenReturn(null);
+//        when(commonService.sendForm(Constants.TARGET_COMMON_API, "/qualityGate/qualityGateDelete", HttpMethod.DELETE, testResultMap , null)).thenReturn(null);
+//        when(commonService.sendForm(Constants.TARGET_COMMON_API,"/project/qualityGateDelete",HttpMethod.PUT,testResultMap,String.class)).thenReturn(result);
+//
+//        QualityGate resultModel = qualityGateService.deleteQualityGate(testModel);
+//        assertThat(resultModel).isNotNull();
+//        assertEquals(Constants.RESULT_STATUS_SUCCESS, resultModel.getResultStatus());
+//
+//        qualityGateService.deleteQualityGate(testModel);
+//    }
+//
+//    /**
+//     *  QualityGate 조건 domain
+//     *
+//     * @throws Exception the exception
+//     */
+//    @Test
+//    public void getQualityGateDomains_Valid_Return() throws Exception{
+////
+////        QualityGate resultModel = new QualityGate();
+////        when(qualityGateService.getQualityGateDomains()).thenReturn(resultModel);
+////
+////        qualityGateService.getQualityGateDomains();
+//    }
+//
+//    /**
+//     * 품질 게이트 1건 검색
+//     * @param
+//     * @return
+//     */
+//    @Test
+//    public void getiQualityGate_Valid_Return() throws Exception{
+////
+////        long id = 33;
+////
+////        when(qualityGateService.getiQualityGate(id)).thenReturn(resultModel);
+////
+////        qualityGateService.getiQualityGate(id);
+//    }
 
 }

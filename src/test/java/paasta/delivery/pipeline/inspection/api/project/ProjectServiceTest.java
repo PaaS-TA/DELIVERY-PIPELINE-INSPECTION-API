@@ -1,45 +1,19 @@
-//package paasta.delivery.pipeline.inspection.api.project;
-//
-//import org.junit.After;
-//import org.junit.Before;
-//import org.junit.FixMethodOrder;
-//import org.junit.Test;
-//import org.junit.runner.RunWith;
-//import org.junit.runners.MethodSorters;
-//import org.mockito.InjectMocks;
-//import org.mockito.Matchers;
-//import org.mockito.Mock;
-//import org.springframework.beans.factory.annotation.Value;
-//import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.http.HttpEntity;
-//import org.springframework.http.HttpMethod;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.test.context.junit4.SpringRunner;
-//import org.springframework.web.client.RestTemplate;
-//import paasta.delivery.pipeline.inspection.api.common.CommonService;
-//import paasta.delivery.pipeline.inspection.api.common.Constants;
-//import paasta.delivery.pipeline.inspection.api.qualityGate.QualityGate;
-//import paasta.delivery.pipeline.inspection.api.qualityGate.QualityGateService;
-//import paasta.delivery.pipeline.inspection.api.qualityProfile.QualityProfile;
-//import paasta.delivery.pipeline.inspection.api.qualityProfile.QualityProfileService;
-//
-//import java.util.ArrayList;
-//import java.util.HashMap;
-//import java.util.List;
-//import java.util.Map;
-//
-//import static org.mockito.Matchers.any;
-//import static org.mockito.Matchers.anyString;
-//import static org.mockito.Mockito.when;
-//
-///**
-// * Created by Dojun on 2017-06-20.
-// */
-//@RunWith(SpringRunner.class)
-//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-//@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-//public class ProjectServiceTest {
+package paasta.delivery.pipeline.inspection.api.project;
+
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+/**
+ * Created by Dojun on 2017-06-20.
+ */
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+public class ProjectServiceTest {
 //
 //    private static final long ID = 1;
 //    private static final String SONAR_NAME = "test-sonarName";
@@ -240,11 +214,11 @@
 //    public void tearDown() throws Exception {
 //    }
 //
-//    @Test
-//    public void getProjectList_Valid_Return() throws Exception {
+    @Test
+    public void getProjectList_Valid_Return() throws Exception {
 //        when(commonService.sendForm(Constants.TARGET_COMMON_API, "/project/projectsList", HttpMethod.POST , testModel ,List.class)).thenReturn(testResultList);
 //        testResultList = projectService.getProjectsList(testModel);
-//    }
+    }
 //
 //    @Test
 //    public void getProject_Valid_Return() throws Exception{
@@ -465,8 +439,8 @@
 //        resultModel = projectService.getProjectKey(testModel);
 //    }
 //
-//}
-//
-//
-//
-//
+}
+
+
+
+

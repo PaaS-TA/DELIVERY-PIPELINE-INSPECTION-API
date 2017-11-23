@@ -61,7 +61,7 @@ public class QualityIssuesService {
             qualityIssues.setComponentKeys(componentKey);
         }
 
-        if (qualityIssues.getComponentKeys() == null || qualityIssues.equals("")) {
+        if (qualityIssues.getComponentKeys() == null || qualityIssues.getComponentKeys().equalsIgnoreCase("") || qualityIssues.getComponentKeys().length() == 0) {
             return new QualityIssues();
         }
 

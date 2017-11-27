@@ -30,18 +30,18 @@ public class CodingRulesController {
         return codingRulesService.getCodingRules(codingRules);
     }
 
-
-    //TODO ---------------------------------------------
-
     /**
-     * Get coding rules deteil map.
+     * Gets coding rule detail.
+     *
+     * RequestParam(value = "key", required = true)
+     * RequestParam(value = "actives", required = true)
      *
      * @param codingRules the coding rules
-     * @return the map
+     * @return the coding rule detail
      */
-    @RequestMapping(value = "/codingRulesDeteil" , method = RequestMethod.GET)
-    public Map getCodingRulesDeteil(@ModelAttribute CodingRules codingRules){
-        return codingRulesService.getCodingRulesDeteil(codingRules);
+    @GetMapping(value = "/codingRuleDetail")
+    public CodingRules getCodingRuleDetail(@ModelAttribute CodingRules codingRules) {
+        return codingRulesService.getCodingRuleDetail(codingRules);
     }
 
 }

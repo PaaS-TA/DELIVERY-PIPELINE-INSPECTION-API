@@ -1,6 +1,7 @@
 package paasta.delivery.pipeline.inspection.api.codingRules;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * The type Coding rules.
@@ -19,15 +20,18 @@ public class CodingRules {
     private String markdown_description;
     private String name;
     private String language;
-    private String actives;
+    private Object actives;
     private String resultStatus;
     private String resultMessage;
     private String languages;
     private String s;
     private String asc;
     private List rules;
+    private Map rule;
     private String q;
     private String severities;
+
+    // --[getter/setter]-----------------------------------
 
     /**
      * Gets total.
@@ -53,7 +57,6 @@ public class CodingRules {
      *
      * @param key the key
      */
-// --[getter/setter]-----------------------------------
     public void setKey(String key) {
         this.key = key;
     }
@@ -284,24 +287,6 @@ public class CodingRules {
     }
 
     /**
-     * Gets actives.
-     *
-     * @return the actives
-     */
-    public String getActives() {
-        return actives;
-    }
-
-    /**
-     * Sets actives.
-     *
-     * @param actives the actives
-     */
-    public void setActives(String actives) {
-        this.actives = actives;
-    }
-
-    /**
      * Gets languages.
      *
      * @return the languages
@@ -409,6 +394,42 @@ public class CodingRules {
         this.severities = severities;
     }
 
+    /**
+     * Gets rule.
+     *
+     * @return the rule
+     */
+    public Map getRule() {
+        return rule;
+    }
+
+    /**
+     * Sets rule.
+     *
+     * @param rule the rule
+     */
+    public void setRule(Map rule) {
+        this.rule = rule;
+    }
+
+    /**
+     * Gets actives.
+     *
+     * @return the actives
+     */
+    public Object getActives() {
+        return actives;
+    }
+
+    /**
+     * Sets actives.
+     *
+     * @param actives the actives
+     */
+    public void setActives(Object actives) {
+        this.actives = actives;
+    }
+
     @Override
     public String toString() {
         return "CodingRules{" +
@@ -424,13 +445,14 @@ public class CodingRules {
                 ", markdown_description='" + markdown_description + '\'' +
                 ", name='" + name + '\'' +
                 ", language='" + language + '\'' +
-                ", actives='" + actives + '\'' +
+                ", actives=" + actives +
                 ", resultStatus='" + resultStatus + '\'' +
                 ", resultMessage='" + resultMessage + '\'' +
                 ", languages='" + languages + '\'' +
                 ", s='" + s + '\'' +
                 ", asc='" + asc + '\'' +
                 ", rules=" + rules +
+                ", rule=" + rule +
                 ", q='" + q + '\'' +
                 ", severities='" + severities + '\'' +
                 '}';

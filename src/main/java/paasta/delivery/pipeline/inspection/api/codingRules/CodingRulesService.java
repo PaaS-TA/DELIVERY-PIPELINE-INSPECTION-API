@@ -52,26 +52,23 @@ public class CodingRulesService {
 
     }
 
-
-
-
-    //TODO --------------------------
-
-
     /**
-     * Get coding rules deteil map.
+     * Gets coding rule detail.
      *
      * @param codingRules the coding rules
-     * @return the map
+     * @return the coding rule detail
      */
-    Map getCodingRulesDeteil(CodingRules codingRules){
-        Object resultJson = commonService.sendForm(inspectionServerUrl, "/api/rules/show?key="+codingRules.getKey()+"&actives="+codingRules.getActives(), HttpMethod.GET , null,Object.class);
-        Map <String, Object> objectHashMap = new HashMap<>();
-        objectHashMap = (Map)resultJson;
-        return objectHashMap;
+    public CodingRules getCodingRuleDetail(CodingRules codingRules) {
+
+        // /api/rules/show
+        String reqUrl = commonService.makeQueryParam(Constants.API_RULES_SHOW, codingRules);
+
+        CodingRules data = commonService.sendForm(inspectionServerUrl, reqUrl, HttpMethod.GET, null, CodingRules.class);
+        data.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
+
+        return data;
 
     }
-
 
 }
 

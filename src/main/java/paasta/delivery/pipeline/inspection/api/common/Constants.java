@@ -26,6 +26,7 @@ public class Constants {
     public static final String API_LANGUAGES_LIST = "/api/languages/list";
 
     public static final String API_RULES_SEARCH = "/api/rules/search";
+    public static final String API_RULES_SHOW = "/api/rules/show";
 
     public static final String KEY_PROFILE = "profile";
     public static final String KEY_LANGUAGES = "languages";

@@ -1,9 +1,10 @@
 package paasta.delivery.pipeline.inspection.api.codingRules;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * The type Coding rules controller.
@@ -32,7 +33,7 @@ public class CodingRulesController {
 
     /**
      * Gets coding rule detail.
-     *
+     * <p>
      * RequestParam(value = "key", required = true)
      * RequestParam(value = "actives", required = true)
      *

@@ -23,6 +23,11 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
+    /**
+     * Instantiates a new Project controller.
+     *
+     * @param projectService the project service
+     */
     @Autowired
     ProjectController(ProjectService projectService) {
         this.projectService = projectService;
@@ -31,8 +36,8 @@ public class ProjectController {
     /**
      * getProjectList
      *
-     * @param
-     * @return List
+     * @param project the project
+     * @return List projects list
      */
     @RequestMapping(value = "/projectList", method = RequestMethod.GET)
     public List getProjectsList(Project project) {
@@ -42,8 +47,8 @@ public class ProjectController {
     /**
      * project create
      *
-     * @param project
-     * @return project
+     * @param project the project
+     * @return project project
      */
     @RequestMapping(value = "/projectsCreate", method = RequestMethod.POST)
     @ResponseBody
@@ -56,8 +61,8 @@ public class ProjectController {
     /**
      * project delete
      *
-     * @param project
-     * @return project
+     * @param project the project
+     * @return project project
      */
     @RequestMapping(value = "/projectsDelete", method = RequestMethod.POST)
     public Project deleteProjects(@RequestBody Project project) {
@@ -69,8 +74,8 @@ public class ProjectController {
     /**
      * project update
      *
-     * @param project
-     * @return project
+     * @param project the project
+     * @return project project
      */
     @RequestMapping(value = "/projectsUpdate", method = RequestMethod.POST)
     public Project updateProjects(@RequestBody Project project) {
@@ -82,8 +87,8 @@ public class ProjectController {
     /**
      * QualityGate project 연결
      *
-     * @param project
-     * @return
+     * @param project the project
+     * @return project
      */
     @RequestMapping(value = "/qualityGateProjectLiked", method = RequestMethod.POST)
     @ResponseBody
@@ -94,8 +99,8 @@ public class ProjectController {
     /**
      * QualityProfile project 연결
      *
-     * @param project
-     * @return
+     * @param project the project
+     * @return project
      */
     @RequestMapping(value = "/qualityProfileProjectLinked", method = RequestMethod.POST)
     public Project qualityProfileProjectLinked(@RequestBody Project project) {
@@ -107,8 +112,8 @@ public class ProjectController {
     /**
      * getProject sonarKey(uuid)
      *
-     * @param
-     * @return project
+     * @param project the project
+     * @return project project sonar key
      */
     @RequestMapping(value = "/getProjectSonarKey", method = RequestMethod.GET)
     public List getProjectSonarKey(Project project) {
@@ -118,8 +123,8 @@ public class ProjectController {
     /**
      * quality Management
      *
-     * @param project
-     * @return
+     * @param project the project
+     * @return project
      */
     @RequestMapping(value = "/qualityManagementList", method = RequestMethod.GET)
     public Project qualityManagementList(Project project) {
@@ -129,8 +134,8 @@ public class ProjectController {
     /**
      * quality Coverage
      *
-     * @param project
-     * @return
+     * @param project the project
+     * @return list
      */
     @RequestMapping(value = "/qualityCoverageList", method = RequestMethod.GET)
     public List<Project> qualityCoverageList(@ModelAttribute Project project) {
@@ -140,8 +145,8 @@ public class ProjectController {
     /**
      * tests source
      *
-     * @param project
-     * @return List
+     * @param project the project
+     * @return List list
      */
     @RequestMapping(value = "/testsSource", method = RequestMethod.GET)
     public List testsSourceList(@ModelAttribute Project project) {
@@ -151,8 +156,8 @@ public class ProjectController {
     /**
      * tests source detail
      *
-     * @param project
-     * @return Project
+     * @param project the project
+     * @return Project project
      */
     @RequestMapping(value = "/testsSourceShow", method = RequestMethod.GET)
     public Project testsSourceShow(@ModelAttribute Project project) {
@@ -162,12 +167,33 @@ public class ProjectController {
     /**
      * getProjectKey
      *
-     * @param project
-     * @return Project
+     * @param project the project
+     * @return Project project key
      */
     @RequestMapping(value = "/projectKey", method = RequestMethod.POST)
     public Project getProjectKey(@RequestBody Project project) {
         return projectService.getProjectKey(project);
+    }
+
+
+    /**
+     * Set update project.
+     * Project Link / UnLink
+     *
+     * RequestParam(value = "id", required = true)
+     * RequestParam(value = "qualityProfileKey OR NULL", required = true)
+     * RequestParam(value = "qualityGateId OR NULL", required = true)
+     * RequestParam(value = "linkOperationType", required = true)
+     * RequestParam(value = "defaultQualityProfileKey", required = false)
+     * RequestParam(value = "defaultQualityGateId", required = false)
+     *
+     * @param project the project
+     * @return the update project
+     */
+    @PostMapping(value = "/setUpdateProject")
+    public Project setUpdateProject(@RequestBody Project project) {
+
+        return projectService.setUpdateProject(project, project.isLinked() ? ProjectService.LinkOperationType.LINK : ProjectService.LinkOperationType.UNLINK);
     }
 
 }

@@ -48,7 +48,7 @@ public class QualityProfileService {
     public List getQualityProfileList(QualityProfile qualityProfile){
 
         // [API] : /api/qualityprofiles/search
-        String reqUrl = commonService.makeQueryParam(Constants.API_QUALITYPROFILES_SEARCH, qualityProfile);
+        String reqUrl = commonService.makeQueryParam(Constants.API_QUALITYPROFILES_SEARCH, qualityProfile, null);
 
         QualityProfile profile = commonService.sendForm(inspectionServerUrl, reqUrl, HttpMethod.GET, null, QualityProfile.class);
 
@@ -100,13 +100,12 @@ public class QualityProfileService {
      */
     public QualityProfile createQualityProfile(QualityProfile qualityProfile){
 
-        QualityProfile result = new QualityProfile();
-
         LinkedHashMap resultBody = (LinkedHashMap) commonService.sendForm(inspectionServerUrl , Constants.API_QUALITYPROFILES_CREATE,HttpMethod.POST, qualityProfile, Map.class);
 
         ObjectMapper om = new ObjectMapper();
-        result = om.convertValue(resultBody.get(Constants.KEY_PROFILE), QualityProfile.class);
-       return result;
+        QualityProfile result = om.convertValue(resultBody.get(Constants.KEY_PROFILE), QualityProfile.class);
+
+        return result;
 
     }
 
@@ -120,7 +119,7 @@ public class QualityProfileService {
 
         // /api/qualityprofiles/projects?key=java-egov-qualityprofile-20090&selected=all
 
-        String reqUrl = commonService.makeQueryParam(Constants.API_QUALITYPROFILES_PROJECTS, qualityProfile);
+        String reqUrl = commonService.makeQueryParam(Constants.API_QUALITYPROFILES_PROJECTS, qualityProfile, null);
 
         LOGGER.info("===[INSPECTION-API :: getProjectList]=== reqUrl : {}", reqUrl);
 

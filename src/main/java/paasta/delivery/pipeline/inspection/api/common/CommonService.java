@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -96,23 +97,32 @@ public class CommonService {
     /**
      * Make query param string.
      *
-     * @param reqUrl the req url
-     * @param obj    the obj
+     * @param reqUrl      the req url
+     * @param obj         the obj
+     * @param exceptParam the except param
      * @return the string
      */
-    public String makeQueryParam(String reqUrl, Object obj) {
+    public String makeQueryParam(String reqUrl, Object obj, String exceptParam) {
         ObjectMapper om = new ObjectMapper();
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(reqUrl);
         Map<String, Object> codingRulesMap = om.convertValue(obj, Map.class);
+        String exceptQuery = "";
 
         for (String key : codingRulesMap.keySet()) {
 
-            if (codingRulesMap.get(key) != null) {
+            if (codingRulesMap.get(key) != null && !key.equals(exceptParam)) {
                 builder.queryParam(key, codingRulesMap.get(key));
+
+            } else if (key.equals(exceptParam)) {
+                exceptQuery += exceptParam + "="+codingRulesMap.get(key);
             }
         }
-        return builder.build().encode().toUriString();
+
+        String queryParam = builder.build().encode().toUriString();
+        String result = StringUtils.isEmpty(queryParam) ? "?" + exceptQuery : queryParam + "&" + exceptQuery;
+
+        return result;
 
     }
 

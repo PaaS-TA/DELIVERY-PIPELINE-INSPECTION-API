@@ -12,16 +12,14 @@ public class Constants {
 
     public static final String RESULT_STATUS_SUCCESS = "SUCCESS";
     public static final String RESULT_STATUS_FAIL = "FAIL";
-    public static final String TARGET_INSPECTION_API = "inspectionApi";
-    public static final String TARGET_COMMON_API = "commonApi";
 
     // [API] qualityprofiles
-    public static final String API_QUALITYPROFILES_SEARCH = "/api/qualityprofiles/search";
-    public static final String API_QUALITYPROFILES_PROJECTS = "/api/qualityprofiles/projects";
-    public static final String API_QUALITYPROFILES_CREATE = "/api/qualityprofiles/create";
-    public static final String API_QUALITYPROFILES_COPY = "/api/qualityprofiles/copy";
-    public static final String API_QUALITYPROFILES_RENAME = "/api/qualityprofiles/rename";
-    public static final String API_QUALITYPROFILES_DELETE = "/api/qualityprofiles/delete";
+    public static final String API_QUALITY_PROFILES_SEARCH = "/api/qualityprofiles/search";
+    public static final String API_QUALITY_PROFILES_PROJECTS = "/api/qualityprofiles/projects";
+    public static final String API_QUALITY_PROFILES_CREATE = "/api/qualityprofiles/create";
+    public static final String API_QUALITY_PROFILES_COPY = "/api/qualityprofiles/copy";
+    public static final String API_QUALITY_PROFILES_RENAME = "/api/qualityprofiles/rename";
+    public static final String API_QUALITY_PROFILES_DELETE = "/api/qualityprofiles/delete";
 
     public static final String API_LANGUAGES_LIST = "/api/languages/list";
 
@@ -36,6 +34,10 @@ public class Constants {
     public static final String API_QUALITY_PROFILES_REMOVE_PROJECT = "/api/qualityprofiles/remove_project";
     public static final String API_QUALITY_GATES_SELECT = "/api/qualitygates/select";
     public static final String API_QUALITY_GATES_DESELECT = "/api/qualitygates/deselect";
+
+    private static final String ADMIN_STRING = "admin";
+    public static final String INSPECTION_SERVER_ADMIN_USER_NAME = ADMIN_STRING;
+    public static final String INSPECTION_SERVER_ADMIN_SECRET = ADMIN_STRING;
 
     Constants() {}
 

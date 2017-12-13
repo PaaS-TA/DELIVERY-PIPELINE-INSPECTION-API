@@ -48,7 +48,7 @@ public class QualityProfileService {
     public List getQualityProfileList(QualityProfile qualityProfile){
 
         // [API] : /api/qualityprofiles/search
-        String reqUrl = commonService.makeQueryParam(Constants.API_QUALITYPROFILES_SEARCH, qualityProfile, null);
+        String reqUrl = commonService.makeQueryParam(Constants.API_QUALITY_PROFILES_SEARCH, qualityProfile, null);
 
         QualityProfile profile = commonService.sendForm(inspectionServerUrl, reqUrl, HttpMethod.GET, null, QualityProfile.class);
 
@@ -100,7 +100,7 @@ public class QualityProfileService {
      */
     public QualityProfile createQualityProfile(QualityProfile qualityProfile){
 
-        LinkedHashMap resultBody = (LinkedHashMap) commonService.sendForm(inspectionServerUrl , Constants.API_QUALITYPROFILES_CREATE,HttpMethod.POST, qualityProfile, Map.class);
+        LinkedHashMap resultBody = (LinkedHashMap) commonService.sendForm(inspectionServerUrl , Constants.API_QUALITY_PROFILES_CREATE,HttpMethod.POST, qualityProfile, Map.class);
 
         ObjectMapper om = new ObjectMapper();
         QualityProfile result = om.convertValue(resultBody.get(Constants.KEY_PROFILE), QualityProfile.class);
@@ -119,7 +119,7 @@ public class QualityProfileService {
 
         // /api/qualityprofiles/projects?key=java-egov-qualityprofile-20090&selected=all
 
-        String reqUrl = commonService.makeQueryParam(Constants.API_QUALITYPROFILES_PROJECTS, qualityProfile, null);
+        String reqUrl = commonService.makeQueryParam(Constants.API_QUALITY_PROFILES_PROJECTS, qualityProfile, null);
 
         LOGGER.info("===[INSPECTION-API :: getProjectList]=== reqUrl : {}", reqUrl);
 
@@ -137,7 +137,7 @@ public class QualityProfileService {
     public QualityProfile copyQualityProfile(QualityProfile qualityProfile) {
 
         // /api/qualityprofiles/copy
-        QualityProfile resultBody = commonService.sendForm(inspectionServerUrl , Constants.API_QUALITYPROFILES_COPY, HttpMethod.POST, qualityProfile, QualityProfile.class);
+        QualityProfile resultBody = commonService.sendForm(inspectionServerUrl , Constants.API_QUALITY_PROFILES_COPY, HttpMethod.POST, qualityProfile, QualityProfile.class);
 
         return resultBody;
 
@@ -152,7 +152,7 @@ public class QualityProfileService {
     public QualityProfile updateQualityProfile(QualityProfile qualityProfile) {
 
         // /api/qualityprofiles/rename
-        commonService.sendForm(inspectionServerUrl , Constants.API_QUALITYPROFILES_RENAME, HttpMethod.POST, qualityProfile, String.class);
+        commonService.sendForm(inspectionServerUrl , Constants.API_QUALITY_PROFILES_RENAME, HttpMethod.POST, qualityProfile, String.class);
 
         QualityProfile result = qualityProfile;
         result.setResultStatus(Constants.RESULT_STATUS_SUCCESS);
@@ -169,7 +169,7 @@ public class QualityProfileService {
     public QualityProfile deleteQualityProfile(QualityProfile qualityProfile) {
 
         // /api/qualityprofiles/delete
-        commonService.sendForm(inspectionServerUrl , Constants.API_QUALITYPROFILES_DELETE, HttpMethod.POST, qualityProfile, String.class);
+        commonService.sendForm(inspectionServerUrl , Constants.API_QUALITY_PROFILES_DELETE, HttpMethod.POST, qualityProfile, String.class);
 
         QualityProfile result = new QualityProfile();
         result.setResultStatus(Constants.RESULT_STATUS_SUCCESS);

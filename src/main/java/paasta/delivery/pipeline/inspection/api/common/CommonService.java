@@ -29,7 +29,6 @@ public class CommonService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonService.class);
     private static final String AUTHORIZATION_HEADER_KEY = "Authorization";
-    private static final String CONTENT_TYPE = "Content-Type";
     private final RestTemplate restTemplate;
 
     /**
@@ -75,7 +74,7 @@ public class CommonService {
      * @return the t
      */
     public <T> T sendForm(String baseUrl, String reqUrl, HttpMethod httpMethod, Object bodyObject, Class<T> responseType) {
-        String authorization = adminUserName + ":" + adminPassword;
+        String authorization = Constants.INSPECTION_SERVER_ADMIN_USER_NAME + ":" + Constants.INSPECTION_SERVER_ADMIN_SECRET;
         HttpHeaders reqHeaders = new HttpHeaders();
         reqHeaders.add(AUTHORIZATION_HEADER_KEY, "Basic " + Base64Utils.encodeToString(authorization.getBytes(StandardCharsets.UTF_8)));
 
@@ -115,7 +114,7 @@ public class CommonService {
                 builder.queryParam(key, codingRulesMap.get(key));
 
             } else if (key.equals(exceptParam)) {
-                exceptQuery += exceptParam + "="+codingRulesMap.get(key);
+                exceptQuery += exceptParam + "=" + codingRulesMap.get(key);
             }
         }
 
